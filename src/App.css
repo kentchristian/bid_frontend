@@ -1,15 +1,42 @@
 @import 'tailwindcss';
 
+:root {
+  --app-bg: #f3f3f3;
+  --main-text: #111827;
+  --sidebar-bg: #242424;
+  --sidebar-text: #f3f3f3;
+  --sidebar-hover: rgba(255, 255, 255, 0.08);
+  --main-bg: #f3f3f3;
+}
+
+:root[data-theme="dark"] {
+  --app-bg: #242424;
+  --main-text: #f3f3f3;
+  --sidebar-bg: #f3f3f3;
+  --sidebar-text: #111827;
+  --sidebar-hover: rgba(0, 0, 0, 0.08);
+  --main-bg: #242424;
+}
+
 body {
   margin: 0;
-  color: #fff;
+  color: var(--main-text);
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  background-color: #242424;
+  background-color: var(--app-bg);
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 /* Background Scheme for aside */
 aside {
-  background-color: #242424;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+main {
+  background-color: var(--main-bg);
+  color: var(--main-text);
+  transition: background-color 300ms ease, color 300ms ease;
 }
 
 .content {

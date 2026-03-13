@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, type ReactNode } from "react"
 import { cn } from "./lib/helpers/cn"
 
 import Button from "@mui/material/Button"
@@ -12,16 +12,23 @@ const navItems = [
   
 ]
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+type LayoutProps = {
+  children: ReactNode
+  mode: "light" | "dark"
+  onToggleMode: () => void
+}
+
+const Layout = ({ children, mode, onToggleMode }: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(false)
+  const logoSrc = mode === "dark" ? "/logo-light.svg" : "/logo.svg"
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <aside
         className={cn(
-          "border-r transition-[width] duration-300 ease-in-out flex flex-col text-slate-100",
-          collapsed ? "w-16" : "w-64",
+          "border-r transition-[width] duration-300 flex flex-col",
+          collapsed ? "w-16 ease-in" : "w-64 ease-out",
           "hover:cursor-pointer"
         )}
       >
@@ -33,7 +40,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         >
           {!collapsed && (
             <div className="flex items-center gap-2">
-              <img src="/logo.svg" alt="BID logo" className="h-30 w-auto" />
+              <img src={logoSrc} alt="BID logo" className="h-30 w-auto" />
             </div>
           )}
 
@@ -44,13 +51,17 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               minWidth: 0,
               fontSize: 30,
               color: "inherit",
+              "&:hover": {
+                backgroundColor: "var(--sidebar-hover)",
+                color: "inherit"
+              },
             }}
           >
             {collapsed ? <icons.expand size={20} /> : <icons.collapse size={20} />}
           </Button>
         </div>
 
-        <nav className="flex flex-col mt-4 gap-2">
+        <nav className="flex flex-1 flex-col mt-4 gap-2">
           {navItems.map((item) => (
             <Button
               key={item.name}
@@ -64,12 +75,57 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 minHeight: 44,
                 textAlign: "left",
                 color: "inherit",
+                "&:hover": {
+                  backgroundColor: "var(--sidebar-hover)",
+                  color: "inherit"
+                },
               }}
             >
               {item.icon}
               {!collapsed && <span>{item.name}</span>}
             </Button>
           ))}
+
+          <Button
+            onClick={onToggleMode}
+            fullWidth
+            aria-label={mode === "light" ? "Switch to dark mode" : "Switch to light mode"}
+            sx={{
+              mt: "auto",
+              justifyContent: collapsed ? "center" : "flex-start",
+              gap: collapsed ? 0 : 1.5,
+              px: collapsed ? 1.25 : 2,
+              py: 1.25,
+              minHeight: 44,
+              textAlign: "left",
+              color: "inherit",
+              "&:hover": {
+                backgroundColor: "var(--sidebar-hover)",
+                color: "inherit"
+              },
+            }}
+          >
+            <span className="relative inline-flex h-5 w-5">
+              <span
+                className={cn(
+                  "absolute inset-0 transition-all duration-200 ease-out",
+                  mode === "light" ? "opacity-100 rotate-0" : "opacity-0 -rotate-180"
+                )}
+              >
+                <icons.darkMode size={20} />
+              </span>
+              <span
+                className={cn(
+                  "absolute inset-0 transition-all duration-200 ease-out",
+                  mode === "light" ? "opacity-0 rotate-180" : "opacity-100 rotate-0",
+                  
+                )}
+              >
+                <icons.lightMode size={20} />
+              </span>
+            </span>
+            {!collapsed && <span>{mode === "light" ? "Light Mode" : "Dark Mode"}</span>}
+          </Button>
         </nav>
       </aside>
 

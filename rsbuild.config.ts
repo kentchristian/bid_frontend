@@ -5,7 +5,7 @@ import { pluginReact } from '@rsbuild/plugin-react';
 export default defineConfig({
   plugins: [pluginReact()],
   html: {
-    title: "Business Intelligence Management",
+    title: "BID",
     favicon: "./public/favIcon.svg",
   },
 });
