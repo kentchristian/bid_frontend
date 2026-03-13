@@ -1,11 +1,14 @@
 import './App.css';
+import PageContainer from './components/common/PageContainer';
+import Layout from './layout';
 
 const App = () => {
   return (
-    <div className="content">
-      <h1>Rsbuild with React</h1>
-      <p>Start building amazing things with Rsbuild.</p>
-    </div>
+    <Layout> 
+      <PageContainer> 
+        Hi 
+      </PageContainer>
+    </Layout>
   );
 };
 
