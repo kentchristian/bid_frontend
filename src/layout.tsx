@@ -1,12 +1,15 @@
-import HomeIcon from "@mui/icons-material/Home"
-import InfoIcon from "@mui/icons-material/Info"
-import MenuIcon from "@mui/icons-material/Menu"
 import { useState } from "react"
 import { cn } from "./lib/helpers/cn"
 
+import Button from "@mui/material/Button"
+import { icons } from "./lib/constants/icons"
+
 const navItems = [
-  { name: "Home", icon: <HomeIcon />, href: "/" },
-  { name: "About", icon: <InfoIcon />, href: "/about" },
+  { name: "Dashboard", icon: <icons.dashboard size={20} />, href: "/" },
+  { name: "Sales", icon: <icons.sales size={20} />, href: "/" },
+  { name: "Inventory", icon: <icons.inventory size={20} />, href: "/" },
+  { name: "Reports", icon: <icons.reports size={20} />, href: "/" },
+  
 ]
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -17,16 +20,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Sidebar */}
       <aside
         className={cn(
-          "bg-white border-r transition-all duration-300 flex flex-col",
-          collapsed ? "w-16" : "w-64"
+          "bg-black border-r transition-all duration-300 flex flex-col",
+          collapsed ? "w-16" : "w-64",
+          "hover:cursor-pointer"
         )}
       >
-        <button
-          className="p-2 m-2 rounded hover:bg-gray-200"
+        <Button
           onClick={() => setCollapsed(!collapsed)}
+          sx={{
+            alignSelf: "end",
+            fontSize: 30
+          }}
         >
-          <MenuIcon />
-        </button>
+          {collapsed ? <icons.expand size={20} /> : <icons.collapse size={20} />}
+        </Button>
 
         <nav className="flex flex-col mt-4 gap-2">
           {navItems.map((item) => (
