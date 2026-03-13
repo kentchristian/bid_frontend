@@ -20,31 +20,55 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Sidebar */}
       <aside
         className={cn(
-          "bg-black border-r transition-all duration-300 flex flex-col",
+          "border-r transition-[width] duration-300 ease-in-out flex flex-col text-slate-100",
           collapsed ? "w-16" : "w-64",
           "hover:cursor-pointer"
         )}
       >
-        <Button
-          onClick={() => setCollapsed(!collapsed)}
-          sx={{
-            alignSelf: "end",
-            fontSize: 30
-          }}
+        <div
+          className={cn(
+            "flex items-center px-3 pt-3",
+            collapsed ? "justify-center" : "justify-between"
+          )}
         >
-          {collapsed ? <icons.expand size={20} /> : <icons.collapse size={20} />}
-        </Button>
+          {!collapsed && (
+            <div className="flex items-center gap-2">
+              <img src="/logo.svg" alt="BID logo" className="h-30 w-auto" />
+            </div>
+          )}
+
+          <Button
+            onClick={() => setCollapsed(!collapsed)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            sx={{
+              minWidth: 0,
+              fontSize: 30,
+              color: "inherit",
+            }}
+          >
+            {collapsed ? <icons.expand size={20} /> : <icons.collapse size={20} />}
+          </Button>
+        </div>
 
         <nav className="flex flex-col mt-4 gap-2">
           {navItems.map((item) => (
-            <a
+            <Button
               key={item.name}
               href={item.href}
-              className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded"
+              fullWidth
+              sx={{
+                justifyContent: collapsed ? "center" : "flex-start",
+                gap: collapsed ? 0 : 1.5,
+                px: collapsed ? 1.25 : 2,
+                py: 1.25,
+                minHeight: 44,
+                textAlign: "left",
+                color: "inherit",
+              }}
             >
               {item.icon}
               {!collapsed && <span>{item.name}</span>}
-            </a>
+            </Button>
           ))}
         </nav>
       </aside>

@@ -1,16 +1,16 @@
-import { createTheme } from "@mui/material/styles"
+import { alpha, createTheme } from "@mui/material/styles"
 
 export const theme = createTheme({
   palette: {
     mode: "light", // change to 'dark' later if needed
     primary: {
-      main: "#2563eb", // your brand color
+      main: "#fefefe", // your brand color
     },
     secondary: {
       main: "#9333ea",
     },
     background: {
-      default: "#f9fafb",
+      default: "#242424",
     },
   },
 
@@ -29,16 +29,35 @@ export const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          borderRadius: 5,
-          padding: "5px 5px",
-          // backgroundColor: "#2563eb"
-          color: "#fff",
+        root: ({ theme }) => ({
+          borderRadius: 8,
+          padding: "6px 10px",
+          transition: theme.transitions.create(["background-color", "color"], {
+            duration: theme.transitions.duration.short,
+          }),
+        }),
+        text: ({ theme }) => ({
+          color: theme.palette.text.primary,
           "&:hover": {
-            backgroundColor: "#fdfdfd",
-            color: "#000000",
+            backgroundColor: alpha(theme.palette.primary.main, 0.16),
+            color: theme.palette.primary.main,
           },
-        },
+        }),
+        outlined: ({ theme }) => ({
+          color: theme.palette.primary.main,
+          borderColor: alpha(theme.palette.primary.main, 0.4),
+          "&:hover": {
+            backgroundColor: alpha(theme.palette.primary.main, 0.08),
+            borderColor: theme.palette.primary.main,
+          },
+        }),
+        contained: ({ theme }) => ({
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
+          "&:hover": {
+            backgroundColor: theme.palette.primary.dark,
+          },
+        }),
       },
     },
 

@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [pluginReact()],
   html: {
     title: "Business Intelligence Management",
-    // favicon: './public/keysii_logo.jpeg',
+    favicon: "./public/favIcon.svg",
   },
 });
