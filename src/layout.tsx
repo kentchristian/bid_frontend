@@ -22,27 +22,35 @@ const Layout = ({ children, mode, onToggleMode }: LayoutProps) => {
   const [collapsed, setCollapsed] = useState(false)
   const logoSrc = mode === "dark" ? "/logo-light.svg" : "/logo.svg"
 
+  const labelTransition = cn(
+    "overflow-hidden whitespace-nowrap transition-[opacity,transform,max-width] duration-500 ease-in-out",
+    collapsed
+      ? "max-w-0 opacity-0 -translate-x-2"
+      : "max-w-full opacity-100 translate-x-0"
+  )
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside
         className={cn(
-          "border-r transition-[width] duration-300 flex flex-col",
-          collapsed ? "w-16 ease-in" : "w-64 ease-out",
-          "hover:cursor-pointer"
+          "border-r transition-[width] duration-500 ease-in flex flex-col overflow-hidden will-change-[width] hover:cursor-pointer",
+          collapsed ? "w-16" : "w-64"
         )}
       >
         <div
-          className={cn(
-            "flex items-center px-3 pt-3",
-            collapsed ? "justify-center" : "justify-between"
-          )}
+          className="flex items-center justify-between px-3 pt-3"
         >
-          {!collapsed && (
-            <div className="flex items-center gap-2">
-              <img src={logoSrc} alt="BID logo" className="h-30 w-auto" />
-            </div>
-          )}
+          <div
+            className={cn(
+              "flex items-center gap-2 transition-[opacity,transform,max-width] duration-500 ease-in-out overflow-hidden",
+              collapsed
+                ? "max-w-0 opacity-0 -translate-x-2"
+                : "max-w-full opacity-100 translate-x-0"
+            )}
+          >
+            <img src={logoSrc} alt="BID logo" className="h-30 w-auto" />
+          </div>
 
           <Button
             onClick={() => setCollapsed(!collapsed)}
@@ -68,11 +76,12 @@ const Layout = ({ children, mode, onToggleMode }: LayoutProps) => {
               href={item.href}
               fullWidth
               sx={{
-                justifyContent: collapsed ? "center" : "flex-start",
+                justifyContent: "flex-start",
                 gap: collapsed ? 0 : 1.5,
-                px: collapsed ? 1.25 : 2,
+                px: collapsed ? 2.75 : 2,
                 py: 1.25,
                 minHeight: 44,
+                transition: "padding 500ms ease-in-out, gap 500ms ease-in-out",
                 textAlign: "left",
                 color: "inherit",
                 "&:hover": {
@@ -82,7 +91,7 @@ const Layout = ({ children, mode, onToggleMode }: LayoutProps) => {
               }}
             >
               {item.icon}
-              {!collapsed && <span>{item.name}</span>}
+              <span className={labelTransition}>{item.name}</span>
             </Button>
           ))}
 
@@ -92,11 +101,12 @@ const Layout = ({ children, mode, onToggleMode }: LayoutProps) => {
             aria-label={mode === "light" ? "Switch to dark mode" : "Switch to light mode"}
             sx={{
               mt: "auto",
-              justifyContent: collapsed ? "center" : "flex-start",
+              justifyContent: "flex-start",
               gap: collapsed ? 0 : 1.5,
-              px: collapsed ? 1.25 : 2,
+              px: collapsed ? 2.75 : 2,
               py: 1.25,
               minHeight: 44,
+              transition: "padding 500ms ease-in-out, gap 500ms ease-in-out",
               textAlign: "left",
               color: "inherit",
               "&:hover": {
@@ -124,7 +134,9 @@ const Layout = ({ children, mode, onToggleMode }: LayoutProps) => {
                 <icons.lightMode size={20} />
               </span>
             </span>
-            {!collapsed && <span>{mode === "light" ? "Light Mode" : "Dark Mode"}</span>}
+            <span className={labelTransition}>
+              {mode === "light" ? "Light Mode" : "Dark Mode"}
+            </span>
           </Button>
         </nav>
       </aside>
