@@ -1,11 +1,13 @@
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
 import TotalUnitsSoldCard from '../components/cards/TotalUnitsSoldCard';
+import InventoryHealthPieChart from '../components/charts/InventoryHealthPieChart';
+import SalesTrendAreaChart from '../components/charts/SalesTrendAreaChart';
 import PageContainer from '../components/common/PageContainer';
 
 const Dashboard = () => {
   return (
-    <PageContainer>
+    <PageContainer className="gap-2 flex flex-col">
       <div className="flex flex-row gap-2">
         <TotalRevenueCard
           title={'Total Revenue'}
@@ -19,8 +21,19 @@ const Dashboard = () => {
         />
         <CriticalstacksAlert
           title={'Critical Stacks Alert'}
-          itemsBelowThrehold={[1, 2, 3, 4]}
+          itemsBelowThrehold={['something', 'something']}
         />
+      </div>
+
+      <div className="flex flex-row gap-2">
+        {/* Need card Container for now */}
+
+        <div className="rounded-md border w-full h-full flex justify-center items-center">
+          <SalesTrendAreaChart />
+        </div>
+        <div className="rounded-md border w-full h-full flex justify-center items-center">
+          <InventoryHealthPieChart />
+        </div>
       </div>
     </PageContainer>
   );
