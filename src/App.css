@@ -33,7 +33,7 @@ aside {
   transition: background-color 300ms ease, color 300ms ease;
 }
 
-main {
+main, header {
   background-color: var(--main-bg);
   color: var(--main-text);
   transition: background-color 300ms ease, color 300ms ease;
