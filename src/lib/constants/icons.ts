@@ -1,9 +1,9 @@
 
 import { FaRegChartBar } from "react-icons/fa";
-import { GoSidebarCollapse } from "react-icons/go";
+import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
 import { IoIosTrendingUp } from "react-icons/io";
 import { IoTrendingDownSharp } from "react-icons/io5";
-import { MdDashboard, MdInventory, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { MdArrowDropDown, MdArrowDropUp, MdDashboard, MdInventory, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
 
 export const icons = {
@@ -17,5 +17,9 @@ export const icons = {
   darkMode: MdOutlineDarkMode,
   trendUp: IoIosTrendingUp,
   trendDown: IoTrendingDownSharp,
+  mdArrowUp: MdArrowDropUp,
+  mdArrowDown: MdArrowDropDown,
+  arrowUp: GoArrowUp,
+  arrowDown: GoArrowDown,
 
 };

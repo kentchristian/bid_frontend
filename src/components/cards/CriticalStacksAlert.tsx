@@ -1,0 +1,56 @@
+import { cn } from '../../lib/helpers/cn';
+import { Typography } from '../common/Typography';
+
+interface CriticalstacksAlertProps {
+  title: string;
+  itemsBelowThrehold: string[]; // for now -- modify later when data exist
+}
+
+/* A component to visualize if dailyTarget for units sold is achieved
+   To visualize if today's sales was a loss or sucessful
+**/
+const CriticalstacksAlert = ({
+  title,
+  itemsBelowThrehold,
+}: CriticalstacksAlertProps) => {
+  const countItems = itemsBelowThrehold.length;
+
+  const trendUp = countItems > 0; // true means threshold is positive
+
+  return (
+    <div
+      className={cn(
+        'flex flex-col gap-2 p-2 border border-gray-500 rounded-md w-full',
+        'shadow-lg shadow-black/20',
+        'bg-(--card)',
+      )}
+    >
+      <div className="flex flex-row justify-between items-center">
+        <Typography>{title}</Typography>
+        <div
+          className={cn(
+            'flex h-5 w-5 rounded-full justify-center items-center',
+            trendUp ? 'bg-[#C85050]' : 'bg-[#50C878]',
+          )}
+        >
+          <Typography className="text-white">{countItems}</Typography>
+        </div>
+      </div>
+
+      <div className="flex flex-row items-center gap-2">
+        {trendUp ? (
+          <>
+            <Typography variant="h3" className="text-[#C85050]">
+              {countItems}
+            </Typography>
+            <Typography variant="h3">Items Below Threshold</Typography>
+          </>
+        ) : (
+          <Typography variant="h3">0</Typography>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CriticalstacksAlert;

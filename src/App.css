@@ -6,6 +6,7 @@
   --sidebar-bg: #242424;
   --sidebar-text: #f3f3f3;
   --sidebar-hover: rgba(255, 255, 255, 0.08);
+  --card: #f7f7f7;
   --main-bg: #f3f3f3;
 }
 
@@ -13,6 +14,7 @@
   --app-bg: #242424;
   --main-text: #f3f3f3;
   --sidebar-bg: #f3f3f3;
+  --card: #282828;
   --sidebar-text: #111827;
   --sidebar-hover: rgba(0, 0, 0, 0.08);
   --main-bg: #242424;
