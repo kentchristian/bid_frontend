@@ -136,7 +136,7 @@ const SideBar = ({ mode, onToggleMode, className}: SideBarProps) => {
               </span>
             </span>
             <span className={labelTransition}>
-              {mode === "light" ? "Light Mode" : "Dark Mode"}
+              {mode === "light" ? "Dark Mode" : "Light Mode"}
             </span>
           </Button>
         </nav>

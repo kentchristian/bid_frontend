@@ -17,7 +17,7 @@ const PageContainer = ({
     // add that customizable className
     <div className={
       cn(
-        "w-full h-full p-4",
+        "w-full h-full p-1",
         SCROLLBAR_CONFIG,
         className
       )

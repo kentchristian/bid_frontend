@@ -1,6 +1,8 @@
 
 import { FaRegChartBar } from "react-icons/fa";
 import { GoSidebarCollapse } from "react-icons/go";
+import { IoIosTrendingUp } from "react-icons/io";
+import { IoTrendingDownSharp } from "react-icons/io5";
 import { MdDashboard, MdInventory, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
 
@@ -13,5 +15,7 @@ export const icons = {
   reports: TbReportSearch,
   lightMode: MdOutlineLightMode,
   darkMode: MdOutlineDarkMode,
+  trendUp: IoIosTrendingUp,
+  trendDown: IoTrendingDownSharp,
 
 };
