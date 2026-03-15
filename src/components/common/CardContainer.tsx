@@ -6,7 +6,7 @@ import { Typography } from './Typography';
 export interface CardContainerProps {
   title?: string;
   info?: string;
-  toolbarIcon?: React.ReactNode;
+  toolBar?: React.ReactNode;
   children: React.ReactNode;
 
   loading?: boolean;
@@ -18,18 +18,16 @@ export interface CardContainerProps {
 const CardContainer = ({
   title,
   info,
-  toolbarIcon,
+  toolBar,
   children,
   loading = false,
   isEmpty = false,
   emptyMessage = 'No data available',
   className,
 }: CardContainerProps) => {
-  const resolvedToolbarIcon = toolbarIcon ?? (
-    <InfoOutlinedIcon fontSize="small" />
-  );
+  const resolvedtoolBar = toolBar ?? <InfoOutlinedIcon fontSize="small" />;
   const tooltipMessage = info ?? '';
-  const showToolbar = Boolean(toolbarIcon || info);
+  const showToolbar = Boolean(toolBar || info);
 
   return (
     <div
@@ -50,7 +48,7 @@ const CardContainer = ({
           {showToolbar && (
             <Tooltip title={tooltipMessage} arrow disableHoverListener={!info}>
               <span className="inline-flex items-center cursor-help opacity-70">
-                {resolvedToolbarIcon}
+                {resolvedtoolBar}
               </span>
             </Tooltip>
           )}

@@ -1,3 +1,4 @@
+import { Switch } from '@mui/material';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -7,6 +8,7 @@ import SalesTrendAreaChart from '../components/charts/SalesTrendAreaChart';
 import CardContainer from '../components/common/CardContainer';
 import PageContainer from '../components/common/PageContainer';
 import MoneyInSales from '../components/tables/MoneyInSales';
+import WareHouseInventory from '../components/tables/WareHoustInventory';
 
 const Dashboard = () => {
   return (
@@ -42,6 +44,14 @@ const Dashboard = () => {
           <TodaysTopHits />
         </CardContainer>
       </div>
+
+      <CardContainer
+        title="Warehouse Inventory"
+        className="flex-1 min-w-0"
+        toolBar={<Switch />}
+      >
+        <WareHouseInventory />
+      </CardContainer>
     </PageContainer>
   );
 };
