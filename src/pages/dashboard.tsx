@@ -1,4 +1,5 @@
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
+import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
 import TotalUnitsSoldCard from '../components/cards/TotalUnitsSoldCard';
 import InventoryHealthPieChart from '../components/charts/InventoryHealthPieChart';
@@ -37,8 +38,8 @@ const Dashboard = () => {
         <CardContainer title="Money in Sales Feed" className="flex-1 min-w-0">
           <MoneyInSales />
         </CardContainer>
-        <CardContainer title="Money in Sales Feed" className="flex-1 min-w-0">
-          <MoneyInSales />
+        <CardContainer title="Today’s Top Hits" className="flex-1 min-w-0">
+          <TodaysTopHits />
         </CardContainer>
       </div>
     </PageContainer>
