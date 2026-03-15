@@ -8,12 +8,13 @@ interface DynamicDataGridProps {
 
 const DynamicDataGrid = ({ columns, rows, loading }: DynamicDataGridProps) => {
   return (
-    <div style={{ width: '100%', height: 500 }}>
+    <div style={{ width: '100%', height: 500, minWidth: 0 }}>
       <DataGrid
         rows={rows}
         columns={columns}
         loading={loading}
         pageSizeOptions={[5, 10, 20]}
+        sx={{ minWidth: 0 }}
         initialState={{
           pagination: {
             paginationModel: { pageSize: 10, page: 0 },

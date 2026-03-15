@@ -19,7 +19,7 @@ const data = [
 
 const SalesTrendAreaChart = () => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" maxHeight={250}>
       <AreaChart
         data={data}
         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

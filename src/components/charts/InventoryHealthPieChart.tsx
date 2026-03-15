@@ -19,7 +19,7 @@ const COLORS = ['#28a745', '#ffc107', '#dc3545']; // green, yellow, red
 
 const InventoryHealthPieChart = () => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={250}>
       <PieChart>
         <Pie
           data={data}
