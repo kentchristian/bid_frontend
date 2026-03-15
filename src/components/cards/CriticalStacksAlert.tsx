@@ -26,11 +26,13 @@ const CriticalstacksAlert = ({
         <Typography>{title}</Typography>
         <div
           className={cn(
-            'flex h-5 w-5 rounded-full justify-center items-center',
+            'flex h-8 w-8 rounded-full justify-center items-center',
             trendUp ? 'bg-(--accent-negative)' : 'bg-(--accent-positive)',
           )}
         >
-          <Typography className="white">{countItems}</Typography>
+          <Typography className="text-(--positive-chip-text)">
+            {countItems}
+          </Typography>
         </div>
       </div>
 

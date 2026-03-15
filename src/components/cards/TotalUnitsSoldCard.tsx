@@ -24,9 +24,9 @@ const TotalUnitsSoldCard = ({
   );
 
   const cornerTrend = trendUp ? (
-    <icons.trendUp color="white" />
+    <icons.trendUp color="var(--positive-chip-text)" />
   ) : (
-    <icons.trendDown color="white" />
+    <icons.trendDown color="var(--positive-chip-text)" />
   );
 
   return (
