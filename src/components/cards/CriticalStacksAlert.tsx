@@ -27,17 +27,17 @@ const CriticalstacksAlert = ({
         <div
           className={cn(
             'flex h-5 w-5 rounded-full justify-center items-center',
-            trendUp ? 'bg-[#C85050]' : 'bg-[#50C878]',
+            trendUp ? 'bg-(--accent-negative)' : 'bg-(--accent-positive)',
           )}
         >
-          <Typography className="text-white">{countItems}</Typography>
+          <Typography className="white">{countItems}</Typography>
         </div>
       </div>
 
       <div className="flex flex-row items-center gap-2">
         {trendUp ? (
           <>
-            <Typography variant="h3" className="text-[#C85050]">
+            <Typography variant="h3" className="text-(--accent-negative)">
               {countItems}
             </Typography>
             <Typography variant="h3">Items Below Threshold</Typography>

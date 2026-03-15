@@ -18,14 +18,14 @@ const TotalRevenueCard = ({
   const trendRate = getTrendRate(totalRevenueToday, totalRevenueYesterday);
 
   const sign = trendUp ? (
-    <icons.trendUp color="#50C878" />
+    <icons.trendUp color="var(--accent-positive)" />
   ) : (
-    <icons.trendDown color="#C85050" />
+    <icons.trendDown color="var(--accent-negative)" />
   );
   const mdArrow = trendUp ? (
-    <icons.mdArrowUp color="#50C878" size={20} />
+    <icons.mdArrowUp color="var(--accent-positive)" size={20} />
   ) : (
-    <icons.mdArrowDown color="#C85050" size={20} />
+    <icons.mdArrowDown color="var(--accent-negative)" size={20} />
   );
 
   return (
@@ -38,8 +38,8 @@ const TotalRevenueCard = ({
         <Chip
           label={`${trendRate}%`}
           sx={{
-            background: '#50C878',
-            color: 'white',
+            background: 'var(--accent-positive)',
+            color: 'var(--positive-chip-text)',
           }}
         />
       </div>

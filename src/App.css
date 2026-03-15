@@ -18,6 +18,8 @@
   --sidebar-logo-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   --sidebar-logo-filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
   --accent-positive: #059669;
+  --positive-chip-text: #ffffff;
+  --accent-negative: #DC2626;
 }
 
 :root[data-theme="dark"] {
@@ -38,6 +40,9 @@
   --sidebar-logo-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
   --sidebar-logo-filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
   --accent-positive: #34d399;
+  --positive-chip-text: #1f1f1f;
+  --accent-negative: #F87171;
+  
 }
 
 body {

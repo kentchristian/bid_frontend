@@ -38,8 +38,8 @@ const TotalUnitsSoldCard = ({
         <Typography>{title}</Typography>
         <div
           className={cn(
-            'flex h-5 w-5 rounded-full justify-center items-center',
-            trendUp ? 'bg-[#50C878]' : 'bg-[#C85050]',
+            'flex h-8 w-8 rounded-full justify-center items-center',
+            trendUp ? 'bg-(--accent-positive)' : 'bg-(--accent-negative)',
           )}
         >
           {cornerTrend}

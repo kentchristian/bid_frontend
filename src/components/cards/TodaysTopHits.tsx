@@ -42,55 +42,27 @@ const topProducts: Product[] = [
     price: 3500,
     updatedAt: 'Today • 2:50 PM',
   },
-  {
-    id: 4,
-    rank: 4,
-    name: '24" Monitor',
-    class: 'Electronics',
-    quantity: 95,
-    totalRevenue: 855000,
-    price: 9000,
-    updatedAt: 'Today • 2:10 PM',
-  },
-  {
-    id: 5,
-    rank: 5,
-    name: 'USB-C Hub',
-    class: 'Accessories',
-    quantity: 180,
-    totalRevenue: 270000,
-    price: 1500,
-    updatedAt: 'Today • 1:40 PM',
-  },
 ];
 
 const TodaysTopHits = () => {
-  const maxQuantity = Math.max(...topProducts.map((product) => product.quantity));
+  const maxQuantity = Math.max(
+    ...topProducts.map((product) => product.quantity),
+  );
   const rankPalette = [
     {
-      border: 'border-amber-400',
-      badge: 'border-amber-400 text-amber-500',
-      bar: 'bg-amber-400',
+      border: 'border-[#FFD700]',
+      badge: 'border-[#FFD700] text-[#FFD700]',
+      bar: 'bg-[#FFD700]',
     },
     {
-      border: 'border-slate-400',
-      badge: 'border-slate-400 text-slate-400',
-      bar: 'bg-slate-400',
+      border: 'border-[#C0C0C0]',
+      badge: 'border-[#C0C0C0] text-[#C0C0C0]',
+      bar: 'bg-[#C0C0C0]',
     },
     {
-      border: 'border-orange-500',
-      badge: 'border-orange-500 text-orange-500',
-      bar: 'bg-orange-500',
-    },
-    {
-      border: 'border-sky-500',
-      badge: 'border-sky-500 text-sky-500',
-      bar: 'bg-sky-500',
-    },
-    {
-      border: 'border-violet-500',
-      badge: 'border-violet-500 text-violet-500',
-      bar: 'bg-violet-500',
+      border: 'border-[#CD7F32]',
+      badge: 'border-[#CD7F32] text-[#CD7F32]',
+      bar: 'bg-[#CD7F32]',
     },
   ];
 
@@ -103,12 +75,12 @@ const TodaysTopHits = () => {
         const remainingPct = 100 - quantityPct;
         const progressTone =
           remainingPct < 25
-            ? 'bg-red-500'
+            ? 'bg-(--accent-negative)'
             : remainingPct < 50
               ? 'bg-orange-500'
               : remainingPct < 75
                 ? 'bg-yellow-400'
-                : 'bg-emerald-500';
+                : 'bg-(--accent-positive)';
 
         return (
           <li
