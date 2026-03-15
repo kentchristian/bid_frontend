@@ -1,4 +1,5 @@
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
+import MoneyInSales from '../components/cards/MoneyInSales';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
 import TotalUnitsSoldCard from '../components/cards/TotalUnitsSoldCard';
 import InventoryHealthPieChart from '../components/charts/InventoryHealthPieChart';
@@ -34,6 +35,10 @@ const Dashboard = () => {
         <div className="rounded-md border w-full h-full flex justify-center items-center">
           <InventoryHealthPieChart />
         </div>
+      </div>
+
+      <div>
+        <MoneyInSales />
       </div>
     </PageContainer>
   );
