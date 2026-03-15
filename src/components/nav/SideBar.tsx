@@ -1,5 +1,4 @@
 import { Button } from '@mui/material';
-import { useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
 
@@ -15,11 +14,17 @@ interface SideBarProps {
   mode: 'light' | 'dark';
   onToggleMode: () => void;
   className?: string;
+  collapsed: boolean;
+  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({ mode, onToggleMode, className }: SideBarProps) => {
-  const [collapsed, setCollapsed] = useState(false);
-
+const SideBar = ({
+  mode,
+  onToggleMode,
+  className,
+  collapsed,
+  setCollapsed,
+}: SideBarProps) => {
   const logoSrc = mode === 'dark' ? '/logo.svg' : '/logo-light.svg';
 
   const labelTransition = cn(
@@ -31,7 +36,7 @@ const SideBar = ({ mode, onToggleMode, className }: SideBarProps) => {
   return (
     <aside
       className={cn(
-        'transition-[width] duration-500 ease-in flex flex-col overflow-hidden will-change-[width] hover:cursor-pointer',
+        'transition-[width] duration-500 ease-in flex shrink-0 flex-col overflow-hidden will-change-[width] hover:cursor-pointer',
         collapsed ? 'w-16' : 'w-64',
         className,
       )}

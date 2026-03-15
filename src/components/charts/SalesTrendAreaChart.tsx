@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import CardContainer from '../common/CardContainer';
 
 const data = [
   { day: 'Mon', sales: 1200 },
@@ -19,32 +20,38 @@ const data = [
 
 const SalesTrendAreaChart = () => {
   return (
-    <ResponsiveContainer width="100%" maxHeight={250}>
-      <AreaChart
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        <defs>
-          {/* Gradient for the shadow/fill under the line */}
-          <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6} />
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <XAxis dataKey="day" />
-        <YAxis />
-        <Tooltip />
+    <CardContainer
+      title="Sales Trend (Last 7 Days)"
+      info="Shows the List Per day within 7  days"
+      className="flex-1 min-w-0"
+    >
+      <ResponsiveContainer width="100%" maxHeight={300}>
+        <AreaChart
+          data={data}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+        >
+          <defs>
+            {/* Gradient for the shadow/fill under the line */}
+            <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="day" />
+          <YAxis />
+          <Tooltip />
 
-        {/* Area with line and shadow */}
-        <Area
-          type="monotone"
-          dataKey="sales"
-          stroke="#8884d8" // line color
-          fill="url(#colorSales)" // gradient fill under the line
-          activeDot={{ r: 8 }}
-        />
-      </AreaChart>
-    </ResponsiveContainer>
+          {/* Area with line and shadow */}
+          <Area
+            type="monotone"
+            dataKey="sales"
+            stroke="#8884d8" // line color
+            fill="url(#colorSales)" // gradient fill under the line
+            activeDot={{ r: 8 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </CardContainer>
   );
 };
 

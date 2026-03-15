@@ -29,7 +29,10 @@ const TotalRevenueCard = ({
   );
 
   return (
-    <div id="overview-card" className={cn('flex flex-col gap-2 p-2 w-full')}>
+    <div
+      id="overview-card"
+      className={cn('flex flex-col gap-2 p-2 flex-1 min-w-0')}
+    >
       <div className="flex flex-row justify-between items-center">
         <Typography>{title}</Typography>
         <Chip

@@ -34,7 +34,7 @@ const CardContainer = ({
   return (
     <div
       className={cn(
-        'w-full h-full min-w-0 rounded-2xl p-6 shadow-xl transition-colors duration-300',
+        'w-full h-full min-w-0 rounded-2xl p-6 shadow-xl transition-colors duration-300 flex flex-col',
         className,
       )}
       style={{ backgroundColor: 'var(--card)', color: 'var(--main-text)' }}
@@ -58,7 +58,7 @@ const CardContainer = ({
       )}
 
       {/* Body */}
-      <div className="w-full h-full">
+      <div className="w-full h-full min-h-0 flex-1 flex flex-col">
         {/* Loading State (ONE skeleton only) */}
         {loading && (
           <Skeleton
@@ -79,7 +79,9 @@ const CardContainer = ({
         )}
 
         {/* Content */}
-        {!loading && !isEmpty && <div className="h-full">{children}</div>}
+        {!loading && !isEmpty && (
+          <div className="h-full min-h-0 flex-1">{children}</div>
+        )}
       </div>
     </div>
   );

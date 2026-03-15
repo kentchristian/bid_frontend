@@ -1,4 +1,3 @@
-import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 
 const MoneyInSales = () => {
@@ -6,7 +5,7 @@ const MoneyInSales = () => {
     { field: 'time', headerName: 'Time', flex: 1 },
     { field: 'customer', headerName: 'Customer', flex: 1 },
     { field: 'product', headerName: 'Product', flex: 1 },
-    { field: 'quantity', headerName: 'Quantity', flex: 1 },
+    { field: 'quantity', headerName: 'Quantity', flex: 0.5 },
     { field: 'total', headerName: 'Total', flex: 1 },
   ];
 
@@ -53,11 +52,7 @@ const MoneyInSales = () => {
     },
   ];
 
-  return (
-    <CardContainer title="Money in Sales Feed" className="min-w-0 max-w-120">
-      <DynamicDataGrid columns={columns} rows={rows} />
-    </CardContainer>
-  );
+  return <DynamicDataGrid columns={columns} rows={rows} />;
 };
 
 export default MoneyInSales;
