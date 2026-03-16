@@ -11,7 +11,13 @@ const PageContainer = ({
 }: ContainerType) => {
   return (
     // add that customizable className
-    <div className={cn('w-full h-full p-4', SCROLLBAR_CONFIG, className)}>
+    <div
+      className={cn(
+        'page-container w-full h-full p-4',
+        SCROLLBAR_CONFIG,
+        className,
+      )}
+    >
       {
         //TODO: create a custom loading component
         loading && loading.isLoading && <div>Loading... </div>

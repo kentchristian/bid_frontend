@@ -13,7 +13,7 @@ import WareHouseInventory from '../components/tables/WareHoustInventory';
 const Dashboard = () => {
   return (
     <PageContainer className="gap-2 flex flex-col">
-      <div className="flex flex-row gap-2">
+      <div className="dashboard-row flex flex-row gap-2">
         <TotalRevenueCard
           title={'Total Revenue'}
           totalRevenueToday={12}
@@ -30,13 +30,13 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex flex-row gap-2">
+      <div className="dashboard-row flex flex-row gap-2">
         {/* Need card Container for now */}
         <SalesTrendAreaChart />
         <InventoryHealthPieChart />
       </div>
 
-      <div className="flex flex-row gap-2">
+      <div className="dashboard-row flex flex-row gap-2">
         <CardContainer
           title="Money in Sales Feed"
           info="Presents a transactional log of sales activity.

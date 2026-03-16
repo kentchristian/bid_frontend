@@ -1,0 +1,86 @@
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+    height: 100dvh;
+  }
+
+  .sidebar-shell {
+    width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .sidebar-desktop {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 1200;
+  }
+
+  .page-container {
+    padding: 12px;
+  }
+
+  .dashboard-row {
+    flex-direction: column;
+  }
+
+  .dashboard-row > * {
+    width: 100%;
+  }
+
+  .card-container {
+    padding: 16px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .card-header .MuiSwitch-root {
+    align-self: flex-start;
+  }
+
+  .data-grid-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-grid-wrapper .MuiDataGrid-root {
+    min-width: 680px;
+  }
+
+  .MuiDataGrid-columnHeaders,
+  .MuiDataGrid-cell {
+    font-size: 0.8rem;
+  }
+
+  .top-hits-item {
+    padding: 12px;
+  }
+
+  .top-hits-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .top-hits-meta {
+    width: 100%;
+    text-align: left;
+  }
+
+  .top-hits-progress {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .top-hits-bar {
+    width: 100%;
+  }
+}

@@ -35,14 +35,14 @@ const CardContainer = ({
   return (
     <div
       className={cn(
-        'w-full h-full min-w-0 rounded-2xl p-6 shadow-xl transition-colors duration-300 flex flex-col',
+        'card-container w-full h-full min-w-0 rounded-2xl p-6 shadow-xl transition-colors duration-300 flex flex-col',
         className,
       )}
       style={{ backgroundColor: 'var(--card)', color: 'var(--main-text)' }}
     >
       {/* Header */}
       {!loading && (
-        <div className="flex justify-between items-center mb-6">
+        <div className="card-header flex justify-between items-center mb-6">
           <div className="flex flex-row items-center gap-2">
             <Typography variant="h3" className="text-lg font-semibold">
               {title}

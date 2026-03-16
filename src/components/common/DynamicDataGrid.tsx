@@ -15,7 +15,9 @@ const DynamicDataGrid = ({
   className,
 }: DynamicDataGridProps) => {
   return (
-    <div className={cn('w-full min-w-0 flex-1 h-full', className)}>
+    <div
+      className={cn('data-grid-wrapper w-full min-w-0 flex-1 h-full', className)}
+    >
       <DataGrid
         rows={rows}
         columns={columns}
