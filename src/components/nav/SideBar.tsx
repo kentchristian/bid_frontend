@@ -1,31 +1,31 @@
 import { Button } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
+import { useThemeMode, useToggleMode } from '../../lib/store/useMode';
 
 const navItems = [
-  { name: 'Dashboard', icon: <icons.dashboard size={20} />, href: '/' },
-  { name: 'Sales', icon: <icons.sales size={20} />, href: '/' },
-  { name: 'Inventory', icon: <icons.inventory size={20} />, href: '/' },
-  { name: 'Reports', icon: <icons.reports size={20} />, href: '/' },
+  { name: 'Dashboard', icon: <icons.dashboard size={20} />, to: '/' },
+  { name: 'Sales', icon: <icons.sales size={20} />, to: '/sales' },
+  { name: 'Inventory', icon: <icons.inventory size={20} />, to: '/inventory' },
+  { name: 'Reports', icon: <icons.reports size={20} />, to: '/reports' },
 ];
 
 // 2nd Layer Interface
 interface SideBarProps {
-  mode: 'light' | 'dark';
-  onToggleMode: () => void;
   className?: string;
-  collapsed: boolean;
-  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({
-  mode,
-  onToggleMode,
-  className,
-  collapsed,
-  setCollapsed,
-}: SideBarProps) => {
+const SideBar = ({ className }: SideBarProps) => {
+  const mode = useThemeMode();
+  const toggleMode = useToggleMode();
+  const [collapsed, setCollapsed] = useState(false);
   const logoSrc = mode === 'dark' ? '/logo.svg' : '/logo-light.svg';
+
+  useEffect(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, [collapsed]);
 
   const labelTransition = cn(
     'overflow-hidden whitespace-nowrap transition-[opacity,transform,max-width] duration-500 ease-in-out',
@@ -78,7 +78,9 @@ const SideBar = ({
         {navItems.map((item) => (
           <Button
             key={item.name}
-            href={item.href}
+            component={NavLink}
+            to={item.to}
+            end={item.to === '/'}
             fullWidth
             sx={{
               justifyContent: 'flex-start',
@@ -93,6 +95,9 @@ const SideBar = ({
                 backgroundColor: 'var(--sidebar-hover)',
                 color: 'inherit',
               },
+              '&[aria-current="page"]': {
+                backgroundColor: 'var(--sidebar-active)',
+              },
             }}
           >
             {item.icon}
@@ -101,7 +106,7 @@ const SideBar = ({
         ))}
 
         <Button
-          onClick={onToggleMode}
+          onClick={toggleMode}
           fullWidth
           aria-label={
             mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
