@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Drawer, IconButton } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
 import { icons } from '../../lib/constants/icons';
@@ -21,140 +21,199 @@ const SideBar = ({ className }: SideBarProps) => {
   const mode = useThemeMode();
   const toggleMode = useToggleMode();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const logoSrc = mode === 'dark' ? '/logo.svg' : '/logo-light.svg';
 
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
   }, [collapsed]);
 
-  const labelTransition = cn(
-    'overflow-hidden whitespace-nowrap transition-[opacity,transform,max-width] duration-500 ease-in-out',
-    collapsed
-      ? 'max-w-0 opacity-0 -translate-x-2'
-      : 'max-w-full opacity-100 translate-x-0',
-  );
-  return (
-    <aside
-      className={cn(
-        'transition-[width] duration-500 ease-in flex shrink-0 flex-col overflow-hidden will-change-[width] hover:cursor-pointer',
-        collapsed ? 'w-16' : 'w-64',
-        className,
-      )}
-    >
-      <div className="flex items-center justify-between px-3 pt-3">
-        <div
-          className={cn(
-            'flex items-center gap-2 transition-[opacity,transform,max-width] duration-500 ease-in-out overflow-hidden',
-            collapsed
-              ? 'max-w-0 opacity-0 -translate-x-2'
-              : 'max-w-full opacity-100 translate-x-0',
-          )}
-        >
-          <img src={logoSrc} alt="BID logo" className="h-30 w-auto" />
-        </div>
+  const getLabelTransition = (isCollapsed: boolean) =>
+    cn(
+      'overflow-hidden whitespace-nowrap transition-[opacity,transform,max-width] duration-500 ease-in-out',
+      isCollapsed
+        ? 'max-w-0 opacity-0 -translate-x-2'
+        : 'max-w-full opacity-100 translate-x-0',
+    );
 
+  const navButtonSx = (isCollapsed: boolean) => ({
+    justifyContent: 'flex-start',
+    gap: isCollapsed ? 0 : 1.5,
+    px: isCollapsed ? 2.75 : 2,
+    py: 1.25,
+    minHeight: 44,
+    transition: 'padding 500ms ease-in-out, gap 500ms ease-in-out',
+    textAlign: 'left',
+    color: 'inherit',
+    '&:hover': {
+      backgroundColor: 'var(--sidebar-hover)',
+      color: 'inherit',
+    },
+    '&[aria-current="page"]': {
+      backgroundColor: 'var(--sidebar-active)',
+    },
+  });
+
+  const handleMobileToggle = () => setMobileOpen((prev) => !prev);
+  const handleMobileClose = () => setMobileOpen(false);
+
+  const renderNavItems = (isCollapsed: boolean, onItemClick?: () => void) => (
+    <nav className="flex flex-1 flex-col mt-4 gap-2">
+      {navItems.map((item) => (
         <Button
-          onClick={() => setCollapsed(!collapsed)}
-          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          key={item.name}
+          component={NavLink}
+          to={item.to}
+          end={item.to === '/'}
+          fullWidth
+          onClick={onItemClick}
+          sx={navButtonSx(isCollapsed)}
+        >
+          {item.icon}
+          <span className={getLabelTransition(isCollapsed)}>{item.name}</span>
+        </Button>
+      ))}
+
+      <Button
+        onClick={() => {
+          toggleMode();
+          onItemClick?.();
+        }}
+        fullWidth
+        aria-label={
+          mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+        }
+        sx={{
+          mt: 'auto',
+          ...navButtonSx(isCollapsed),
+        }}
+      >
+        <span className="relative inline-flex h-5 w-5">
+          <span
+            className={cn(
+              'absolute inset-0 transition-all duration-200 ease-out',
+              mode === 'light'
+                ? 'opacity-100 rotate-0'
+                : 'opacity-0 -rotate-180',
+            )}
+          >
+            <icons.darkMode size={20} />
+          </span>
+          <span
+            className={cn(
+              'absolute inset-0 transition-all duration-200 ease-out',
+              mode === 'light'
+                ? 'opacity-0 rotate-180'
+                : 'opacity-100 rotate-0',
+            )}
+          >
+            <icons.lightMode size={20} />
+          </span>
+        </span>
+        <span className={getLabelTransition(isCollapsed)}>
+          {mode === 'light' ? 'Dark Mode' : 'Light Mode'}
+        </span>
+      </Button>
+    </nav>
+  );
+
+  return (
+    <div className="sidebar-shell">
+      <div className="mobile-nav">
+        <IconButton
+          onClick={handleMobileToggle}
+          aria-label="Open navigation menu"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav-drawer"
           sx={{
-            minWidth: 0,
-            fontSize: 30,
             color: 'inherit',
             '&:hover': {
               backgroundColor: 'var(--sidebar-hover)',
-              color: 'inherit',
             },
           }}
         >
-          {collapsed ? (
-            <icons.expand size={20} />
-          ) : (
-            <icons.collapse size={20} />
-          )}
-        </Button>
+          <icons.menu size={24} />
+        </IconButton>
+        <img src={logoSrc} alt="BID logo" className="mobile-nav__logo" />
+        <span className="h-10 w-10" aria-hidden="true" />
       </div>
 
-      <nav className="flex flex-1 flex-col mt-4 gap-2">
-        {navItems.map((item) => (
+      <aside
+        className={cn(
+          'sidebar-desktop transition-[width] duration-500 ease-in flex shrink-0 flex-col overflow-hidden will-change-[width] hover:cursor-pointer',
+          collapsed ? 'w-16' : 'w-64',
+          className,
+        )}
+      >
+        <div className="flex items-center justify-between px-3 pt-3">
+          <div
+            className={cn(
+              'flex items-center gap-2 transition-[opacity,transform,max-width] duration-500 ease-in-out overflow-hidden',
+              collapsed
+                ? 'max-w-0 opacity-0 -translate-x-2'
+                : 'max-w-full opacity-100 translate-x-0',
+            )}
+          >
+            <img
+              src={logoSrc}
+              alt="BID logo"
+              className="app-logo h-30 w-auto"
+            />
+          </div>
+
           <Button
-            key={item.name}
-            component={NavLink}
-            to={item.to}
-            end={item.to === '/'}
-            fullWidth
+            onClick={() => setCollapsed(!collapsed)}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             sx={{
-              justifyContent: 'flex-start',
-              gap: collapsed ? 0 : 1.5,
-              px: collapsed ? 2.75 : 2,
-              py: 1.25,
-              minHeight: 44,
-              transition: 'padding 500ms ease-in-out, gap 500ms ease-in-out',
-              textAlign: 'left',
+              minWidth: 0,
+              fontSize: 30,
               color: 'inherit',
               '&:hover': {
                 backgroundColor: 'var(--sidebar-hover)',
                 color: 'inherit',
               },
-              '&[aria-current="page"]': {
-                backgroundColor: 'var(--sidebar-active)',
+            }}
+          >
+            {collapsed ? (
+              <icons.expand size={20} />
+            ) : (
+              <icons.collapse size={20} />
+            )}
+          </Button>
+        </div>
+
+        {renderNavItems(collapsed)}
+      </aside>
+
+      <Drawer
+        open={mobileOpen}
+        onClose={handleMobileClose}
+        ModalProps={{ keepMounted: true }}
+        PaperProps={{
+          id: 'mobile-nav-drawer',
+          className: 'mobile-drawer',
+        }}
+      >
+        <div className="mobile-drawer__header">
+          <div className="mobile-drawer__brand">
+            <img src={logoSrc} alt="BID logo" className="mobile-nav__logo" />
+          </div>
+          <IconButton
+            onClick={handleMobileClose}
+            aria-label="Close navigation menu"
+            sx={{
+              color: 'inherit',
+              '&:hover': {
+                backgroundColor: 'var(--sidebar-hover)',
               },
             }}
           >
-            {item.icon}
-            <span className={labelTransition}>{item.name}</span>
-          </Button>
-        ))}
-
-        <Button
-          onClick={toggleMode}
-          fullWidth
-          aria-label={
-            mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
-          }
-          sx={{
-            mt: 'auto',
-            justifyContent: 'flex-start',
-            gap: collapsed ? 0 : 1.5,
-            px: collapsed ? 2.75 : 2,
-            py: 1.25,
-            minHeight: 44,
-            transition: 'padding 500ms ease-in-out, gap 500ms ease-in-out',
-            textAlign: 'left',
-            color: 'inherit',
-            '&:hover': {
-              backgroundColor: 'var(--sidebar-hover)',
-              color: 'inherit',
-            },
-          }}
-        >
-          <span className="relative inline-flex h-5 w-5">
-            <span
-              className={cn(
-                'absolute inset-0 transition-all duration-200 ease-out',
-                mode === 'light'
-                  ? 'opacity-100 rotate-0'
-                  : 'opacity-0 -rotate-180',
-              )}
-            >
-              <icons.darkMode size={20} />
-            </span>
-            <span
-              className={cn(
-                'absolute inset-0 transition-all duration-200 ease-out',
-                mode === 'light'
-                  ? 'opacity-0 rotate-180'
-                  : 'opacity-100 rotate-0',
-              )}
-            >
-              <icons.lightMode size={20} />
-            </span>
-          </span>
-          <span className={labelTransition}>
-            {mode === 'light' ? 'Dark Mode' : 'Light Mode'}
-          </span>
-        </Button>
-      </nav>
-    </aside>
+            <icons.close size={20} />
+          </IconButton>
+        </div>
+        {renderNavItems(false, handleMobileClose)}
+      </Drawer>
+    </div>
   );
 };
 

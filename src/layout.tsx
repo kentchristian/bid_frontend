@@ -4,7 +4,7 @@ import SideBar from './components/nav/SideBar';
 
 const Layout = () => {
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="app-shell flex h-screen overflow-hidden">
       {/* Sidebar */}
       <SideBar />
       {/* Main content Version 1*/}
@@ -17,7 +17,7 @@ const Layout = () => {
         </main>
       </div> */}
 
-      <main className="flex-1 min-w-0 min-h-0">
+      <main className="app-main flex-1 min-w-0 min-h-0">
         <Outlet />
       </main>
     </div>

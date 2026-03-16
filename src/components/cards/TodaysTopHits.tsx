@@ -91,9 +91,9 @@ const TodaysTopHits = () => {
         return (
           <li
             key={product.id}
-            className={`group rounded-2xl border-2 p-4 shadow-sm transition-all duration-300 hover:shadow-md bg-[color:var(--sidebar-bg)] ${rankStyle.border}`}
+            className={`top-hits-item group rounded-2xl border-2 p-4 shadow-sm transition-all duration-300 hover:shadow-md bg-[color:var(--sidebar-bg)] ${rankStyle.border}`}
           >
-            <div className="flex items-start justify-between gap-4">
+            <div className="top-hits-row flex items-start justify-between gap-4">
               <div className="flex items-start gap-4">
                 <div className="flex flex-col items-center h-15 w-15">
                   {product.rankSymbol}
@@ -132,7 +132,7 @@ const TodaysTopHits = () => {
                 </div>
               </div>
 
-              <div className="text-right">
+              <div className="top-hits-meta text-right">
                 <Typography
                   variant="body-lg"
                   weight={600}
@@ -149,8 +149,8 @@ const TodaysTopHits = () => {
                   ₱ {product.price.toLocaleString()} / unit
                 </Typography>
 
-                <div className="mt-2 flex items-center justify-end gap-2">
-                  <div className="h-1.5 w-24 rounded-full bg-[color:var(--card-border)]">
+                <div className="top-hits-progress mt-2 flex items-center justify-end gap-2">
+                  <div className="top-hits-bar h-1.5 w-24 rounded-full bg-[color:var(--card-border)]">
                     <div
                       className={`h-1.5 rounded-full ${progressTone}`}
                       style={{ width: `${quantityPct}%` }}

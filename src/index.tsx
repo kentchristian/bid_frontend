@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
-import './App.css';
+import './lib/styles/global.css';
 import router from './routes/route-config';
 
 const applyInitialTheme = () => {
