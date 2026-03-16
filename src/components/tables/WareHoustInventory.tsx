@@ -1,6 +1,23 @@
+import { Button } from '@mui/material';
+import { FiEdit2, FiMinus, FiPlus } from 'react-icons/fi';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 
 const WareHouseInventory = () => {
+  const actionButtonSx = (colorVar: string) => ({
+    minWidth: 0,
+    width: 36,
+    height: 36,
+    padding: 0,
+    borderRadius: 0.5,
+    borderColor: `var(${colorVar})`,
+    color: `var(${colorVar})`,
+    backgroundColor: 'transparent',
+    '&:hover': {
+      borderColor: `var(${colorVar})`,
+      backgroundColor: 'transparent',
+    },
+  });
+
   const columns = [
     { field: 'name', headerName: 'Product Name', flex: 2 },
     { field: 'category', headerName: 'Category', flex: 1 },
@@ -14,25 +31,31 @@ const WareHouseInventory = () => {
       renderCell: (params: any) => {
         const { id } = params.row;
         return (
-          <div className="flex gap-2 p-2">
-            <button
-              className="px-2 h-10 bg-green-500 text-white rounded hover:bg-green-600"
+          <div className="flex items-center justify-start gap-2 p-2">
+            <Button
+              aria-label={`Add stock for ID ${id}`}
+              variant="outlined"
+              sx={actionButtonSx('--accent-positive')}
               onClick={() => alert(`Add stock for ID ${id}`)}
             >
-              +
-            </button>
-            <button
-              className="px-2 bg-red-500 text-white rounded hover:bg-red-600"
+              <FiPlus size={16} />
+            </Button>
+            <Button
+              aria-label={`Minus stock for ID ${id}`}
+              variant="outlined"
+              sx={actionButtonSx('--accent-negative')}
               onClick={() => alert(`Minus stock for ID ${id}`)}
             >
-              -
-            </button>
-            <button
-              className="px-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              <FiMinus size={16} />
+            </Button>
+            <Button
+              aria-label={`Edit product ID ${id}`}
+              variant="outlined"
+              sx={actionButtonSx('--accent-primary')}
               onClick={() => alert(`Edit product ID ${id}`)}
             >
-              Edit
-            </button>
+              <FiEdit2 size={16} />
+            </Button>
           </div>
         );
       },

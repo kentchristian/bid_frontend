@@ -113,3 +113,54 @@ main {
   font-weight: 400;
   opacity: 0.5;
 }
+
+
+
+
+
+
+
+
+/* Loading Styles**/
+
+
+.money-loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 16px;
+}
+
+/* Coin */
+.coin {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #FFD700, #FFC300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #7a5c00;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  animation: spinCoin 1s linear infinite;
+}
+
+/* Text */
+.loading-text {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+/* Spinning Animation */
+@keyframes spinCoin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}

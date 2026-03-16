@@ -22,7 +22,8 @@ const InventoryHealthPieChart = () => {
   return (
     <CardContainer
       title="Inventory Health"
-      info="Shows Inventory Pie Chart to visualize the ratio of stocks needing attention."
+      info="Represents the current inventory distribution by stock condition.
+Categorizes products into Healthy Stock, Low Stock, and Out of Stock based on reorder thresholds."
       className="flex-1 min-w-0"
     >
       <ResponsiveContainer width="100%" height={300}>

@@ -51,7 +51,7 @@ const TotalRevenueCard = ({
 
       <div className="flex flex-row">
         <span>{mdArrow}</span>
-        <Typography>{trendRate}%vs Yesterday</Typography>
+        <Typography>{trendRate}% vs Yesterday</Typography>
       </div>
     </div>
   );

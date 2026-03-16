@@ -1,4 +1,3 @@
-import { Switch } from '@mui/material';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -37,10 +36,20 @@ const Dashboard = () => {
       </div>
 
       <div className="flex flex-row gap-2">
-        <CardContainer title="Money in Sales Feed" className="flex-1 min-w-0">
+        <CardContainer
+          title="Money in Sales Feed"
+          info="Presents a transactional log of sales activity.
+Includes time of transaction, customer, product purchased, quantity sold, and total revenue generated."
+          className="flex-1 min-w-0"
+        >
           <MoneyInSales />
         </CardContainer>
-        <CardContainer title="Today’s Top Hits" className="flex-1 min-w-0">
+        <CardContainer
+          title="Today’s Top Hits"
+          info="Ranks the top-performing products for the current day based on total accumulated sales.
+Displays revenue generated, quantity sold, remaining inventory, unit price, product classification, and latest update timestamp."
+          className="flex-1 min-w-0"
+        >
           <TodaysTopHits />
         </CardContainer>
       </div>
@@ -48,7 +57,9 @@ const Dashboard = () => {
       <CardContainer
         title="Warehouse Inventory"
         className="flex-1 min-w-0"
-        toolBar={<Switch />}
+        info="Provides a structured view of warehouse stock levels.
+Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
+        // toolBar={<Switch />}
       >
         <WareHouseInventory />
       </CardContainer>
