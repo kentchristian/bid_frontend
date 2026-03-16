@@ -1,3 +1,4 @@
+import { formatUnit } from '../../lib/utils/formatUnit';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 
 const MoneyInSales = () => {
@@ -6,7 +7,12 @@ const MoneyInSales = () => {
     { field: 'customer', headerName: 'Customer', flex: 1 },
     { field: 'product', headerName: 'Product', flex: 1 },
     { field: 'quantity', headerName: 'Quantity', flex: 0.5 },
-    { field: 'total', headerName: 'Total', flex: 1 },
+    {
+      field: 'total',
+      headerName: 'Total',
+      flex: 1,
+      valueFormatter: (params: number) => formatUnit(params, 'PHP'),
+    },
   ];
 
   const rows = [

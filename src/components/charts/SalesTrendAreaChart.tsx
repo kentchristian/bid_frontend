@@ -6,6 +6,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { formatUnit } from '../../lib/utils/formatUnit';
 import CardContainer from '../common/CardContainer';
 
 const data = [
@@ -39,7 +40,10 @@ const SalesTrendAreaChart = () => {
             </linearGradient>
           </defs>
           <XAxis dataKey="day" />
-          <YAxis />
+          <YAxis
+            tickFormatter={(value) => formatUnit(value, 'PHP')}
+            fontSize={15}
+          />
           <Tooltip />
 
           {/* Area with line and shadow */}
