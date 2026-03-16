@@ -1,22 +1,28 @@
+import { QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import './lib/styles/global.css';
 import { MiddlewareProvider } from './middleware/MiddlewareProvider';
 import router from './routes/route-config';
+import { queryClient } from './services/queryClient';
 
 const applyInitialTheme = () => {
   if (typeof window === 'undefined') return;
 
   const stored = window.localStorage.getItem('theme-mode');
-  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  const prefersDark = window.matchMedia?.(
+    '(prefers-color-scheme: dark)',
+  ).matches;
   let resolvedMode: 'light' | 'dark' | null = null;
 
   if (stored === 'light' || stored === 'dark') {
     resolvedMode = stored;
   } else if (stored) {
     try {
-      const parsed = JSON.parse(stored) as { state?: { mode?: 'light' | 'dark' } };
+      const parsed = JSON.parse(stored) as {
+        state?: { mode?: 'light' | 'dark' };
+      };
       const mode = parsed?.state?.mode;
       resolvedMode = mode === 'light' || mode === 'dark' ? mode : null;
     } catch {
@@ -38,7 +44,9 @@ if (rootEl) {
   root.render(
     <React.StrictMode>
       <MiddlewareProvider>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </MiddlewareProvider>
     </React.StrictMode>,
   );

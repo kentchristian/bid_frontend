@@ -11,16 +11,35 @@ import { Navigate, useLocation } from 'react-router';
 
 type MiddlewareContextValue = {
   isAuthenticated: boolean;
-  setAuthenticated: (value: boolean) => void;
+  setAuthenticated: (value: boolean, options?: SetAuthenticatedOptions) => void;
 };
 
 const MiddlewareContext = createContext<MiddlewareContextValue | null>(null);
 
 const STORAGE_KEY = 'bid.authenticated';
+// Update this name if your backend exposes a readable auth cookie.
+const AUTH_COOKIE_NAME = 'bid.authenticated';
+
+type SetAuthenticatedOptions = {
+  remember?: boolean;
+};
+
+const readCookie = (name: string) => {
+  if (typeof document === 'undefined') return null;
+  const escaped = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${escaped}=([^;]*)`),
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+};
 
 const readStoredAuth = () => {
   if (typeof window === 'undefined') return false;
-  return window.localStorage.getItem(STORAGE_KEY) === 'true';
+  const cookieValue = readCookie(AUTH_COOKIE_NAME);
+  if (cookieValue !== null) return cookieValue === 'true';
+  const localValue = window.localStorage.getItem(STORAGE_KEY);
+  if (localValue === 'true') return true;
+  return window.sessionStorage.getItem(STORAGE_KEY) === 'true';
 };
 
 export const MiddlewareProvider = ({ children }: { children: ReactNode }) => {
@@ -30,10 +49,14 @@ export const MiddlewareProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(readStoredAuth());
   }, []);
 
-  const setAuthenticated = (value: boolean) => {
+  const setAuthenticated = (value: boolean, options?: SetAuthenticatedOptions) => {
     setIsAuthenticated(value);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(STORAGE_KEY, value ? 'true' : 'false');
+      const remember = options?.remember ?? true;
+      const primaryStorage = remember ? window.localStorage : window.sessionStorage;
+      const secondaryStorage = remember ? window.sessionStorage : window.localStorage;
+      primaryStorage.setItem(STORAGE_KEY, value ? 'true' : 'false');
+      secondaryStorage.setItem(STORAGE_KEY, 'false');
     }
   };
 

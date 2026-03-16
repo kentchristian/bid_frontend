@@ -1,21 +1,58 @@
 import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
-import { Link } from 'react-router';
+import { useMutation } from '@tanstack/react-query';
+import { useState, type FormEvent } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { login } from '../../api/auth';
 import AuthCard from '../../components/common/AuthCard';
 import { Typography } from '../../components/common/Typography';
+import { useMiddleware } from '../../middleware/MiddlewareProvider';
+
+type LocationState = {
+  from?: { pathname: string };
+};
 
 export const Login = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setAuthenticated } = useMiddleware();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      setAuthenticated(true, { remember: rememberMe });
+      const from =
+        (location.state as LocationState | null)?.from?.pathname ??
+        '/dashboard';
+      navigate(from, { replace: true });
+    },
+    onError: () => {
+      setFormError(
+        'Login failed. Please check your credentials and try again.',
+      );
+    },
+  });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormError(null);
+    loginMutation.mutate({ email: email.trim(), password });
+  };
+
   return (
     <AuthCard title="Login">
-      <form
-        className="flex flex-col gap-4"
-        onSubmit={(event) => event.preventDefault()}
-      >
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <TextField
           label="Email"
           variant="outlined"
           fullWidth
           type="email"
           required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
         />
         <TextField
           label="Password"
@@ -23,11 +60,18 @@ export const Login = () => {
           fullWidth
           type="password"
           required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
         />
 
         <div className="flex items-center justify-between">
           <FormControlLabel
-            control={<Checkbox />}
+            control={
+              <Checkbox
+                checked={rememberMe}
+                onChange={(event) => setRememberMe(event.target.checked)}
+              />
+            }
             label="Remember me"
             className="text-gray-600"
           />
@@ -36,14 +80,19 @@ export const Login = () => {
           </a>
         </div>
 
+        {formError ? (
+          <Typography className="text-sm text-red-600">{formError}</Typography>
+        ) : null}
+
         <Button
           variant="contained"
           color="primary"
           type="submit"
           className="mt-2 py-2"
           fullWidth
+          disabled={loginMutation.isPending}
         >
-          Login
+          {loginMutation.isPending ? 'Logging in...' : 'Login'}
         </Button>
 
         <Typography className="text-center text-gray-500 text-sm mt-4">
