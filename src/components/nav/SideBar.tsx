@@ -154,11 +154,7 @@ const SideBar = ({ className }: SideBarProps) => {
                 : 'max-w-full opacity-100 translate-x-0',
             )}
           >
-            <img
-              src={logoSrc}
-              alt="BID logo"
-              className="app-logo h-30 w-auto"
-            />
+            <img src={logoSrc} alt="BID logo" className="app-logo h-30" />
           </div>
 
           <Button

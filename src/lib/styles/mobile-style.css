@@ -1,7 +1,4 @@
 @media (max-width: 768px) {
-  .app-logo {
-    height: 80rem;
-  }
 
   .app-shell {
     flex-direction: column;
@@ -89,5 +86,3 @@
     width: 100%;
   }
 }
-
-
