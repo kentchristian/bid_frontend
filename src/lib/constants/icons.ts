@@ -5,6 +5,7 @@ import { IoIosTrendingUp } from "react-icons/io";
 import { IoTrendingDownSharp } from "react-icons/io5";
 import { MdArrowDropDown, MdArrowDropUp, MdDashboard, MdInventory, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
+import { first, second, third } from "../../assets/rank-icons";
 
 export const icons = {
   expand: GoSidebarCollapse,
@@ -21,5 +22,11 @@ export const icons = {
   mdArrowDown: MdArrowDropDown,
   arrowUp: GoArrowUp,
   arrowDown: GoArrowDown,
+
+
+  // Ranked Icons
+  first: first,
+  second: second,
+  third: third,
 
 };

@@ -9,6 +9,7 @@ export interface CardContainerProps {
   info?: string;
   toolBar?: React.ReactNode;
   children: React.ReactNode;
+  customFunction?: React.ReactNode;
 
   loading?: boolean;
   isEmpty?: boolean;
@@ -25,6 +26,7 @@ const CardContainer = ({
   isEmpty = false,
   emptyMessage = 'No data available',
   className,
+  customFunction,
 }: CardContainerProps) => {
   const resolvedtoolBar = toolBar ?? <InfoOutlinedIcon fontSize="small" />;
   const tooltipMessage = info ?? '';
@@ -40,19 +42,25 @@ const CardContainer = ({
     >
       {/* Header */}
       {!loading && (
-        <div className="flex justify-between items-start mb-6">
-          <div>
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-row items-center gap-2">
             <Typography variant="h3" className="text-lg font-semibold">
               {title}
             </Typography>
+            {showToolbar && (
+              <Tooltip
+                title={tooltipMessage}
+                arrow
+                disableHoverListener={!info}
+              >
+                <span className="inline-flex items-center cursor-help opacity-70">
+                  {resolvedtoolBar}
+                </span>
+              </Tooltip>
+            )}
           </div>
-          {showToolbar && (
-            <Tooltip title={tooltipMessage} arrow disableHoverListener={!info}>
-              <span className="inline-flex items-center cursor-help opacity-70">
-                {resolvedtoolBar}
-              </span>
-            </Tooltip>
-          )}
+
+          {customFunction}
         </div>
       )}
 

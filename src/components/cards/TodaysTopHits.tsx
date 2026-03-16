@@ -1,8 +1,11 @@
+import type React from 'react';
+import { icons } from '../../lib/constants/icons';
 import { Typography } from '../common/Typography';
 
 type Product = {
   id: number;
   rank: number;
+  rankSymbol: React.JSX.Element;
   name: string;
   class: string;
   quantity: number;
@@ -15,6 +18,7 @@ const topProducts: Product[] = [
   {
     id: 1,
     rank: 1,
+    rankSymbol: icons.first,
     name: 'Laptop Pro 15',
     class: 'Electronics',
     quantity: 120,
@@ -25,6 +29,7 @@ const topProducts: Product[] = [
   {
     id: 2,
     rank: 2,
+    rankSymbol: icons.second,
     name: 'Wireless Mouse',
     class: 'Accessories',
     quantity: 340,
@@ -35,6 +40,7 @@ const topProducts: Product[] = [
   {
     id: 3,
     rank: 3,
+    rankSymbol: icons.third,
     name: 'Mechanical Keyboard',
     class: 'Accessories',
     quantity: 210,
@@ -89,20 +95,8 @@ const TodaysTopHits = () => {
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-4">
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-semibold ${rankStyle.badge}`}
-                  >
-                    <Typography asChild variant="body-sm" weight={700}>
-                      <span className="text-inherit">{product.rank}</span>
-                    </Typography>
-                  </div>
-                  <Typography
-                    variant="overline"
-                    className="mt-1 text-[color:var(--sidebar-muted)]"
-                  >
-                    Rank
-                  </Typography>
+                <div className="flex flex-col items-center h-15 w-15">
+                  {product.rankSymbol}
                 </div>
 
                 <div>
