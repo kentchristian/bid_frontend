@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import 'tailwindcss';
 
 :root {
@@ -59,6 +60,10 @@ body {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   background-color: var(--app-bg);
   transition: background-color 300ms ease, color 300ms ease;
+}
+
+.auth-hero {
+  font-family: 'Space Grotesk', 'Manrope', Inter, Avenir, Helvetica, Arial, sans-serif;
 }
 
 /* Background Scheme for aside */

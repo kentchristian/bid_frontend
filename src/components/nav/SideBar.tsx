@@ -6,7 +6,7 @@ import { cn } from '../../lib/helpers/cn';
 import { useThemeMode, useToggleMode } from '../../lib/store/useMode';
 
 const navItems = [
-  { name: 'Dashboard', icon: <icons.dashboard size={20} />, to: '/' },
+  { name: 'Dashboard', icon: <icons.dashboard size={20} />, to: '/dashboard' },
   { name: 'Sales', icon: <icons.sales size={20} />, to: '/sales' },
   { name: 'Inventory', icon: <icons.inventory size={20} />, to: '/inventory' },
   { name: 'Reports', icon: <icons.reports size={20} />, to: '/reports' },
@@ -64,7 +64,7 @@ const SideBar = ({ className }: SideBarProps) => {
           key={item.name}
           component={NavLink}
           to={item.to}
-          end={item.to === '/'}
+          end={item.to === '/dashboard'}
           fullWidth
           onClick={onItemClick}
           sx={navButtonSx(isCollapsed)}

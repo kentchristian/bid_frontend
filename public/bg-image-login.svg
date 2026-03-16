@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1400" viewBox="0 0 1200 1400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3f4349"/>
+      <stop offset="55%" stop-color="#5f646c"/>
+      <stop offset="100%" stop-color="#727880"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#bcbcb5" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#bcbcb5" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(370 640) rotate(90) scale(220)">
+      <stop offset="0%" stop-color="#bcbcb5" stop-opacity="0.35"/>
+      <stop offset="70%" stop-color="#bcbcb5" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#bcbcb5" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="1400" fill="url(#bg)"/>
+
+  <g opacity="0.18" stroke="#bcbcb5" stroke-width="1.2">
+    <path d="M120 320 L320 520 L520 420 L710 520 L940 420" />
+    <path d="M140 820 L340 700 L540 780 L760 650 L1010 700" />
+    <path d="M210 520 L420 620 L610 560 L820 640" />
+    <path d="M260 980 L480 900 L680 980 L900 880" />
+  </g>
+
+  <g opacity="0.22" fill="#bcbcb5">
+    <circle cx="120" cy="320" r="6"/>
+    <circle cx="320" cy="520" r="6"/>
+    <circle cx="520" cy="420" r="6"/>
+    <circle cx="710" cy="520" r="6"/>
+    <circle cx="940" cy="420" r="6"/>
+    <circle cx="140" cy="820" r="6"/>
+    <circle cx="340" cy="700" r="6"/>
+    <circle cx="540" cy="780" r="6"/>
+    <circle cx="760" cy="650" r="6"/>
+    <circle cx="1010" cy="700" r="6"/>
+  </g>
+
+  <g opacity="0.28">
+    <rect x="140" y="980" width="36" height="160" fill="url(#accent)"/>
+    <rect x="200" y="930" width="36" height="210" fill="url(#accent)"/>
+    <rect x="260" y="880" width="36" height="260" fill="url(#accent)"/>
+    <rect x="320" y="820" width="36" height="320" fill="url(#accent)"/>
+    <rect x="380" y="780" width="36" height="360" fill="url(#accent)"/>
+  </g>
+
+  <g opacity="0.35">
+    <circle cx="370" cy="640" r="200" fill="url(#halo)"/>
+    <circle cx="370" cy="640" r="150" stroke="#bcbcb5" stroke-opacity="0.35" stroke-width="2"/>
+    <circle cx="370" cy="640" r="92" stroke="#bcbcb5" stroke-opacity="0.45" stroke-width="1.5"/>
+    <circle cx="370" cy="640" r="38" fill="#bcbcb5" fill-opacity="0.18"/>
+    <path d="M460 720 L560 820" stroke="#bcbcb5" stroke-opacity="0.35" stroke-width="10" stroke-linecap="round"/>
+    <path d="M458 722 L560 820" stroke="#727880" stroke-opacity="0.55" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g opacity="0.2" fill="none" stroke="#bcbcb5" stroke-width="2">
+    <path d="M780 190 C1020 260 1090 480 1020 700 C960 900 740 1040 540 1080" />
+  </g>
+</svg>

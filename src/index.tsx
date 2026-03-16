@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import './lib/styles/global.css';
+import { MiddlewareProvider } from './middleware/MiddlewareProvider';
 import router from './routes/route-config';
 
 const applyInitialTheme = () => {
@@ -36,7 +37,9 @@ if (rootEl) {
   const root = ReactDOM.createRoot(rootEl);
   root.render(
     <React.StrictMode>
-      <RouterProvider router={router} />
+      <MiddlewareProvider>
+        <RouterProvider router={router} />
+      </MiddlewareProvider>
     </React.StrictMode>,
   );
 }
