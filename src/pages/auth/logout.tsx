@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { logout } from '../../api/auth';
 import LogoutConfirmationDialog from '../../components/dialogs/LogoutConfirmationDialog';
 import { icons } from '../../lib/constants/icons';
+import { useSetMode } from '../../lib/store/useMode';
 import { useMiddleware } from '../../middleware/MiddlewareProvider';
 
 type LocationState = {
@@ -23,6 +24,7 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
   const location = useLocation();
   const queryClient = useQueryClient();
   const { setAuthenticated } = useMiddleware();
+  const setMode = useSetMode();
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -35,6 +37,7 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
       const from =
         (location.state as LocationState | null)?.from?.pathname ?? '/';
       navigate(from, { replace: true });
+      setMode('light'); // turn light mode for default mode
     },
   });
 
@@ -45,7 +48,7 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
 
   const handleCloseDialog = () => {
     if (logoutMutation.isPending) return;
-    setOpenDialog(false);
+    setOpenDialog(false); // avoids early closing
   };
 
   const handleConfirmDialog = () => {

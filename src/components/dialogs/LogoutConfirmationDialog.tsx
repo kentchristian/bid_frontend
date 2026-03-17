@@ -57,10 +57,11 @@ export default function LogoutConfirmationDialog({
         </Button>
         <Button
           onClick={onConfirm}
-          color="error"
+          // color="error"
           // variant="contained"
           sx={{
             background: 'var(--accent-negative)',
+            color: '#f3f3f3',
           }}
           loading={loading}
         >
