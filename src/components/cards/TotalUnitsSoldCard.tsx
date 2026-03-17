@@ -1,23 +1,28 @@
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
+import type { statusQuery } from '../../lib/types/usequery-types';
 import CardContainer from '../common/CardContainer';
 import { Typography } from '../common/Typography';
 
 interface TotalUnitsSoldCardProps {
   title: string;
   totalUnitsSold: number;
-  dailyTarget: number;
+  totalUnitsYesterday: number;
+  loading?: boolean;
+  status?: statusQuery;
 }
 
-/* A component to visualize if dailyTarget for units sold is achieved
+/* A component to visualize if totalUnitsYesterday for units sold is achieved
    To visualize if today's sales was a loss or sucessful
 **/
 const TotalUnitsSoldCard = ({
   title,
   totalUnitsSold,
-  dailyTarget,
+  totalUnitsYesterday,
+  loading,
+  status,
 }: TotalUnitsSoldCardProps) => {
-  const trendUp = totalUnitsSold > dailyTarget;
+  const trendUp = totalUnitsSold > totalUnitsYesterday;
   const mdArrow = trendUp ? (
     <icons.mdArrowUp color="50C878" size={20} />
   ) : (
@@ -34,6 +39,7 @@ const TotalUnitsSoldCard = ({
     <CardContainer
       title={title}
       info="coming soon"
+      loading={loading && status === 'pending'}
       customFunction={
         <div
           className={cn(

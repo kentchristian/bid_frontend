@@ -1,6 +1,6 @@
 import { Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { getTotalRevenue } from '../api/sales';
+import { getTotalItemsSold, getTotalRevenue } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -11,7 +11,7 @@ import CardContainer from '../components/common/CardContainer';
 import PageContainer from '../components/common/PageContainer';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
-import type { TotalRevenue } from '../lib/types/usequery-types';
+import type { TotalItemsSold, TotalRevenue } from '../lib/types/usequery-types';
 import { getCookie } from '../lib/utils/getCookie';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
 
@@ -24,8 +24,18 @@ const Dashboard = () => {
     isLoading: totalRevenueLoading,
     status: totalRevenueStatus,
   } = useQuery<TotalRevenue>({
-    queryKey: ['user', csrf],
+    queryKey: ['user', csrf, 'sales-total-revenue'],
     queryFn: getTotalRevenue,
+    enabled: isAuthenticated,
+  });
+
+  const {
+    data: totalItemsSold,
+    isLoading: totalItemsSoldLoading,
+    status: totalItemsSoldStatus,
+  } = useQuery<TotalItemsSold>({
+    queryKey: ['user', csrf, 'sales-total-items-sold'],
+    queryFn: getTotalItemsSold,
     enabled: isAuthenticated,
   });
 
@@ -41,8 +51,10 @@ const Dashboard = () => {
         />
         <TotalUnitsSoldCard
           title={'Total Units Sold'}
-          totalUnitsSold={142}
-          dailyTarget={100}
+          totalUnitsSold={totalItemsSold?.today_total_items || 0}
+          totalUnitsYesterday={totalItemsSold?.yesterday_total_items || 0}
+          loading={totalItemsSoldLoading}
+          status={totalItemsSoldStatus}
         />
         <CriticalstacksAlert
           title={'Critical Stacks Alert'}
