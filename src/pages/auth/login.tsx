@@ -1,11 +1,4 @@
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
+import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
 
@@ -30,6 +23,26 @@ export const Login = () => {
   const [formError, setFormError] = useState<string | null>(null);
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const sxTextField = {
+    backgroundColor: 'var(--main-bg)',
+    input: { color: 'var(--sidebar-text)' },
+    label: { color: 'var(--sidebar-text)' }, // Optional: changes the label color too
+    '& .MuiOutlinedInput-root': {
+      // normal
+      '& fieldset': {
+        borderColor: 'var(--sidebar-text)',
+      },
+      // hover
+      '&:hover fieldset': {
+        borderColor: 'blue',
+      },
+      // focused
+      '&.Mui-focused fieldset': {
+        borderColor: 'blue',
+      },
+    },
+  };
 
   const loginMutation = useMutation({
     mutationFn: login,
@@ -64,6 +77,7 @@ export const Login = () => {
           required
           value={email}
           onChange={(event) => setEmail(event.target.value)}
+          sx={sxTextField}
         />
         <TextField
           label="Password"
@@ -73,6 +87,7 @@ export const Login = () => {
           required
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          sx={sxTextField}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -81,9 +96,13 @@ export const Login = () => {
                   edge="end"
                 >
                   {showPassword ? (
-                    <icons.visbilityOn />
+                    <div className="text-(--sidebar-text)">
+                      <icons.visbilityOn />
+                    </div>
                   ) : (
-                    <icons.visibilityOff />
+                    <div className="text-(--sidebar-text)">
+                      <icons.visibilityOff />
+                    </div>
                   )}
                 </IconButton>
               </InputAdornment>
@@ -91,8 +110,8 @@ export const Login = () => {
           }}
         />
 
-        <div className="flex items-center justify-between">
-          <FormControlLabel
+        <div className="flex items-center justify-end">
+          {/* <FormControlLabel
             control={
               <Checkbox
                 checked={rememberMe}
@@ -101,8 +120,8 @@ export const Login = () => {
             }
             label="Remember me"
             className="text-gray-600"
-          />
-          <a href="#" className="text-blue-500 text-sm hover:underline">
+          /> */}
+          <a href="#" className="var(--sidebar-text) text-sm hover:underline ">
             Forgot password?
           </a>
         </div>

@@ -60,7 +60,18 @@ Displays revenue generated, quantity sold, remaining inventory, unit price, prod
         className="flex-1 min-w-0"
         info="Provides a structured view of warehouse stock levels.
 Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
-        customFunction={<Switch />}
+        customFunction={
+          <Switch
+            sx={{
+              '& .MuiSwitch-switchBase.Mui-checked': {
+                color: 'var(--accent-positive)', // thumb color
+              },
+              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                backgroundColor: 'var(--accent-positive)', // track color
+              },
+            }}
+          />
+        }
       >
         <WareHouseInventory />
       </CardContainer>

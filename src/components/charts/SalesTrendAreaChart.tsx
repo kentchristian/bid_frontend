@@ -39,10 +39,11 @@ const SalesTrendAreaChart = () => {
               <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <XAxis dataKey="day" />
+          <XAxis dataKey="day" stroke="var(--main-text)" />
           <YAxis
             tickFormatter={(value) => formatUnit(value, 'PHP')}
             fontSize={15}
+            stroke="var(--main-text)"
           />
           <Tooltip />
 
