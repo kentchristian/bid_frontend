@@ -16,7 +16,11 @@ const data = [
 ];
 
 // Define colors for each category
-const COLORS = ['var(--accent-positive)', '#FFD700', 'var(--accent-negative)']; // green, yellow, red
+const COLORS = [
+  'var(--accent-positive)',
+  'var(--accent-warning)',
+  'var(--accent-negative)',
+]; // green, yellow, red
 
 const InventoryHealthPieChart = () => {
   return (

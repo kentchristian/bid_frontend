@@ -1,4 +1,4 @@
-import { cn } from '../../lib/helpers/cn';
+import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
 import { Typography } from '../common/Typography';
 
@@ -23,26 +23,18 @@ const CriticalstacksAlert = ({
       title={title}
       info="coming soon"
       customFunction={
-        <div
-          className={cn(
-            'flex h-8 w-8 rounded-full justify-center items-center',
-            trendUp ? 'bg-(--accent-negative)' : 'bg-(--accent-positive)',
-          )}
-        >
-          <Typography className="text-(--positive-chip-text)">
-            {countItems}
-          </Typography>
-        </div>
+        trendUp ? (
+          <icons.warning color="var(--accent-warning)" size={20} />
+        ) : (
+          <icons.check color="var(--accent-positive)" size={20} />
+        )
       }
       className="flex-1"
     >
       <div className="flex flex-row gap-2">
         {trendUp ? (
           <>
-            <Typography
-              variant="h3"
-              className="mt-0.5 text-(--accent-negative)"
-            >
+            <Typography variant="h3" className="mt-0.5 text-(--accent-warning)">
               {countItems}
             </Typography>
             <Typography variant="h3" className="mt-0.5">

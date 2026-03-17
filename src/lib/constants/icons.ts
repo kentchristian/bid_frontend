@@ -1,9 +1,10 @@
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { CiCircleCheck } from "react-icons/ci";
 import { FaRegChartBar } from "react-icons/fa";
 import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
-import { IoIosTrendingUp } from "react-icons/io";
+import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
 import { IoTrendingDownSharp } from "react-icons/io5";
 import { MdArrowDropDown, MdArrowDropUp, MdClose, MdDashboard, MdInventory, MdMenu, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { RiLogoutCircleLine } from "react-icons/ri";
@@ -29,6 +30,8 @@ export const icons = {
   arrowUp: GoArrowUp,
   arrowDown: GoArrowDown,
   logout: RiLogoutCircleLine,
+  warning: IoMdWarning,
+  check: CiCircleCheck,
 
   // Visiblitye MUI 
   visbilityOn: Visibility,

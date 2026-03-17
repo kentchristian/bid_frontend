@@ -21,6 +21,7 @@
   --accent-positive: #059669;
   --positive-chip-text: #ffffff;
   --accent-negative: #DC2626;
+  --accent-warning: #E6C900 ;
   --scrollbar-size: 6px;
   --scrollbar-track: #e5e7eb;
   --scrollbar-thumb: #9ca3af;
@@ -47,6 +48,7 @@
   --accent-positive: #34d399;
   --positive-chip-text: #1f1f1f;
   --accent-negative: #F87171;
+  --accent-warning: #FFF066 ;
   --scrollbar-size: 6px;
   --scrollbar-track: #1f1f1f;
   --scrollbar-thumb: #4b5563;

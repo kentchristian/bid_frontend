@@ -56,7 +56,9 @@ const TotalRevenueCard = ({
         <Chip
           label={`${trendRate}%`}
           sx={{
-            background: 'var(--accent-positive)',
+            background: trendUp
+              ? 'var(--accent-positive)'
+              : 'var(--accent-negative)',
             color: 'var(--positive-chip-text)',
           }}
         />
