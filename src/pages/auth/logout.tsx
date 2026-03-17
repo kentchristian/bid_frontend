@@ -1,8 +1,10 @@
 import { Button } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { logout } from '../../api/auth';
+import LogoutConfirmationDialog from '../../components/dialogs/LogoutConfirmationDialog';
 import { icons } from '../../lib/constants/icons';
 import { useMiddleware } from '../../middleware/MiddlewareProvider';
 
@@ -22,6 +24,8 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
   const queryClient = useQueryClient();
   const { setAuthenticated } = useMiddleware();
 
+  const [openDialog, setOpenDialog] = useState(false);
+
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
@@ -34,25 +38,42 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
     },
   });
 
-  const handleClick = () => {
-    logoutMutation.mutate();
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
     onItemClick?.();
   };
 
+  const handleCloseDialog = () => {
+    if (logoutMutation.isPending) return;
+    setOpenDialog(false);
+  };
+
+  const handleConfirmDialog = () => {
+    logoutMutation.mutate();
+  };
   return (
-    <Button
-      sx={sx}
-      onClick={handleClick}
-      fullWidth
-      disabled={logoutMutation.isPending}
-      aria-label="Log out"
-      aria-busy={logoutMutation.isPending || undefined}
-    >
-      <icons.logout size={20} />
-      <span className={labelClassName}>
-        {logoutMutation.isPending ? 'Logging out...' : 'Logout'}
-      </span>
-    </Button>
+    <>
+      <Button
+        sx={sx}
+        onClick={handleOpenDialog}
+        fullWidth
+        disabled={logoutMutation.isPending}
+        aria-label="Log out"
+        aria-busy={logoutMutation.isPending || undefined}
+      >
+        <icons.logout size={20} />
+        <span className={labelClassName}>
+          {logoutMutation.isPending ? 'Logging out...' : 'Logout'}
+        </span>
+      </Button>
+
+      <LogoutConfirmationDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        onConfirm={handleConfirmDialog}
+        loading={logoutMutation.isPending}
+      />
+    </>
   );
 };
 
