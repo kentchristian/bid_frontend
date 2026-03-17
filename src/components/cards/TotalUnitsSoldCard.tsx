@@ -1,5 +1,6 @@
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
+import CardContainer from '../common/CardContainer';
 import { Typography } from '../common/Typography';
 
 interface TotalUnitsSoldCardProps {
@@ -30,12 +31,10 @@ const TotalUnitsSoldCard = ({
   );
 
   return (
-    <div
-      id="overview-card"
-      className={cn('flex flex-col gap-2 p-2 flex-1 min-w-0')}
-    >
-      <div className="flex flex-row justify-between items-center">
-        <Typography>{title}</Typography>
+    <CardContainer
+      title={title}
+      info="coming soon"
+      customFunction={
         <div
           className={cn(
             'flex h-8 w-8 rounded-full justify-center items-center',
@@ -44,13 +43,14 @@ const TotalUnitsSoldCard = ({
         >
           {cornerTrend}
         </div>
-      </div>
-
+      }
+      className="flex-1"
+    >
       <div className="flex flex-row gap-2 items-center">
         <Typography variant="h3">{totalUnitsSold} items</Typography>
         {mdArrow}
       </div>
-    </div>
+    </CardContainer>
   );
 };
 

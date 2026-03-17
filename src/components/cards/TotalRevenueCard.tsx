@@ -1,18 +1,24 @@
 import { Chip } from '@mui/material';
 import { icons } from '../../lib/constants/icons';
-import { cn } from '../../lib/helpers/cn';
+import type { statusQuery } from '../../lib/types/usequery-types';
 import { getTrendRate } from '../../lib/utils/getTrendRate';
+import CardContainer from '../common/CardContainer';
+import MoneyLoading from '../common/MoneyLoading';
 import { Typography } from '../common/Typography';
 
 interface TotalRevenueCardProps {
   title: string;
   totalRevenueToday: number;
   totalRevenueYesterday: number;
+  loading?: boolean;
+  status?: statusQuery;
 }
 const TotalRevenueCard = ({
   title,
   totalRevenueToday,
   totalRevenueYesterday,
+  loading,
+  status,
 }: TotalRevenueCardProps) => {
   const trendUp = totalRevenueToday > totalRevenueYesterday;
   const trendRate = getTrendRate(totalRevenueToday, totalRevenueYesterday);
@@ -28,22 +34,8 @@ const TotalRevenueCard = ({
     <icons.mdArrowDown color="var(--accent-negative)" size={20} />
   );
 
-  return (
-    <div
-      id="overview-card"
-      className={cn('flex flex-col gap-2 p-2 flex-1 min-w-0')}
-    >
-      <div className="flex flex-row justify-between items-center">
-        <Typography>{title}</Typography>
-        <Chip
-          label={`${trendRate}%`}
-          sx={{
-            background: 'var(--accent-positive)',
-            color: 'var(--positive-chip-text)',
-          }}
-        />
-      </div>
-
+  const content = (
+    <>
       <div className="flex flex-row gap-2 items-center">
         <Typography variant="h3">₱ {totalRevenueToday}</Typography>
         {sign}
@@ -53,7 +45,30 @@ const TotalRevenueCard = ({
         <span>{mdArrow}</span>
         <Typography>{trendRate}% vs Yesterday</Typography>
       </div>
-    </div>
+    </>
+  );
+
+  return (
+    <CardContainer
+      title={title}
+      info="Total Revenue is the total income from today’s sales. The trend shows how it compares to yesterday, indicating growth (↑) or decline (↓)."
+      customFunction={
+        <Chip
+          label={`${trendRate}%`}
+          sx={{
+            background: 'var(--accent-positive)',
+            color: 'var(--positive-chip-text)',
+          }}
+        />
+      }
+      className="flex-1"
+    >
+      {loading && status === 'pending' ? (
+        <MoneyLoading loadingText="Loading revenue..." />
+      ) : (
+        content
+      )}
+    </CardContainer>
   );
 };
 

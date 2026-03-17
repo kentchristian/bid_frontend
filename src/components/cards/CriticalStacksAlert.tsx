@@ -1,4 +1,5 @@
 import { cn } from '../../lib/helpers/cn';
+import CardContainer from '../common/CardContainer';
 import { Typography } from '../common/Typography';
 
 interface CriticalstacksAlertProps {
@@ -18,12 +19,10 @@ const CriticalstacksAlert = ({
   const trendUp = countItems > 0; // true means threshold is positive
 
   return (
-    <div
-      id="overview-card"
-      className={cn('flex flex-col gap-2 p-2 flex-1 min-w-0')}
-    >
-      <div className="flex flex-row justify-between items-center">
-        <Typography>{title}</Typography>
+    <CardContainer
+      title={title}
+      info="coming soon"
+      customFunction={
         <div
           className={cn(
             'flex h-8 w-8 rounded-full justify-center items-center',
@@ -34,21 +33,27 @@ const CriticalstacksAlert = ({
             {countItems}
           </Typography>
         </div>
-      </div>
-
-      <div className="flex flex-row items-center gap-2">
+      }
+      className="flex-1"
+    >
+      <div className="flex flex-row gap-2">
         {trendUp ? (
           <>
-            <Typography variant="h3" className="text-(--accent-negative)">
+            <Typography
+              variant="h3"
+              className="mt-0.5 text-(--accent-negative)"
+            >
               {countItems}
             </Typography>
-            <Typography variant="h3">Items Below Threshold</Typography>
+            <Typography variant="h3" className="mt-0.5">
+              Items Below Threshold
+            </Typography>
           </>
         ) : (
           <Typography variant="h3">0</Typography>
         )}
       </div>
-    </div>
+    </CardContainer>
   );
 };
 

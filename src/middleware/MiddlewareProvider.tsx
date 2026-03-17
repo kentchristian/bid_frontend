@@ -28,9 +28,7 @@ type SetAuthenticatedOptions = {
 const readCookie = (name: string) => {
   if (typeof document === 'undefined') return null;
   const escaped = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-  const match = document.cookie.match(
-    new RegExp(`(?:^|; )${escaped}=([^;]*)`),
-  );
+  const match = document.cookie.match(new RegExp(`(?:^|; )${escaped}=([^;]*)`));
   return match ? decodeURIComponent(match[1]) : null;
 };
 
@@ -58,7 +56,10 @@ export const MiddlewareProvider = ({ children }: { children: ReactNode }) => {
     setIsAuthenticated(readStoredAuth());
   }, []);
 
-  const setAuthenticated = (value: boolean, options?: SetAuthenticatedOptions) => {
+  const setAuthenticated = (
+    value: boolean,
+    options?: SetAuthenticatedOptions,
+  ) => {
     setIsAuthenticated(value);
     if (typeof window !== 'undefined') {
       setAuthCookie(value, options);
@@ -98,10 +99,7 @@ export const RequireAuth = ({ children }: { children: ReactElement }) => {
 
   if (isRootPath) {
     return (
-      <Navigate
-        to={isAuthenticated ? '/dashboard' : '/auth/login'}
-        replace
-      />
+      <Navigate to={isAuthenticated ? '/dashboard' : '/auth/login'} replace />
     );
   }
 

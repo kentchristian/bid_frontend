@@ -1,4 +1,6 @@
 import { Switch } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { getTotalRevenue } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -9,15 +11,33 @@ import CardContainer from '../components/common/CardContainer';
 import PageContainer from '../components/common/PageContainer';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
+import type { TotalRevenue } from '../lib/types/usequery-types';
+import { getCookie } from '../lib/utils/getCookie';
+import { useMiddleware } from '../middleware/MiddlewareProvider';
 
 const Dashboard = () => {
+  const { isAuthenticated } = useMiddleware();
+  const csrf = getCookie('csrf');
+
+  const {
+    data: totalRevenue,
+    isLoading: totalRevenueLoading,
+    status: totalRevenueStatus,
+  } = useQuery<TotalRevenue>({
+    queryKey: ['user', csrf],
+    queryFn: getTotalRevenue,
+    enabled: isAuthenticated,
+  });
+
   return (
     <PageContainer className="gap-2 flex flex-col">
       <div className="dashboard-row flex flex-row gap-2">
         <TotalRevenueCard
           title={'Total Revenue'}
-          totalRevenueToday={12}
-          totalRevenueYesterday={6}
+          totalRevenueToday={totalRevenue?.today_total || 0}
+          totalRevenueYesterday={totalRevenue?.yesterday_total || 0}
+          status={totalRevenueStatus}
+          loading={totalRevenueLoading}
         />
         <TotalUnitsSoldCard
           title={'Total Units Sold'}

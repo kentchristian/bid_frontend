@@ -1,7 +1,7 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Tooltip } from '@mui/material';
 import { cn } from '../../lib/helpers/cn';
-import MoneyLoader from './LoadingComponent';
+import MoneyLoader from './MoneyLoading';
 import { Typography } from './Typography';
 
 export interface CardContainerProps {

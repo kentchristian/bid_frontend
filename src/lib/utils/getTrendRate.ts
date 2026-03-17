@@ -17,7 +17,8 @@ export const getTrendRate: TrendRateType = (presentValue, oldValue) => {
   const dif = presentValue - oldValue;
   const quo = dif / oldValue;
   const rate = quo * 100;
+  const rounded_rate = Math.round(rate * 100) / 100;
 
-  if (presentValue > oldValue) return rate;
-  else return rate * -1; // remove the negatives 
+  if (presentValue > oldValue) return rounded_rate;
+  else return rounded_rate * -1; // remove the negatives 
 }
