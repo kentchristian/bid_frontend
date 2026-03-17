@@ -17,8 +17,9 @@ type MiddlewareContextValue = {
 const MiddlewareContext = createContext<MiddlewareContextValue | null>(null);
 
 const STORAGE_KEY = 'bid.authenticated';
-// Update this name if your backend exposes a readable auth cookie.
+// Client-readable auth flag cookie (set by the app).
 const AUTH_COOKIE_NAME = 'bid.authenticated';
+const REMEMBER_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
 
 type SetAuthenticatedOptions = {
   remember?: boolean;
@@ -36,10 +37,18 @@ const readCookie = (name: string) => {
 const readStoredAuth = () => {
   if (typeof window === 'undefined') return false;
   const cookieValue = readCookie(AUTH_COOKIE_NAME);
-  if (cookieValue !== null) return cookieValue === 'true';
-  const localValue = window.localStorage.getItem(STORAGE_KEY);
-  if (localValue === 'true') return true;
-  return window.sessionStorage.getItem(STORAGE_KEY) === 'true';
+  return cookieValue === 'true';
+};
+
+const setAuthCookie = (value: boolean, options?: SetAuthenticatedOptions) => {
+  if (typeof document === 'undefined') return;
+  if (!value) {
+    document.cookie = `${AUTH_COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
+    return;
+  }
+  const remember = options?.remember ?? true;
+  const maxAge = remember ? `; max-age=${REMEMBER_MAX_AGE_SECONDS}` : '';
+  document.cookie = `${AUTH_COOKIE_NAME}=true; path=/${maxAge}; samesite=lax`;
 };
 
 export const MiddlewareProvider = ({ children }: { children: ReactNode }) => {
@@ -52,11 +61,10 @@ export const MiddlewareProvider = ({ children }: { children: ReactNode }) => {
   const setAuthenticated = (value: boolean, options?: SetAuthenticatedOptions) => {
     setIsAuthenticated(value);
     if (typeof window !== 'undefined') {
-      const remember = options?.remember ?? true;
-      const primaryStorage = remember ? window.localStorage : window.sessionStorage;
-      const secondaryStorage = remember ? window.sessionStorage : window.localStorage;
-      primaryStorage.setItem(STORAGE_KEY, value ? 'true' : 'false');
-      secondaryStorage.setItem(STORAGE_KEY, 'false');
+      setAuthCookie(value, options);
+      // Clear legacy storage flags so cookie is source of truth.
+      window.localStorage.removeItem(STORAGE_KEY);
+      window.sessionStorage.removeItem(STORAGE_KEY);
     }
   };
 

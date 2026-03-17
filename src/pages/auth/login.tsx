@@ -1,10 +1,19 @@
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
+
 import { Link, useLocation, useNavigate } from 'react-router';
 import { login } from '../../api/auth';
 import AuthCard from '../../components/common/AuthCard';
 import { Typography } from '../../components/common/Typography';
+import { icons } from '../../lib/constants/icons';
 import { useMiddleware } from '../../middleware/MiddlewareProvider';
 
 type LocationState = {
@@ -19,6 +28,8 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const loginMutation = useMutation({
     mutationFn: login,
@@ -58,10 +69,26 @@ export const Login = () => {
           label="Password"
           variant="outlined"
           fullWidth
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           required
           value={password}
           onChange={(event) => setPassword(event.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  edge="end"
+                >
+                  {showPassword ? (
+                    <icons.visbilityOn />
+                  ) : (
+                    <icons.visibilityOff />
+                  )}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
 
         <div className="flex items-center justify-between">
@@ -91,8 +118,9 @@ export const Login = () => {
           className="mt-2 py-2"
           fullWidth
           disabled={loginMutation.isPending}
+          loading={loginMutation.isPending}
         >
-          {loginMutation.isPending ? 'Logging in...' : 'Login'}
+          Login
         </Button>
 
         <Typography className="text-center text-gray-500 text-sm mt-4">

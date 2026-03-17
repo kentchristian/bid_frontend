@@ -4,6 +4,7 @@ import { NavLink } from 'react-router';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
 import { useThemeMode, useToggleMode } from '../../lib/store/useMode';
+import Logout from '../../pages/auth/logout';
 
 const navItems = [
   { name: 'Dashboard', icon: <icons.dashboard size={20} />, to: '/dashboard' },
@@ -36,6 +37,7 @@ const SideBar = ({ className }: SideBarProps) => {
         : 'max-w-full opacity-100 translate-x-0',
     );
 
+  // Web Style
   const navButtonSx = (isCollapsed: boolean) => ({
     justifyContent: 'flex-start',
     gap: isCollapsed ? 0 : 1.5,
@@ -59,6 +61,7 @@ const SideBar = ({ className }: SideBarProps) => {
 
   const renderNavItems = (isCollapsed: boolean, onItemClick?: () => void) => (
     <nav className="flex flex-1 flex-col mt-4 gap-2">
+      {/* Nav Buttons */}
       {navItems.map((item) => (
         <Button
           key={item.name}
@@ -85,7 +88,7 @@ const SideBar = ({ className }: SideBarProps) => {
         }
         sx={{
           mt: 'auto',
-          ...navButtonSx(isCollapsed),
+          ...navButtonSx(isCollapsed), // reusing the style collapsed
         }}
       >
         <span className="relative inline-flex h-5 w-5">
@@ -114,11 +117,18 @@ const SideBar = ({ className }: SideBarProps) => {
           {mode === 'light' ? 'Dark Mode' : 'Light Mode'}
         </span>
       </Button>
+
+      <Logout
+        onItemClick={onItemClick}
+        sx={navButtonSx(isCollapsed)}
+        labelClassName={getLabelTransition(isCollapsed)}
+      />
     </nav>
   );
 
   return (
     <div className="sidebar-shell">
+      {/* Mobile Header Nav -- Only Shows on Mobile Breakpoint */}
       <div className="mobile-nav">
         <IconButton
           onClick={handleMobileToggle}
@@ -135,9 +145,10 @@ const SideBar = ({ className }: SideBarProps) => {
           <icons.menu size={24} />
         </IconButton>
         <img src={logoSrc} alt="BID logo" className="mobile-nav__logo" />
-        <span className="h-10 w-10" aria-hidden="true" />
+        <span className="h-10 w-10" aria-hidden="false" />
       </div>
 
+      {/* Desktop SideBar */}
       <aside
         className={cn(
           'sidebar-desktop transition-[width] duration-500 ease-in flex shrink-0 flex-col overflow-hidden will-change-[width] hover:cursor-pointer',
@@ -157,6 +168,7 @@ const SideBar = ({ className }: SideBarProps) => {
             <img src={logoSrc} alt="BID logo" className="app-logo h-30" />
           </div>
 
+          {/* Collapse / Expand Button */}
           <Button
             onClick={() => setCollapsed(!collapsed)}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -178,9 +190,11 @@ const SideBar = ({ className }: SideBarProps) => {
           </Button>
         </div>
 
+        {/* Render Nav Items -- The Buttons */}
         {renderNavItems(collapsed)}
       </aside>
 
+      {/* Mobile Drawer */}
       <Drawer
         open={mobileOpen}
         onClose={handleMobileClose}
