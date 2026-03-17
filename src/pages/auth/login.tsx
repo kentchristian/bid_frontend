@@ -1,4 +1,11 @@
-import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
 
@@ -110,17 +117,17 @@ export const Login = () => {
           }}
         />
 
-        <div className="flex items-center justify-end">
-          {/* <FormControlLabel
+        <div className="flex items-center justify-between">
+          <FormControlLabel
             control={
               <Checkbox
-                checked={rememberMe}
+                checked={rememberMe} // if checked authentication true has 30 days ttl
                 onChange={(event) => setRememberMe(event.target.checked)}
               />
             }
             label="Remember me"
             className="text-gray-600"
-          /> */}
+          />
           <a href="#" className="var(--sidebar-text) text-sm hover:underline ">
             Forgot password?
           </a>
