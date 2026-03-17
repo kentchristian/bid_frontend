@@ -1,3 +1,4 @@
+import ComingSoon from '../components/common/ComingSoon';
 import PageContainer from '../components/common/PageContainer';
 
 const Sales = () => {
@@ -7,6 +8,7 @@ const Sales = () => {
       <p className="text-sm text-[color:var(--sidebar-muted)]">
         Sales overview content will live here.
       </p>
+      <ComingSoon />
     </PageContainer>
   );
 };

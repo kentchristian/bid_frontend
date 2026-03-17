@@ -1,3 +1,4 @@
+import ComingSoon from '../components/common/ComingSoon';
 import PageContainer from '../components/common/PageContainer';
 
 const Reports = () => {
@@ -7,6 +8,7 @@ const Reports = () => {
       <p className="text-sm text-[color:var(--sidebar-muted)]">
         Reporting dashboards will live here.
       </p>
+      <ComingSoon />
     </PageContainer>
   );
 };

@@ -1,3 +1,4 @@
+import ComingSoon from '../components/common/ComingSoon';
 import PageContainer from '../components/common/PageContainer';
 
 const Inventory = () => {
@@ -7,6 +8,7 @@ const Inventory = () => {
       <p className="text-sm text-[color:var(--sidebar-muted)]">
         Inventory management content will live here.
       </p>
+      <ComingSoon />
     </PageContainer>
   );
 };
