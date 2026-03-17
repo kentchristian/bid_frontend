@@ -1,5 +1,5 @@
 interface MoneyLoadingProps {
-  loadingText: string;
+  loadingText?: string;
 }
 const MoneyLoading = ({ loadingText }: MoneyLoadingProps) => {
   return (

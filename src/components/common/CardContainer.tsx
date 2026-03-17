@@ -1,7 +1,6 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { Tooltip } from '@mui/material';
+import { Skeleton, Tooltip } from '@mui/material';
 import { cn } from '../../lib/helpers/cn';
-import MoneyLoader from './MoneyLoading';
 import { Typography } from './Typography';
 
 export interface CardContainerProps {
@@ -67,7 +66,12 @@ const CardContainer = ({
       {/* Body */}
       <div className="w-full h-full min-h-0 flex-1 flex flex-col">
         {/* Loading State (ONE skeleton only) */}
-        {loading && <MoneyLoader />}
+        {loading && (
+          <Skeleton
+            variant="rectangular"
+            className="w-full h-full flex-1 rounded-xl"
+          />
+        )}
 
         {/* Loading | isEmpty */}
         {!loading && isEmpty && (

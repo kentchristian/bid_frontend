@@ -3,7 +3,6 @@ import { icons } from '../../lib/constants/icons';
 import type { statusQuery } from '../../lib/types/usequery-types';
 import { getTrendRate } from '../../lib/utils/getTrendRate';
 import CardContainer from '../common/CardContainer';
-import MoneyLoading from '../common/MoneyLoading';
 import { Typography } from '../common/Typography';
 
 interface TotalRevenueCardProps {
@@ -63,13 +62,10 @@ const TotalRevenueCard = ({
           }}
         />
       }
+      loading={loading && status === 'pending'}
       className="flex-1"
     >
-      {loading && status === 'pending' ? (
-        <MoneyLoading loadingText="Loading revenue..." />
-      ) : (
-        content
-      )}
+      {content}
     </CardContainer>
   );
 };

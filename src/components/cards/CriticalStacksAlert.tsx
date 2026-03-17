@@ -24,9 +24,9 @@ const CriticalstacksAlert = ({
       info="coming soon"
       customFunction={
         trendUp ? (
-          <icons.warning color="var(--accent-warning)" size={20} />
+          <icons.warning color="var(--accent-warning)" size={30} />
         ) : (
-          <icons.check color="var(--accent-positive)" size={20} />
+          <icons.check color="var(--accent-positive)" size={30} />
         )
       }
       className="flex-1"
