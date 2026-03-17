@@ -51,8 +51,8 @@ const SalesTrendAreaChart = () => {
           <Area
             type="monotone"
             dataKey="sales"
-            stroke="#8884d8" // line color
-            fill="url(#colorSales)" // gradient fill under the line
+            stroke="var(--accent-positive)" // line color
+            fill="rgba(5, 150, 105, 0.15)" // gradient fill under the line
             activeDot={{ r: 8 }}
           />
         </AreaChart>
