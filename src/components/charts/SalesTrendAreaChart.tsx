@@ -6,26 +6,24 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+
+import type { SalesTrend } from '../../lib/types/usequery-types';
 import { formatUnit } from '../../lib/utils/formatUnit';
 import CardContainer from '../common/CardContainer';
 
-const data = [
-  { day: 'Sun', sales: 1300 },
-  { day: 'Mon', sales: 1200 },
-  { day: 'Tue', sales: 2100 },
-  { day: 'Wed', sales: 800 },
-  { day: 'Thu', sales: 1600 },
-  { day: 'Fri', sales: 900 },
-  { day: 'Sat', sales: 1700 },
-];
+interface SalesTrendAreaChartProps {
+  loading?: boolean;
+  data?: SalesTrend[];
+}
 
-const SalesTrendAreaChart = () => {
+const SalesTrendAreaChart = ({ loading, data }: SalesTrendAreaChartProps) => {
   return (
     <CardContainer
       title="Sales Trend (Weekly)"
       info="Displays total sales revenue for the current calendar week (Sunday to Saturday).
   Visualizes daily revenue distribution and highlights fluctuations across the week."
       className="flex-1 min-w-0"
+      loading={loading}
     >
       <ResponsiveContainer width="100%" maxHeight={300}>
         <AreaChart

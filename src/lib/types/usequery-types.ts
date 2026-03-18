@@ -14,6 +14,18 @@ export type TotalItemsSold = {
   items: string[]
 }
 
+export type SalesTrend = {
+  day: string;
+  sales: number;
+}
+
+export type DashboardSalesMetrics = {
+  total_revenue: TotalRevenue,
+  total_items: TotalItemsSold,
+  trend_sales: SalesTrend[]
+
+}
+
 export type ItemsBelowThreshold = {
   total: number;
   items: {

@@ -2,7 +2,7 @@ import { Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getItemsBelowThreshold } from '../api/inventory';
-import { getTotalItemsSold, getTotalRevenue } from '../api/sales';
+import { getSalesDashboardMetrics } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -14,9 +14,9 @@ import PageContainer from '../components/common/PageContainer';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
 import {
+  type DashboardSalesMetrics,
   type ItemsBelowThreshold,
-  type TotalItemsSold,
-  type TotalRevenue,
+  type SalesTrend,
 } from '../lib/types/usequery-types';
 import { getCookie } from '../lib/utils/getCookie';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
@@ -26,25 +26,14 @@ const Dashboard = () => {
   const csrftoken = getCookie('csrftoken');
 
   const {
-    data: totalRevenue,
-    isLoading: totalRevenueLoading,
-    status: totalRevenueStatus,
-  } = useQuery<TotalRevenue>({
-    queryKey: ['user', csrftoken, 'sales-total-revenue'],
-    queryFn: getTotalRevenue,
+    data: sales,
+    isLoading: salesLoading,
+    status: salesStatus,
+  } = useQuery<DashboardSalesMetrics>({
+    queryKey: ['user', csrftoken, 'dashboard-metrics'],
+    queryFn: getSalesDashboardMetrics,
     enabled: isAuthenticated,
   });
-
-  const {
-    data: totalItemsSold,
-    isLoading: totalItemsSoldLoading,
-    status: totalItemsSoldStatus,
-  } = useQuery<TotalItemsSold>({
-    queryKey: ['user', csrftoken, 'sales-total-items-sold'],
-    queryFn: getTotalItemsSold,
-    enabled: isAuthenticated,
-  });
-
   const {
     data: itemsBelowThreshold,
     isLoading: itemsBelowThresholdLoading,
@@ -55,6 +44,16 @@ const Dashboard = () => {
     enabled: isAuthenticated,
   });
 
+  const chartFallBack: SalesTrend[] = [
+    { day: 'Sun', sales: 0 },
+    { day: 'Mon', sales: 0 },
+    { day: 'Tue', sales: 0 },
+    { day: 'Wed', sales: 0 },
+    { day: 'Thu', sales: 0 },
+    { day: 'Fri', sales: 0 },
+    { day: 'Sat', sales: 0 },
+  ];
+
   return (
     <PageContainer className="gap-2 flex flex-col">
       <div className="dashboard-row flex flex-row gap-2">
@@ -63,20 +62,20 @@ const Dashboard = () => {
           info={
             'Total Revenue is the total income from today’s sales. The trend shows how it compares to yesterday, indicating growth (↑) or decline (↓).'
           }
-          totalRevenueToday={totalRevenue?.today_total || 0}
-          totalRevenueYesterday={totalRevenue?.yesterday_total || 0}
-          status={totalRevenueStatus}
-          loading={totalRevenueLoading}
+          totalRevenueToday={sales?.total_revenue?.today_total || 0}
+          totalRevenueYesterday={sales?.total_revenue?.yesterday_total || 0}
+          status={salesStatus}
+          loading={salesLoading}
         />
         <TotalUnitsSoldCard
           title={'Total Units Sold'}
           info={
             'Total units successfully sold in the last 24 hours (resets at midnight).'
           }
-          totalUnitsSold={totalItemsSold?.today_total_items || 0}
-          totalUnitsYesterday={totalItemsSold?.yesterday_total_items || 0}
-          loading={totalItemsSoldLoading}
-          status={totalItemsSoldStatus}
+          totalUnitsSold={sales?.total_items?.today_total_items || 0}
+          totalUnitsYesterday={sales?.total_items?.yesterday_total_items || 0}
+          loading={salesLoading}
+          status={salesStatus}
         />
         <CriticalstacksAlert
           title={'Critical Stacks Alert'}
@@ -91,7 +90,10 @@ const Dashboard = () => {
 
       <div className="dashboard-row flex flex-row gap-2">
         {/* Need card Container for now */}
-        <SalesTrendAreaChart />
+        <SalesTrendAreaChart
+          loading={salesLoading && salesStatus === 'pending'}
+          data={sales?.trend_sales || chartFallBack}
+        />
         <InventoryHealthPieChart />
       </div>
 
