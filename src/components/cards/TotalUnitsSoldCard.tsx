@@ -10,6 +10,7 @@ interface TotalUnitsSoldCardProps {
   totalUnitsYesterday: number;
   loading?: boolean;
   status?: statusQuery;
+  info?: string;
 }
 
 /* A component to visualize if totalUnitsYesterday for units sold is achieved
@@ -21,6 +22,7 @@ const TotalUnitsSoldCard = ({
   totalUnitsYesterday,
   loading,
   status,
+  info,
 }: TotalUnitsSoldCardProps) => {
   const trendUp = totalUnitsSold > totalUnitsYesterday;
   const mdArrow = trendUp ? (
@@ -38,7 +40,7 @@ const TotalUnitsSoldCard = ({
   return (
     <CardContainer
       title={title}
-      info="coming soon"
+      info={info}
       loading={loading && status === 'pending'}
       customFunction={
         <div
@@ -53,7 +55,7 @@ const TotalUnitsSoldCard = ({
       className="flex-1"
     >
       <div className="flex flex-row gap-2 items-center">
-        <Typography variant="h3">{totalUnitsSold} items</Typography>
+        <Typography variant="h1">{totalUnitsSold} items</Typography>
         {mdArrow}
       </div>
     </CardContainer>

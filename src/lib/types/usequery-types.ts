@@ -13,3 +13,13 @@ export type TotalItemsSold = {
   yesterday_total_items: number
   items: string[]
 }
+
+export type ItemsBelowThreshold = {
+  total: number;
+  items: {
+    product_name: string;
+    item_threshold: number;
+    stock: number;
+  }[],
+
+}

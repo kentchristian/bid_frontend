@@ -11,6 +11,7 @@ interface TotalRevenueCardProps {
   totalRevenueYesterday: number;
   loading?: boolean;
   status?: statusQuery;
+  info?: string;
 }
 const TotalRevenueCard = ({
   title,
@@ -18,6 +19,7 @@ const TotalRevenueCard = ({
   totalRevenueYesterday,
   loading,
   status,
+  info,
 }: TotalRevenueCardProps) => {
   const trendUp = totalRevenueToday > totalRevenueYesterday;
   const trendRate = getTrendRate(totalRevenueToday, totalRevenueYesterday);
@@ -36,7 +38,7 @@ const TotalRevenueCard = ({
   const content = (
     <>
       <div className="flex flex-row gap-2 items-center">
-        <Typography variant="h3">₱ {totalRevenueToday}</Typography>
+        <Typography variant="h1">₱ {totalRevenueToday}</Typography>
         {sign}
       </div>
 
@@ -50,7 +52,7 @@ const TotalRevenueCard = ({
   return (
     <CardContainer
       title={title}
-      info="Total Revenue is the total income from today’s sales. The trend shows how it compares to yesterday, indicating growth (↑) or decline (↓)."
+      info={info}
       customFunction={
         <Chip
           label={`${trendRate}%`}

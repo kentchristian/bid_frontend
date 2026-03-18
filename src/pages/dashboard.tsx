@@ -1,5 +1,7 @@
 import { Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+
+import { getItemsBelowThreshold } from '../api/inventory';
 import { getTotalItemsSold, getTotalRevenue } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
@@ -11,20 +13,24 @@ import CardContainer from '../components/common/CardContainer';
 import PageContainer from '../components/common/PageContainer';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
-import type { TotalItemsSold, TotalRevenue } from '../lib/types/usequery-types';
+import {
+  type ItemsBelowThreshold,
+  type TotalItemsSold,
+  type TotalRevenue,
+} from '../lib/types/usequery-types';
 import { getCookie } from '../lib/utils/getCookie';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
 
 const Dashboard = () => {
   const { isAuthenticated } = useMiddleware();
-  const csrf = getCookie('csrf');
+  const csrftoken = getCookie('csrftoken');
 
   const {
     data: totalRevenue,
     isLoading: totalRevenueLoading,
     status: totalRevenueStatus,
   } = useQuery<TotalRevenue>({
-    queryKey: ['user', csrf, 'sales-total-revenue'],
+    queryKey: ['user', csrftoken, 'sales-total-revenue'],
     queryFn: getTotalRevenue,
     enabled: isAuthenticated,
   });
@@ -34,8 +40,18 @@ const Dashboard = () => {
     isLoading: totalItemsSoldLoading,
     status: totalItemsSoldStatus,
   } = useQuery<TotalItemsSold>({
-    queryKey: ['user', csrf, 'sales-total-items-sold'],
+    queryKey: ['user', csrftoken, 'sales-total-items-sold'],
     queryFn: getTotalItemsSold,
+    enabled: isAuthenticated,
+  });
+
+  const {
+    data: itemsBelowThreshold,
+    isLoading: itemsBelowThresholdLoading,
+    status: itemsBelowThresholdStatus,
+  } = useQuery<ItemsBelowThreshold>({
+    queryKey: ['user', csrftoken, 'items-below-threshold'],
+    queryFn: getItemsBelowThreshold,
     enabled: isAuthenticated,
   });
 
@@ -44,6 +60,9 @@ const Dashboard = () => {
       <div className="dashboard-row flex flex-row gap-2">
         <TotalRevenueCard
           title={'Total Revenue'}
+          info={
+            'Total Revenue is the total income from today’s sales. The trend shows how it compares to yesterday, indicating growth (↑) or decline (↓).'
+          }
           totalRevenueToday={totalRevenue?.today_total || 0}
           totalRevenueYesterday={totalRevenue?.yesterday_total || 0}
           status={totalRevenueStatus}
@@ -51,6 +70,9 @@ const Dashboard = () => {
         />
         <TotalUnitsSoldCard
           title={'Total Units Sold'}
+          info={
+            'Total units successfully sold in the last 24 hours (resets at midnight).'
+          }
           totalUnitsSold={totalItemsSold?.today_total_items || 0}
           totalUnitsYesterday={totalItemsSold?.yesterday_total_items || 0}
           loading={totalItemsSoldLoading}
@@ -58,7 +80,12 @@ const Dashboard = () => {
         />
         <CriticalstacksAlert
           title={'Critical Stacks Alert'}
-          itemsBelowThrehold={['something', 'something']}
+          info={
+            "Total count of items that have reached 'Low Stock' status and need to be reordered."
+          }
+          itemsBelowThrehold={itemsBelowThreshold?.total || 0}
+          loading={itemsBelowThresholdLoading}
+          status={itemsBelowThresholdStatus}
         />
       </div>
 

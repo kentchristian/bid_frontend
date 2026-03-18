@@ -34,7 +34,7 @@ const CardContainer = ({
   return (
     <div
       className={cn(
-        'card-container w-full h-full min-w-0 rounded-2xl p-6 shadow-xl transition-colors duration-300 flex flex-col',
+        'card-container w-full h-full min-h-25 min-w-0 rounded-2xl p-6 shadow-xl transition-colors duration-300 flex flex-col',
         className,
       )}
       style={{ backgroundColor: 'var(--card)', color: 'var(--main-text)' }}
@@ -69,7 +69,7 @@ const CardContainer = ({
         {loading && (
           <Skeleton
             variant="rectangular"
-            className="w-full h-full flex-1 rounded-xl"
+            className="w-full h-full min-h-25 flex-1 rounded-xl"
           />
         )}
 
