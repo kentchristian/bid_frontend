@@ -22,7 +22,7 @@ const SalesTrendAreaChart = ({ loading, data }: SalesTrendAreaChartProps) => {
       title="Sales Trend (Weekly)"
       info="Displays total sales revenue for the current calendar week (Sunday to Saturday).
   Visualizes daily revenue distribution and highlights fluctuations across the week."
-      className="sales-trend flex-1 min-w-0"
+      className="sales-trend flex-1 min-w-0 min-h-100"
       loading={loading}
     >
       <ResponsiveContainer width="100%" maxHeight={300}>

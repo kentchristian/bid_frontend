@@ -52,7 +52,7 @@ const TotalUnitsSoldCard = ({
           {cornerTrend}
         </div>
       }
-      className="flex-1"
+      className="flex-1 min-h-40"
     >
       <div className="flex flex-row gap-2 items-center">
         <Typography variant="h1">{totalUnitsSold} items</Typography>

@@ -65,7 +65,7 @@ const TotalRevenueCard = ({
         />
       }
       loading={loading && status === 'pending'}
-      className="flex-1"
+      className="flex-1 min-h-40"
     >
       {content}
     </CardContainer>

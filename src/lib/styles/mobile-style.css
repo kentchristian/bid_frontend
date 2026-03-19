@@ -1,4 +1,7 @@
-@media (max-width: 768px) {
+
+/* 768px original Mobile */
+/* 960px second */
+@media (max-width: 1142px) { 
 
   .app-shell {
     flex-direction: column;
@@ -37,6 +40,7 @@
   .card-container {
     padding: 16px;
     
+    
   }
 
   .pie-container, .sales-trend {
@@ -68,10 +72,12 @@
     font-size: 0.8rem;
   }
   
-
   .top-hits-container {
     min-height: 300;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    
   }
 
   .top-hits-item {

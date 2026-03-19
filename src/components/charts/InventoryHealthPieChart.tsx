@@ -30,7 +30,7 @@ const InventoryHealthPieChart = ({
       title="Inventory Health"
       info="Represents the current inventory distribution by stock condition.
 Categorizes products into Healthy Stock, Low Stock, and Out of Stock based on reorder thresholds."
-      className="pie-container flex-1 min-w-0"
+      className="pie-container flex-1 min-w-0 min-h-100"
       loading={loading}
       isEmpty={data.length === 0}
     >
