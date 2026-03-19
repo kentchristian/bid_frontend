@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import './lib/styles/global.css';
+import { BreakpointProvider } from './lib/providers/BreakpointProvider';
 import { MiddlewareProvider } from './middleware/MiddlewareProvider';
 import router from './routes/route-config';
 import { queryClient } from './services/queryClient';
@@ -44,9 +45,11 @@ if (rootEl) {
   root.render(
     <React.StrictMode>
       <MiddlewareProvider>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
+        <BreakpointProvider>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </BreakpointProvider>
       </MiddlewareProvider>
     </React.StrictMode>,
   );

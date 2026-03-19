@@ -36,6 +36,11 @@
 
   .card-container {
     padding: 16px;
+    
+  }
+
+  .pie-container, .sales-trend {
+    min-height: 350;
   }
 
   .card-header {
@@ -61,6 +66,12 @@
   .MuiDataGrid-columnHeaders,
   .MuiDataGrid-cell {
     font-size: 0.8rem;
+  }
+  
+
+  .top-hits-container {
+    min-height: 300;
+    overflow-y: auto;
   }
 
   .top-hits-item {

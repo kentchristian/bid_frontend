@@ -128,7 +128,7 @@ Includes time of transaction, customer, product purchased, quantity sold, and to
           title="Today’s Top Hits"
           info="Ranks the top-performing products for the current day based on total accumulated sales.
 Displays revenue generated, quantity sold, remaining inventory, unit price, product classification, and latest update timestamp."
-          className="flex-1 min-w-0"
+          className="top-hits-container flex-1 min-w-0"
         >
           <TodaysTopHits />
         </CardContainer>
@@ -136,7 +136,7 @@ Displays revenue generated, quantity sold, remaining inventory, unit price, prod
 
       <CardContainer
         title="Warehouse Inventory"
-        className="flex-1 min-w-0"
+        className="flex-1 min-w-0 min-h-140"
         info="Provides a structured view of warehouse stock levels.
 Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
         customFunction={
