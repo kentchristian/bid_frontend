@@ -1,7 +1,7 @@
 import { Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
-import { getItemsBelowThreshold } from '../api/inventory';
+import { getInventoryMetrics } from '../api/inventory';
 import { getSalesDashboardMetrics } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
@@ -15,8 +15,9 @@ import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
 import {
   type DashboardSalesMetrics,
-  type ItemsBelowThreshold,
+  type InventoryMetrics,
   type SalesTrend,
+  type StockClassTotal,
 } from '../lib/types/usequery-types';
 import { getCookie } from '../lib/utils/getCookie';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
@@ -34,13 +35,14 @@ const Dashboard = () => {
     queryFn: getSalesDashboardMetrics,
     enabled: isAuthenticated,
   });
+
   const {
-    data: itemsBelowThreshold,
-    isLoading: itemsBelowThresholdLoading,
-    status: itemsBelowThresholdStatus,
-  } = useQuery<ItemsBelowThreshold>({
-    queryKey: ['user', csrftoken, 'items-below-threshold'],
-    queryFn: getItemsBelowThreshold,
+    data: inventoryMetrics,
+    isLoading: inventoryMetricsLoading,
+    status: inventoryMetricsStatus,
+  } = useQuery<InventoryMetrics>({
+    queryKey: ['user', csrftoken, 'inventory-metrics'],
+    queryFn: getInventoryMetrics,
     enabled: isAuthenticated,
   });
 
@@ -52,6 +54,12 @@ const Dashboard = () => {
     { day: 'Thu', sales: 0 },
     { day: 'Fri', sales: 0 },
     { day: 'Sat', sales: 0 },
+  ];
+
+  const inventoryHealthFallback: StockClassTotal[] = [
+    { name: 'Healthy Stocks', value: 0 },
+    { name: 'Low Stocks', value: 0 },
+    { name: 'Out of Stock', value: 0 },
   ];
 
   return (
@@ -82,9 +90,11 @@ const Dashboard = () => {
           info={
             "Total count of items that have reached 'Low Stock' status and need to be reordered."
           }
-          itemsBelowThrehold={itemsBelowThreshold?.total || 0}
-          loading={itemsBelowThresholdLoading}
-          status={itemsBelowThresholdStatus}
+          itemsBelowThrehold={
+            inventoryMetrics?.items_below_threshold?.total || 0
+          }
+          loading={inventoryMetricsLoading}
+          status={inventoryMetricsStatus}
         />
       </div>
 
@@ -94,7 +104,15 @@ const Dashboard = () => {
           loading={salesLoading && salesStatus === 'pending'}
           data={sales?.trend_sales || chartFallBack}
         />
-        <InventoryHealthPieChart />
+        <InventoryHealthPieChart
+          loading={
+            inventoryMetricsLoading && inventoryMetricsStatus === 'pending'
+          }
+          data={
+            inventoryMetrics?.inventory_health?.stocks_class_total ||
+            inventoryHealthFallback
+          }
+        />
       </div>
 
       <div className="dashboard-row flex flex-row gap-2">

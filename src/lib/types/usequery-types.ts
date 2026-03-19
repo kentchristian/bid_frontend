@@ -35,3 +35,20 @@ export type ItemsBelowThreshold = {
   }[],
 
 }
+
+
+export type StockClassTotal = {
+  name: string;
+  value: number;
+}
+
+export type Inventoryhealth = {
+  
+  stocks_class_total: StockClassTotal[],
+  item?: any // TODO: define the class later
+}
+
+export type InventoryMetrics = {
+  items_below_threshold: ItemsBelowThreshold,
+  inventory_health: Inventoryhealth,
+}

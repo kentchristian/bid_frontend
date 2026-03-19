@@ -6,14 +6,8 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from 'recharts';
+import type { StockClassTotal } from '../../lib/types/usequery-types';
 import CardContainer from '../common/CardContainer';
-
-// Sample inventory health data
-const data = [
-  { name: 'Healthy Stocks', value: 120 },
-  { name: 'Low Stocks', value: 45 },
-  { name: 'Out of Stock', value: 15 },
-];
 
 // Define colors for each category
 const COLORS = [
@@ -22,13 +16,22 @@ const COLORS = [
   'var(--accent-negative)',
 ]; // green, yellow, red
 
-const InventoryHealthPieChart = () => {
+interface InventoryHealthPieCharProps {
+  loading?: boolean;
+  data: StockClassTotal[];
+}
+
+const InventoryHealthPieChart = ({
+  data,
+  loading,
+}: InventoryHealthPieCharProps) => {
   return (
     <CardContainer
       title="Inventory Health"
       info="Represents the current inventory distribution by stock condition.
 Categorizes products into Healthy Stock, Low Stock, and Out of Stock based on reorder thresholds."
       className="flex-1 min-w-0"
+      loading={loading}
     >
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
