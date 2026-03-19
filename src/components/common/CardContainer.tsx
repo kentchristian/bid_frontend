@@ -1,6 +1,7 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Skeleton, Tooltip } from '@mui/material';
 import { cn } from '../../lib/helpers/cn';
+import EmptyState from './EmptyState';
 import { Typography } from './Typography';
 
 export interface CardContainerProps {
@@ -69,17 +70,12 @@ const CardContainer = ({
         {loading && (
           <Skeleton
             variant="rectangular"
-            className="w-full h-full min-h-25 flex-1 rounded-xl"
+            className={cn('w-full h-full flex-1 rounded-xl')}
           />
         )}
 
         {/* Loading | isEmpty */}
-        {!loading && isEmpty && (
-          <div className="h-full flex flex-col items-center justify-center text-center">
-            <div className="text-5xl mb-4 opacity-40">📦</div>
-            <p className="text-sm opacity-60">{emptyMessage}</p>
-          </div>
-        )}
+        {!loading && isEmpty && <EmptyState />}
 
         {/* Content */}
         {!loading && !isEmpty && (

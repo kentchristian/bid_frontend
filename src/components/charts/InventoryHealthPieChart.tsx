@@ -32,6 +32,7 @@ const InventoryHealthPieChart = ({
 Categorizes products into Healthy Stock, Low Stock, and Out of Stock based on reorder thresholds."
       className="flex-1 min-w-0"
       loading={loading}
+      isEmpty={data.length === 0}
     >
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
@@ -41,7 +42,7 @@ Categorizes products into Healthy Stock, Low Stock, and Out of Stock based on re
             nameKey="name"
             cx="50%"
             cy="50%"
-            outerRadius={120}
+            outerRadius={'90%'}
             fill="#8884d8"
             label
           >

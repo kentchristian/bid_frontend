@@ -42,10 +42,19 @@ export type StockClassTotal = {
   value: number;
 }
 
+export type InventoryHealthItem = {
+  product_name: string;
+  item_threshold: number;
+  stock: number;
+  category?: string;
+  status?: string;
+  [key: string]: unknown;
+}
+
 export type Inventoryhealth = {
   
   stocks_class_total: StockClassTotal[],
-  item?: any // TODO: define the class later
+  item?: InventoryHealthItem
 }
 
 export type InventoryMetrics = {
