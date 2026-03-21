@@ -13,7 +13,7 @@ import CardContainer from '../common/CardContainer';
 
 interface SalesTrendAreaChartProps {
   loading?: boolean;
-  data?: SalesTrend[];
+  data?: SalesTrend[] | null;
 }
 
 const SalesTrendAreaChart = ({ loading, data }: SalesTrendAreaChartProps) => {
@@ -24,37 +24,40 @@ const SalesTrendAreaChart = ({ loading, data }: SalesTrendAreaChartProps) => {
   Visualizes daily revenue distribution and highlights fluctuations across the week."
       className="sales-trend flex-1 min-w-0 min-h-100"
       loading={loading}
+      isEmpty={!data || data?.length === 0}
     >
-      <ResponsiveContainer width="100%" maxHeight={300}>
-        <AreaChart
-          data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-        >
-          <defs>
-            {/* Gradient for the shadow/fill under the line */}
-            <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis dataKey="day" stroke="var(--main-text)" />
-          <YAxis
-            tickFormatter={(value) => formatUnit(value, 'PHP')}
-            fontSize={15}
-            stroke="var(--main-text)"
-          />
-          <Tooltip />
+      {data && (
+        <ResponsiveContainer width="100%" maxHeight={300}>
+          <AreaChart
+            data={data}
+            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          >
+            <defs>
+              {/* Gradient for the shadow/fill under the line */}
+              <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.6} />
+                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="day" stroke="var(--main-text)" />
+            <YAxis
+              tickFormatter={(value) => formatUnit(value, 'PHP')}
+              fontSize={15}
+              stroke="var(--main-text)"
+            />
+            <Tooltip />
 
-          {/* Area with line and shadow */}
-          <Area
-            type="monotone"
-            dataKey="sales"
-            stroke="var(--accent-positive)" // line color
-            fill="rgba(5, 150, 105, 0.15)" // gradient fill under the line
-            activeDot={{ r: 8 }}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+            {/* Area with line and shadow */}
+            <Area
+              type="monotone"
+              dataKey="sales"
+              stroke="var(--accent-positive)" // line color
+              fill="rgba(5, 150, 105, 0.15)" // gradient fill under the line
+              activeDot={{ r: 8 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      )}
     </CardContainer>
   );
 };

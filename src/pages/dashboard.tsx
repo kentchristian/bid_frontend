@@ -22,8 +22,6 @@ import type {
 import {
   type DashboardSalesMetrics,
   type InventoryMetrics,
-  type SalesTrend,
-  type StockClassTotal,
 } from '../lib/types/usequery-types';
 import { getCookie } from '../lib/utils/getCookie';
 import { getTwelveHourFormat } from '../lib/utils/getTwelveHourFormat';
@@ -52,22 +50,6 @@ const Dashboard = () => {
     queryFn: getInventoryMetrics,
     enabled: isAuthenticated,
   });
-
-  const chartFallBack: SalesTrend[] = [
-    { day: 'Sun', sales: 0 },
-    { day: 'Mon', sales: 0 },
-    { day: 'Tue', sales: 0 },
-    { day: 'Wed', sales: 0 },
-    { day: 'Thu', sales: 0 },
-    { day: 'Fri', sales: 0 },
-    { day: 'Sat', sales: 0 },
-  ];
-
-  const inventoryHealthFallback: StockClassTotal[] = [
-    { name: 'Healthy Stocks', value: 0 },
-    { name: 'Low Stocks', value: 0 },
-    { name: 'Out of Stock', value: 0 },
-  ];
 
   // Transform Money In Sales Data
   const moneyInSales = useMemo(() => {
@@ -126,16 +108,13 @@ const Dashboard = () => {
         {/* Need card Container for now */}
         <SalesTrendAreaChart
           loading={salesLoading && salesStatus === 'pending'}
-          data={sales?.trend_sales || chartFallBack}
+          data={sales?.trend_sales || null}
         />
         <InventoryHealthPieChart
           loading={
             inventoryMetricsLoading && inventoryMetricsStatus === 'pending'
           }
-          data={
-            inventoryMetrics?.inventory_health?.stocks_class_total ||
-            inventoryHealthFallback
-          }
+          data={inventoryMetrics?.inventory_health?.stocks_class_total || null}
         />
       </div>
 
