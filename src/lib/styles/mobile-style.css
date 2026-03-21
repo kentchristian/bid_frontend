@@ -58,13 +58,8 @@
     align-self: flex-start;
   }
 
-  .data-grid-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
   .data-grid-wrapper .MuiDataGrid-root {
-    min-width: 680px;
+    min-height: 500px;
   }
 
   .MuiDataGrid-columnHeaders,

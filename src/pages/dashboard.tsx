@@ -11,8 +11,14 @@ import InventoryHealthPieChart from '../components/charts/InventoryHealthPieChar
 import SalesTrendAreaChart from '../components/charts/SalesTrendAreaChart';
 import CardContainer from '../components/common/CardContainer';
 import PageContainer from '../components/common/PageContainer';
+
+import { useMemo } from 'react';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
+import type {
+  MoneyInSalesType,
+  TransformedMoneyInSalesType,
+} from '../lib/types/money-in-sales';
 import {
   type DashboardSalesMetrics,
   type InventoryMetrics,
@@ -20,6 +26,7 @@ import {
   type StockClassTotal,
 } from '../lib/types/usequery-types';
 import { getCookie } from '../lib/utils/getCookie';
+import { getTwelveHourFormat } from '../lib/utils/getTwelveHourFormat';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
 
 const Dashboard = () => {
@@ -61,6 +68,30 @@ const Dashboard = () => {
     { name: 'Low Stocks', value: 0 },
     { name: 'Out of Stock', value: 0 },
   ];
+
+  //     id: 1,
+  //     time: '08:30 AM',
+  //     created_by: 'Juan Dela Cruz',
+  //     product: 'Laptop',
+  //     quantity: 1,
+  //     total: 45000,
+
+  // Transform Money In Sales Data
+  const moneyInSales = useMemo(() => {
+    if (!sales?.money_in_sales) return [];
+
+    const transformedMoneyInSales: TransformedMoneyInSalesType[] =
+      sales.money_in_sales.map((item: MoneyInSalesType) => ({
+        id: item?.id,
+        time: getTwelveHourFormat(item?.sold_at),
+        created_by: item?.created_by?.name || 'System',
+        product: item?.inventory?.product_name || 'N/A',
+        quantity: item?.quantity,
+        total: item?.total_price,
+      }));
+
+    return transformedMoneyInSales;
+  }, [sales?.money_in_sales]);
 
   return (
     <PageContainer className="gap-2 flex flex-col">
@@ -122,7 +153,7 @@ const Dashboard = () => {
 Includes time of transaction, customer, product purchased, quantity sold, and total revenue generated."
           className="flex-1 min-w-0"
         >
-          <MoneyInSales />
+          <MoneyInSales rows={moneyInSales || []} />
         </CardContainer>
         <CardContainer
           title="Today’s Top Hits"

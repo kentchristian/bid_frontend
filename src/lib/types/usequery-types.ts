@@ -1,3 +1,4 @@
+import type { MoneyInSalesType } from "./money-in-sales";
 
 
 export type statusQuery = 'pending' | 'error' | 'success';
@@ -22,8 +23,8 @@ export type SalesTrend = {
 export type DashboardSalesMetrics = {
   total_revenue: TotalRevenue,
   total_items: TotalItemsSold,
-  trend_sales: SalesTrend[]
-
+  trend_sales: SalesTrend[],
+  money_in_sales: MoneyInSalesType[];
 }
 
 export type ItemsBelowThreshold = {
@@ -61,3 +62,7 @@ export type InventoryMetrics = {
   items_below_threshold: ItemsBelowThreshold,
   inventory_health: Inventoryhealth,
 }
+
+
+
+

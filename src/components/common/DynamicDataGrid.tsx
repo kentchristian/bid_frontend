@@ -6,6 +6,7 @@ interface DynamicDataGridProps {
   rows: any[];
   loading?: boolean;
   className?: string;
+  minHeight?: number;
 }
 
 const DynamicDataGrid = ({
@@ -13,23 +14,37 @@ const DynamicDataGrid = ({
   rows,
   loading,
   className,
+  minHeight,
 }: DynamicDataGridProps) => {
   return (
     <div
-      className={cn('data-grid-wrapper w-full min-w-0 flex-1 h-full', className)}
+      className={cn(
+        'data-grid-wrapper w-full min-w-0 flex-1 h-full component-content-scrollbar',
+        className,
+      )}
     >
       <DataGrid
         rows={rows}
         columns={columns}
         loading={loading}
-        pageSizeOptions={[5, 10, 20]}
-        sx={{ minWidth: 0, height: '100%' }}
+        pageSizeOptions={[5, 10, 20, 50, 100]}
+        sx={{
+          height: minHeight,
+          border: 'none',
+          '--DataGrid-scrollbarSize': 'var(--scrollbar-size)',
+          '& .MuiDataGrid-scrollbar': {
+            '--size': 'var(--scrollbar-size)',
+          },
+          '& .MuiDataGrid-footerContainer': {
+            height: 70, // Your desired height
+            minHeight: 70, // This is CRITICAL to override MUI defaults
+          },
+        }}
         initialState={{
           pagination: {
             paginationModel: { pageSize: 10, page: 0 },
           },
         }}
-        disableRowSelectionOnClick
       />
     </div>
   );

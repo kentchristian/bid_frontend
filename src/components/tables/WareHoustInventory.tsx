@@ -105,7 +105,7 @@ const WareHouseInventory = () => {
     },
   ];
 
-  return <DynamicDataGrid columns={columns} rows={rows} />;
+  return <DynamicDataGrid columns={columns} rows={rows} minHeight={450} />;
 };
 
 export default WareHouseInventory;
