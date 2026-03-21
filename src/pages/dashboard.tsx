@@ -2,7 +2,7 @@ import { Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getInventoryMetrics } from '../api/inventory';
-import { getSalesDashboardMetrics } from '../api/sales';
+import { getSalesDashboardMetrics, getTodaysTopHits } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -15,10 +15,16 @@ import PageContainer from '../components/common/PageContainer';
 import { useMemo } from 'react';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
+import { icons } from '../lib/constants/icons';
 import type {
   MoneyInSalesType,
   TransformedMoneyInSalesType,
 } from '../lib/types/money-in-sales';
+import {
+  type apiTodaysTopHitsType,
+  type TodaysTopHitsType,
+  type TransformedTodaysTopHits,
+} from '../lib/types/todays-top-hits-type';
 import {
   type DashboardSalesMetrics,
   type InventoryMetrics,
@@ -51,6 +57,16 @@ const Dashboard = () => {
     enabled: isAuthenticated,
   });
 
+  const {
+    data: todaysTopHitsData,
+    isLoading: todaysTopHitsDataLoading,
+    status: todaysTopHitsDataStatus,
+  } = useQuery<TodaysTopHitsType>({
+    queryKey: ['user', csrftoken, 'todays-top-hits'],
+    queryFn: getTodaysTopHits,
+    enabled: isAuthenticated,
+  });
+
   // Transform Money In Sales Data
   const moneyInSales = useMemo(() => {
     if (!sales?.money_in_sales) return [];
@@ -67,6 +83,40 @@ const Dashboard = () => {
 
     return transformedMoneyInSales;
   }, [sales?.money_in_sales]);
+
+  // id: number;
+  // rank: number;
+  // rankSymbol: JSX.Element;
+  // name: string;
+  // class: string;
+  // quantity: number;
+  // totalRevenue: number;
+  // price: number;
+  // updatedAt: string;
+
+  const todaysTopHits = useMemo(() => {
+    if (!todaysTopHitsData?.todays_top_hits) return [];
+
+    const rankedSymbols = [icons.first, icons.second, icons.third];
+
+    const transformedTodaysTopHits: TransformedTodaysTopHits[] =
+      todaysTopHitsData?.todays_top_hits?.map(
+        (item: apiTodaysTopHitsType, idx: number) => ({
+          id: item?.id,
+          rank: item?.rank,
+          rankSymbol: rankedSymbols[idx] || icons.arrowUp,
+          name: item?.inventory?.product_name ?? 'Unknown Product',
+          class: item?.inventory?.category?.name ?? 'Uncategorized',
+          quantity: item?.quantity ?? 0,
+          totalRevenue: item?.total_price ?? 0,
+          price: item?.inventory?.unit_price ?? 0,
+          updatedAt: getTwelveHourFormat(item?.sold_at) ?? 'N/A',
+          max_quantity: item?.inventory?.max_quantity ?? 0,
+        }),
+      );
+
+    return transformedTodaysTopHits;
+  }, [todaysTopHitsData?.todays_top_hits]);
 
   return (
     <PageContainer className="gap-2 flex flex-col">
@@ -119,25 +169,16 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard-row flex flex-row gap-2">
-        <CardContainer
-          title="Money in Sales Feed"
-          info="Presents a transactional log of sales activity.
-Includes time of transaction, customer, product purchased, quantity sold, and total revenue generated."
-          className="flex-1 min-w-0"
-        >
-          <MoneyInSales
-            rows={moneyInSales || []}
-            loading={salesLoading && salesStatus === 'pending'}
-          />
-        </CardContainer>
-        <CardContainer
-          title="Today’s Top Hits"
-          info="Ranks the top-performing products for the current day based on total accumulated sales.
-Displays revenue generated, quantity sold, remaining inventory, unit price, product classification, and latest update timestamp."
-          className="top-hits-container flex-1 min-w-0"
-        >
-          <TodaysTopHits />
-        </CardContainer>
+        <MoneyInSales
+          rows={moneyInSales || []}
+          loading={salesLoading && salesStatus === 'pending'}
+        />
+        <TodaysTopHits
+          loading={
+            todaysTopHitsDataLoading && todaysTopHitsDataStatus === 'pending'
+          }
+          data={todaysTopHits || []}
+        />
       </div>
 
       <CardContainer

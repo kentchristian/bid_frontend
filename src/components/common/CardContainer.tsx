@@ -74,7 +74,7 @@ const CardContainer = ({
         {loading && !loadingComponent && (
           <Skeleton
             variant="rectangular"
-            className={cn('w-full h-full flex-1 rounded-xl')}
+            className={cn('w-full h-full flex-1 rounded-xl min-w-50')}
           />
         )}
 

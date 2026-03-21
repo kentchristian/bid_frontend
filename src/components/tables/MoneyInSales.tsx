@@ -1,5 +1,6 @@
 import type { TransformedMoneyInSalesType } from '../../lib/types/money-in-sales';
 import { formatUnit } from '../../lib/utils/formatUnit';
+import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 
 interface MoneyInSalesProps {
@@ -22,12 +23,19 @@ const MoneyInSales = ({ rows, loading }: MoneyInSalesProps) => {
   ];
 
   return (
-    <DynamicDataGrid
-      columns={columns}
-      rows={rows}
-      minHeight={350}
-      loading={loading}
-    />
+    <CardContainer
+      title="Money in Sales Feed"
+      info="Presents a transactional log of sales activity.
+Includes time of transaction, customer, product purchased, quantity sold, and total revenue generated."
+      className="flex-1 min-w-0"
+    >
+      <DynamicDataGrid
+        columns={columns}
+        rows={rows}
+        minHeight={350}
+        loading={loading}
+      />
+    </CardContainer>
   );
 };
 
