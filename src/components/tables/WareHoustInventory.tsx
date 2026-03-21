@@ -130,7 +130,7 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     Empty: statusData.Empty.length,
   };
 
-  const filteredRows = statusData[f];
+  const filteredRows = statusData[activeStatus];
 
   return (
     <>
