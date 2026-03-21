@@ -69,13 +69,6 @@ const Dashboard = () => {
     { name: 'Out of Stock', value: 0 },
   ];
 
-  //     id: 1,
-  //     time: '08:30 AM',
-  //     created_by: 'Juan Dela Cruz',
-  //     product: 'Laptop',
-  //     quantity: 1,
-  //     total: 45000,
-
   // Transform Money In Sales Data
   const moneyInSales = useMemo(() => {
     if (!sales?.money_in_sales) return [];
@@ -153,7 +146,10 @@ const Dashboard = () => {
 Includes time of transaction, customer, product purchased, quantity sold, and total revenue generated."
           className="flex-1 min-w-0"
         >
-          <MoneyInSales rows={moneyInSales || []} />
+          <MoneyInSales
+            rows={moneyInSales || []}
+            loading={salesLoading && salesStatus === 'pending'}
+          />
         </CardContainer>
         <CardContainer
           title="Today’s Top Hits"

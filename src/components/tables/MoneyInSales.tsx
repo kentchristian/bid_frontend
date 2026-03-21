@@ -4,9 +4,10 @@ import DynamicDataGrid from '../common/DynamicDataGrid';
 
 interface MoneyInSalesProps {
   rows: TransformedMoneyInSalesType[]; // this is the transformed data
+  loading?: boolean;
 }
 
-const MoneyInSales = ({ rows }: MoneyInSalesProps) => {
+const MoneyInSales = ({ rows, loading }: MoneyInSalesProps) => {
   const columns = [
     { field: 'time', headerName: 'Time', flex: 1 },
     { field: 'created_by', headerName: 'Created By', flex: 1 },
@@ -20,7 +21,14 @@ const MoneyInSales = ({ rows }: MoneyInSalesProps) => {
     },
   ];
 
-  return <DynamicDataGrid columns={columns} rows={rows} minHeight={350} />;
+  return (
+    <DynamicDataGrid
+      columns={columns}
+      rows={rows}
+      minHeight={350}
+      loading={loading}
+    />
+  );
 };
 
 export default MoneyInSales;
