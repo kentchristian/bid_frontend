@@ -151,7 +151,6 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
             }}
           />
         }
-        loading={loading}
       >
         <div
           role="tablist"
@@ -208,6 +207,7 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
         <DynamicDataGrid
           columns={columns}
           rows={filteredRows}
+          loading={loading}
           minHeight={450}
         />
       </CardContainer>

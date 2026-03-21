@@ -217,7 +217,12 @@ const Dashboard = () => {
         />
       </div>
 
-      <WareHouseInventory data={inventoryWareHouse} />
+      <WareHouseInventory
+        data={inventoryWareHouse}
+        loading={
+          inventoryMetricsLoading && inventoryMetricsStatus === 'pending'
+        }
+      />
     </PageContainer>
   );
 };
