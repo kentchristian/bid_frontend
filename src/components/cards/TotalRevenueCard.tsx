@@ -65,6 +65,7 @@ const TotalRevenueCard = ({
         />
       }
       loading={loading && status === 'pending'}
+      loadingComponent={<div>something</div>}
       className="flex-1 min-h-40"
     >
       {content}

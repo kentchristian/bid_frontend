@@ -12,8 +12,9 @@ export interface CardContainerProps {
   customFunction?: React.ReactNode;
 
   loading?: boolean;
+  loadingComponent?: React.ReactNode;
   isEmpty?: boolean;
-  emptyMessage?: string;
+  // emptyMessage?: string;
   className?: string;
 }
 
@@ -23,8 +24,9 @@ const CardContainer = ({
   toolBar,
   children,
   loading = false,
+  loadingComponent,
   isEmpty = false,
-  emptyMessage = 'No data available',
+  // emptyMessage = 'No data available',
   className,
   customFunction,
 }: CardContainerProps) => {
@@ -66,8 +68,10 @@ const CardContainer = ({
 
       {/* Body */}
       <div className="w-full h-full min-h-0 flex-1 flex flex-col">
-        {/* Loading State (ONE skeleton only) */}
-        {loading && (
+        {/* Loading State Custom*/}
+        {loading && loadingComponent && loadingComponent}
+
+        {loading && !loadingComponent && (
           <Skeleton
             variant="rectangular"
             className={cn('w-full h-full flex-1 rounded-xl')}
@@ -76,7 +80,6 @@ const CardContainer = ({
 
         {/* Loading | isEmpty */}
         {!loading && isEmpty && <EmptyState />}
-
         {/* Content */}
         {!loading && !isEmpty && (
           <div className="h-full min-h-0 flex-1">{children}</div>
