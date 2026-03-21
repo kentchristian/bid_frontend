@@ -210,6 +210,20 @@ main {
   background-color: var(--scrollbar-thumb-hover);
 }
 
+.data-grid-native-scroll .MuiDataGrid-virtualScroller.themed-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.data-grid-native-scroll .MuiDataGrid-virtualScroller.themed-scrollbar::-webkit-scrollbar {
+  display: block;
+}
+
+.data-grid-native-scroll .MuiDataGrid-scrollbar,
+.data-grid-native-scroll .MuiDataGrid-scrollbarCorner {
+  display: none;
+}
+
 
 
 

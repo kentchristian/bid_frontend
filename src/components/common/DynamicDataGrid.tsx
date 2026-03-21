@@ -19,7 +19,7 @@ const DynamicDataGrid = ({
   return (
     <div
       className={cn(
-        'data-grid-wrapper w-full min-w-0 flex-1 h-full component-content-scrollbar',
+        'data-grid-wrapper w-full min-w-0 flex-1 h-full',
         className,
       )}
     >
@@ -28,13 +28,13 @@ const DynamicDataGrid = ({
         columns={columns}
         loading={loading}
         pageSizeOptions={[5, 10, 20, 50, 100]}
+        classes={{
+          root: 'data-grid-native-scroll',
+          virtualScroller: 'themed-scrollbar',
+        }}
         sx={{
           height: minHeight,
-          border: 'none',
-          '--DataGrid-scrollbarSize': 'var(--scrollbar-size)',
-          '& .MuiDataGrid-scrollbar': {
-            '--size': 'var(--scrollbar-size)',
-          },
+          // border: 'none',
           '& .MuiDataGrid-footerContainer': {
             height: 70, // Your desired height
             minHeight: 70, // This is CRITICAL to override MUI defaults
