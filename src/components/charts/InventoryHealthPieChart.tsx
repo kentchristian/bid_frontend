@@ -25,7 +25,6 @@ const InventoryHealthPieChart = ({
   data,
   loading,
 }: InventoryHealthPieCharProps) => {
-  console.log(data);
   return (
     <CardContainer
       title="Inventory Health"

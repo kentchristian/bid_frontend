@@ -154,8 +154,6 @@ const Dashboard = () => {
     return transformedHealthItems;
   }, [inventoryMetrics?.inventory_health?.items]);
 
-  console.table(inventoryWareHouse);
-
   return (
     <PageContainer className="gap-2 flex flex-col">
       <div className="dashboard-row flex flex-row gap-2">
