@@ -34,6 +34,7 @@ const TruncatedText = ({
       disableFocusListener={!showTooltip}
       disableTouchListener={!showTooltip}
       {...tooltipProps}
+      className="hover:cursor-help"
     >
       <span className={cn('inline-block max-w-full', className)}>
         {displayText}

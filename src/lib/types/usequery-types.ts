@@ -1,4 +1,5 @@
 import type { MoneyInSalesType } from "./money-in-sales";
+import type { InventoryHealthItems } from "./warehouse-inventory-type";
 
 
 export type statusQuery = 'pending' | 'error' | 'success';
@@ -43,21 +44,11 @@ export type StockClassTotal = {
   value: number;
 }
 
-export type InventoryHealthItem = {
-  product_name: string;
-  item_threshold: number;
-  stock: number;
-  category?: string;
-  status?: string;
-  [key: string]: unknown;
-}
-
 export type Inventoryhealth = {
-  
   stocks_class_total: StockClassTotal[],
-  item?: InventoryHealthItem
+  items: InventoryHealthItems;
+   
 }
-
 export type InventoryMetrics = {
   items_below_threshold: ItemsBelowThreshold,
   inventory_health: Inventoryhealth,

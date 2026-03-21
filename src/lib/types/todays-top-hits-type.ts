@@ -36,5 +36,5 @@ export type TransformedTodaysTopHits = {
   totalRevenue: number;
   price: number;
   updatedAt: string;
-  max_quantity: number;
+  maxQuantity: number;
 };

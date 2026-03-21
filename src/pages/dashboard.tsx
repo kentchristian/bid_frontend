@@ -1,4 +1,3 @@
-import { Switch } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
 import { getInventoryMetrics } from '../api/inventory';
@@ -9,7 +8,6 @@ import TotalRevenueCard from '../components/cards/TotalRevenueCard';
 import TotalUnitsSoldCard from '../components/cards/TotalUnitsSoldCard';
 import InventoryHealthPieChart from '../components/charts/InventoryHealthPieChart';
 import SalesTrendAreaChart from '../components/charts/SalesTrendAreaChart';
-import CardContainer from '../components/common/CardContainer';
 import PageContainer from '../components/common/PageContainer';
 
 import { useMemo } from 'react';
@@ -29,6 +27,12 @@ import {
   type DashboardSalesMetrics,
   type InventoryMetrics,
 } from '../lib/types/usequery-types';
+import type {
+  InventoryHealthItems,
+  TransformedHealthItems,
+  TransformedWareHouseType,
+  WareHouseInventoryType,
+} from '../lib/types/warehouse-inventory-type';
 import { getCookie } from '../lib/utils/getCookie';
 import { getTwelveHourFormat } from '../lib/utils/getTwelveHourFormat';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
@@ -84,16 +88,6 @@ const Dashboard = () => {
     return transformedMoneyInSales;
   }, [sales?.money_in_sales]);
 
-  // id: number;
-  // rank: number;
-  // rankSymbol: JSX.Element;
-  // name: string;
-  // class: string;
-  // quantity: number;
-  // totalRevenue: number;
-  // price: number;
-  // updatedAt: string;
-
   const todaysTopHits = useMemo(() => {
     if (!todaysTopHitsData?.todays_top_hits) return [];
 
@@ -111,12 +105,56 @@ const Dashboard = () => {
           totalRevenue: item?.total_price ?? 0,
           price: item?.inventory?.unit_price ?? 0,
           updatedAt: getTwelveHourFormat(item?.sold_at) ?? 'N/A',
-          max_quantity: item?.inventory?.max_quantity ?? 0,
+          maxQuantity: item?.inventory?.max_quantity ?? 0,
         }),
       );
 
     return transformedTodaysTopHits;
   }, [todaysTopHitsData?.todays_top_hits]);
+
+  const inventoryWareHouse = useMemo(() => {
+    // Explicitly casting or typing the sourceData
+    const sourceData: InventoryHealthItems | undefined =
+      inventoryMetrics?.inventory_health?.items;
+
+    if (!sourceData) {
+      return {
+        healthy_stock_items: [],
+        low_stock: [],
+        empty_stock: [],
+      };
+    }
+
+    // Now 'inventory' is strictly typed as an array of WareHouseInventoryType
+    const transformFunction = (
+      inventory: WareHouseInventoryType[],
+      status: 'Healthy' | 'Low' | 'Empty', // Literal types for better safety
+    ): TransformedWareHouseType[] => {
+      return inventory.map((item: WareHouseInventoryType) => ({
+        id: item?.id,
+        productName: item?.product_name ?? 'Unknown',
+        category: item?.category?.name ?? 'Uncategorized',
+        currentStock: item?.stock_quantity ?? 0,
+        maxQuantity: item?.max_quantity ?? 0,
+        reorderThreshold: item?.reorder_threshold ?? 0,
+        unitPrice: item?.unit_price ?? 0,
+        status: status,
+      }));
+    };
+
+    const transformedHealthItems: TransformedHealthItems = {
+      healthy_stock_items: transformFunction(
+        sourceData?.healthy_stock_items ?? [],
+        'Healthy',
+      ),
+      low_stock: transformFunction(sourceData.low_stock ?? [], 'Low'),
+      empty_stock: transformFunction(sourceData.empty_stock ?? [], 'Empty'),
+    };
+
+    return transformedHealthItems;
+  }, [inventoryMetrics?.inventory_health?.items]);
+
+  console.table(inventoryWareHouse);
 
   return (
     <PageContainer className="gap-2 flex flex-col">
@@ -181,26 +219,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <CardContainer
-        title="Warehouse Inventory"
-        className="flex-1 min-w-0 min-h-140"
-        info="Provides a structured view of warehouse stock levels.
-Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
-        customFunction={
-          <Switch
-            sx={{
-              '& .MuiSwitch-switchBase.Mui-checked': {
-                color: 'var(--accent-positive)', // thumb color
-              },
-              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                backgroundColor: 'var(--accent-positive)', // track color
-              },
-            }}
-          />
-        }
-      >
-        <WareHouseInventory />
-      </CardContainer>
+      <WareHouseInventory data={inventoryWareHouse} />
     </PageContainer>
   );
 };
