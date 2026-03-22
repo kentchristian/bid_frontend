@@ -2,4 +2,4 @@
 
 
 
-export const baseURL = process.env.NEXT_BACKEND
+export const baseURL = process.env.PUBLIC_BACKEND
