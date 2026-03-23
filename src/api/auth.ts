@@ -10,7 +10,25 @@ export const login = async ({ email, password }: LoginPayload) => {
   return response.data;
 };
 
+
+
+
+/* Get CSFRT TOKEN and Logout **/
+let csrfTokenCache: string | null = null;
+
+async function getCsrfToken() {
+  if (csrfTokenCache) return csrfTokenCache;
+  const { data } = await baseApi.get('/auth/csrf/');
+  csrfTokenCache = data.csrfToken;
+  return csrfTokenCache;
+}
+
 export const logout = async () => {
-  const response = await baseApi.post('/auth/logout/');
+  const token = await getCsrfToken();
+  const response = await baseApi.post(
+    '/auth/logout/',
+    null,
+    { headers: { 'X-CSRFToken': token } }
+  );
   return response.data;
 };
