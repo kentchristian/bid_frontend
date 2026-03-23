@@ -13,6 +13,7 @@ import { Link, useLocation, useNavigate } from 'react-router';
 import { login } from '../../api/auth';
 import AuthCard from '../../components/common/AuthCard';
 import { Typography } from '../../components/common/Typography';
+import { guestEmail, guestPassword } from '../../config/global-config';
 import { icons } from '../../lib/constants/icons';
 import { useMiddleware } from '../../middleware/MiddlewareProvider';
 
@@ -71,6 +72,12 @@ export const Login = () => {
     event.preventDefault();
     setFormError(null);
     loginMutation.mutate({ email: email.trim(), password });
+  };
+
+  const handleSignAsGuest = () => {
+    event?.preventDefault();
+    setFormError(null);
+    loginMutation.mutate({ email: guestEmail, password: guestPassword });
   };
 
   return (
@@ -147,6 +154,12 @@ export const Login = () => {
           loading={loginMutation.isPending}
         >
           Login
+        </Button>
+
+        <Button variant="text" onClick={handleSignAsGuest}>
+          <Typography className="text-center text-sm text-blue-500 hover:underline hover:cursor-pointer">
+            Sign in as Guest
+          </Typography>
         </Button>
 
         <Typography className="text-center text-gray-500 text-sm mt-4">

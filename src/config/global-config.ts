@@ -7,3 +7,7 @@ const rawBaseURL = useProxy
 
 // Normalize to avoid double slashes when endpoints are called with leading "/".
 export const baseURL = rawBaseURL.replace(/\/+$/, '');
+
+
+export const guestEmail = import.meta.env.PUBLIC_GUEST_EMAIL ?? 'guest@gmail.com';
+export const guestPassword = import.meta.env.PUBLIC_GUEST_PASS ?? 'guest-password'
