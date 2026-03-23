@@ -16,7 +16,9 @@ export default defineConfig({
   server: {
     proxy: [
       {
-        context: ['/api', '/auth'],
+        context: (path) => 
+          path.startsWith('/api') ||
+        (path.startsWith('/auth') && path !== '/auth/login'),
         target: backend,
         changeOrigin: true,
         secure: false,

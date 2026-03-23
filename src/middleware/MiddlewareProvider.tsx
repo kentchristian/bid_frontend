@@ -8,73 +8,66 @@ import {
   type ReactNode,
 } from 'react';
 import { Navigate, useLocation } from 'react-router';
+import { validateUser } from '../api/auth';
 
 type MiddlewareContextValue = {
   isAuthenticated: boolean;
+  isCheckingAuth: boolean;
   setAuthenticated: (value: boolean, options?: SetAuthenticatedOptions) => void;
 };
 
 const MiddlewareContext = createContext<MiddlewareContextValue | null>(null);
 
-const STORAGE_KEY = 'bid.authenticated';
-// Client-readable auth flag cookie (set by the app).
-const AUTH_COOKIE_NAME = 'bid.authenticated';
-const REMEMBER_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
-
 type SetAuthenticatedOptions = {
   remember?: boolean;
 };
 
-const readCookie = (name: string) => {
-  if (typeof document === 'undefined') return null;
-  const escaped = name.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-  const match = document.cookie.match(new RegExp(`(?:^|; )${escaped}=([^;]*)`));
-  return match ? decodeURIComponent(match[1]) : null;
-};
-
-const readStoredAuth = () => {
-  if (typeof window === 'undefined') return false;
-  const cookieValue = readCookie(AUTH_COOKIE_NAME);
-  return cookieValue === 'true';
-};
-
-const setAuthCookie = (value: boolean, options?: SetAuthenticatedOptions) => {
-  if (typeof document === 'undefined') return;
-  if (!value) {
-    document.cookie = `${AUTH_COOKIE_NAME}=; path=/; max-age=0; samesite=lax`;
-    return;
-  }
-  const remember = options?.remember ?? true;
-  const maxAge = remember ? `; max-age=${REMEMBER_MAX_AGE_SECONDS}` : '';
-  document.cookie = `${AUTH_COOKIE_NAME}=true; path=/${maxAge}; samesite=lax`;
-};
-
 export const MiddlewareProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(readStoredAuth);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    setIsAuthenticated(readStoredAuth());
+    let cancelled = false;
+
+    const checkAuth = async () => {
+      try {
+        const isValid = await validateUser();
+        if (!cancelled) {
+          setIsAuthenticated(isValid);
+        }
+      } catch {
+        if (!cancelled) {
+          setIsAuthenticated(false);
+        }
+      } finally {
+        if (!cancelled) {
+          setIsCheckingAuth(false);
+        }
+      }
+    };
+
+    void checkAuth();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const setAuthenticated = (
     value: boolean,
-    options?: SetAuthenticatedOptions,
+    _options?: SetAuthenticatedOptions,
   ) => {
     setIsAuthenticated(value);
-    if (typeof window !== 'undefined') {
-      setAuthCookie(value, options);
-      // Clear legacy storage flags so cookie is source of truth.
-      window.localStorage.removeItem(STORAGE_KEY);
-      window.sessionStorage.removeItem(STORAGE_KEY);
-    }
+    setIsCheckingAuth(false);
   };
 
   const value = useMemo(
     () => ({
       isAuthenticated,
+      isCheckingAuth,
       setAuthenticated,
     }),
-    [isAuthenticated],
+    [isAuthenticated, isCheckingAuth],
   );
 
   return (
@@ -93,9 +86,13 @@ export const useMiddleware = () => {
 };
 
 export const RequireAuth = ({ children }: { children: ReactElement }) => {
-  const { isAuthenticated } = useMiddleware();
+  const { isAuthenticated, isCheckingAuth } = useMiddleware();
   const location = useLocation();
   const isRootPath = location.pathname === '/' || location.pathname === '';
+
+  if (isCheckingAuth) {
+    return null;
+  }
 
   if (isRootPath) {
     return (
@@ -115,7 +112,11 @@ export const RedirectIfAuthenticated = ({
 }: {
   children: ReactElement;
 }) => {
-  const { isAuthenticated } = useMiddleware();
+  const { isAuthenticated, isCheckingAuth } = useMiddleware();
+
+  if (isCheckingAuth) {
+    return null;
+  }
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;

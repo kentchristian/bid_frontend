@@ -32,3 +32,13 @@ export const logout = async () => {
   );
   return response.data;
 };
+
+
+export const validateUser = async (): Promise<boolean> => {
+  try { // temporary working authentication need api
+    await baseApi.get('/api/inventory/inventory_metrics/')
+    return true; // this line is read if user is validated
+  } catch {
+    return false; // else exis it entirely 
+  }
+}
