@@ -12,6 +12,5 @@ export const login = async ({ email, password }: LoginPayload) => {
 
 export const logout = async () => {
   const response = await baseApi.post('/auth/logout/');
-
   return response.data;
 };

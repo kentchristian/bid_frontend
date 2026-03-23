@@ -1,5 +1,9 @@
 // export const baseURL = 'http://localhost:8000';
 
+const useProxy = import.meta.env.PUBLIC_USE_PROXY === 'true';
+const rawBaseURL = useProxy
+  ? ''
+  : (import.meta.env.PUBLIC_BACKEND ?? 'http://localhost:8000');
 
-
-export const baseURL = process.env.PUBLIC_BACKEND
+// Normalize to avoid double slashes when endpoints are called with leading "/".
+export const baseURL = rawBaseURL.replace(/\/+$/, '');
