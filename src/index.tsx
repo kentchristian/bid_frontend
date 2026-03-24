@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router';
 import './lib/styles/global.css';
 import { BreakpointProvider } from './lib/providers/BreakpointProvider';
+import { SnackbarProvider } from './lib/providers/SnackbarProvider';
 import { MiddlewareProvider } from './middleware/MiddlewareProvider';
 import router from './routes/route-config';
 import { queryClient } from './services/queryClient';
@@ -47,7 +48,9 @@ if (rootEl) {
       <MiddlewareProvider>
         <BreakpointProvider>
           <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
+            <SnackbarProvider>
+              <RouterProvider router={router} />
+            </SnackbarProvider>
           </QueryClientProvider>
         </BreakpointProvider>
       </MiddlewareProvider>

@@ -15,6 +15,7 @@ import AuthCard from '../../components/common/AuthCard';
 import { Typography } from '../../components/common/Typography';
 import { guestEmail, guestPassword } from '../../config/global-config';
 import { icons } from '../../lib/constants/icons';
+import { useSnackbar } from '../../lib/providers/SnackbarProvider';
 import { useUserData } from '../../lib/store/useUserData';
 import { useMiddleware } from '../../middleware/MiddlewareProvider';
 
@@ -26,6 +27,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setAuthenticated } = useMiddleware();
+  const { showSnackbar } = useSnackbar();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -57,6 +59,7 @@ export const Login = () => {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess: (data) => {
+      showSnackbar('Login successful!', { variant: 'success' });
       setAuthenticated(true, { remember: rememberMe });
       setUserData(data?.user_data);
 
