@@ -32,6 +32,7 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.clear();
+      localStorage.clear(); // clear whats inside the storage
       setAuthenticated(false);
 
       const from =

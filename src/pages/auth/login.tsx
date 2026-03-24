@@ -15,6 +15,7 @@ import AuthCard from '../../components/common/AuthCard';
 import { Typography } from '../../components/common/Typography';
 import { guestEmail, guestPassword } from '../../config/global-config';
 import { icons } from '../../lib/constants/icons';
+import { useUserData } from '../../lib/store/useUserData';
 import { useMiddleware } from '../../middleware/MiddlewareProvider';
 
 type LocationState = {
@@ -51,11 +52,14 @@ export const Login = () => {
       },
     },
   };
+  const { setUserData } = useUserData();
 
   const loginMutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (data) => {
       setAuthenticated(true, { remember: rememberMe });
+      setUserData(data?.user_data);
+
       const from =
         (location.state as LocationState | null)?.from?.pathname ??
         '/dashboard';

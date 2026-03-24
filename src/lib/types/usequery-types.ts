@@ -57,3 +57,9 @@ export type InventoryMetrics = {
 
 
 
+export type Tenant = {
+  id?: string;
+  name?: string;
+}
+
+
