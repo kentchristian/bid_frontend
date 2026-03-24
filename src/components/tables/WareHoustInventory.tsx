@@ -1,6 +1,4 @@
-import { Button } from '@mui/material';
 import { useState } from 'react';
-import { FiEdit2, FiMinus, FiPlus } from 'react-icons/fi';
 import { cn } from '../../lib/helpers/cn';
 import type {
   TransformedHealthItems,
@@ -43,42 +41,42 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     { field: 'reorderThreshold', headerName: 'Re-order Threshold', flex: 1 },
     { field: 'unitPrice', headerName: 'Unit Price', flex: 1 },
     { field: 'status', headerName: 'Status', flex: 1 },
-    {
-      field: 'actions',
-      headerName: 'Actions',
-      flex: 1.5,
-      renderCell: (params: any) => {
-        const { id } = params.row;
-        return (
-          <div className="flex items-center justify-start gap-2 p-2">
-            <Button
-              aria-label={`Add stock for ID ${id}`}
-              variant="outlined"
-              sx={actionButtonSx('--accent-positive')}
-              onClick={() => alert(`Add stock for ID ${id}`)}
-            >
-              <FiPlus size={16} />
-            </Button>
-            <Button
-              aria-label={`Minus stock for ID ${id}`}
-              variant="outlined"
-              sx={actionButtonSx('--accent-negative')}
-              onClick={() => alert(`Minus stock for ID ${id}`)}
-            >
-              <FiMinus size={16} />
-            </Button>
-            <Button
-              aria-label={`Edit product ID ${id}`}
-              variant="outlined"
-              sx={actionButtonSx('--accent-primary')}
-              onClick={() => alert(`Edit product ID ${id}`)}
-            >
-              <FiEdit2 size={16} />
-            </Button>
-          </div>
-        );
-      },
-    },
+    // {
+    //   field: 'actions',
+    //   headerName: 'Actions',
+    //   flex: 1.5,
+    //   renderCell: (params: any) => {
+    //     const { id } = params.row;
+    //     return (
+    //       <div className="flex items-center justify-start gap-2 p-2">
+    //         <Button
+    //           aria-label={`Add stock for ID ${id}`}
+    //           variant="outlined"
+    //           sx={actionButtonSx('--accent-positive')}
+    //           onClick={() => alert(`Add stock for ID ${id}`)}
+    //         >
+    //           <FiPlus size={16} />
+    //         </Button>
+    //         <Button
+    //           aria-label={`Minus stock for ID ${id}`}
+    //           variant="outlined"
+    //           sx={actionButtonSx('--accent-negative')}
+    //           onClick={() => alert(`Minus stock for ID ${id}`)}
+    //         >
+    //           <FiMinus size={16} />
+    //         </Button>
+    //         <Button
+    //           aria-label={`Edit product ID ${id}`}
+    //           variant="outlined"
+    //           sx={actionButtonSx('--accent-primary')}
+    //           onClick={() => alert(`Edit product ID ${id}`)}
+    //         >
+    //           <FiEdit2 size={16} />
+    //         </Button>
+    //       </div>
+    //     );
+    //   },
+    // },
   ];
 
   const statusData: Record<InventoryStatus, TransformedWareHouseType[]> = {
