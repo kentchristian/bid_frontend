@@ -202,7 +202,7 @@ main {
 
 .themed-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-color: transparent transparent;
 }
 
 .themed-scrollbar::-webkit-scrollbar {
@@ -211,20 +211,42 @@ main {
 }
 
 .themed-scrollbar::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
+  background: transparent;
 }
 
 .themed-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
+  background-color: transparent;
   border-radius: 999px;
 }
 
-.themed-scrollbar::-webkit-scrollbar-thumb:hover {
+.themed-scrollbar:hover,
+.themed-scrollbar:focus-within {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.themed-scrollbar:hover::-webkit-scrollbar-track,
+.themed-scrollbar:focus-within::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.themed-scrollbar:hover::-webkit-scrollbar-thumb,
+.themed-scrollbar:focus-within::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+}
+
+.themed-scrollbar:hover::-webkit-scrollbar-thumb:hover,
+.themed-scrollbar:focus-within::-webkit-scrollbar-thumb:hover {
   background-color: var(--scrollbar-thumb-hover);
 }
 
 .data-grid-native-scroll .MuiDataGrid-virtualScroller.themed-scrollbar {
   scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.data-grid-native-scroll .MuiDataGrid-virtualScroller.themed-scrollbar:hover,
+.data-grid-native-scroll
+  .MuiDataGrid-virtualScroller.themed-scrollbar:focus-within {
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 

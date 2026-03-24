@@ -31,6 +31,7 @@
 
   .page-container {
     padding: 12px;
+    overflow-x: hidden;
   }
 
   .dashboard-row {
@@ -74,37 +75,64 @@
 
 
   .warehouse-inventory{
-    min-height: 840;
-    width: "100%";
-    overflow-x: auto;
-    scrollbar-width: thin;
-    
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
   }
   .warehouse-data-grid{
-    min-width: 600;
-    overflow: 'hidden'
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .warehouse-status-tabs {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .warehouse-status-tabs [role="tab"] {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+  }
+
+  .warehouse-status-tabs [role="tab"]:hover,
+  .warehouse-status-tabs [role="tab"][aria-selected="true"] {
+    box-shadow: none;
   }
   
   .top-hits-container {
-    min-height: 300;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-    
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
   }
 
   .top-hits-item {
     padding: 12px;
+    
   }
 
   .top-hits-row {
     flex-direction: column;
     align-items: flex-start;
+    
+   
   }
 
   .top-hits-meta {
     width: 100%;
-    text-align: left;
+    text-align: right;
+    margin-top: -60px;
+    
+  }
+
+  .top-hits-meta .text-right {
+    text-align: right;
   }
 
   .top-hits-progress {

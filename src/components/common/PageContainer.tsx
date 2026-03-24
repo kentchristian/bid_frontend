@@ -1,7 +1,7 @@
 import { cn } from '../../lib/helpers/cn';
 import type { ContainerType } from '../../lib/types/container-types';
 
-const SCROLLBAR_CONFIG = 'overflow-auto themed-scrollbar';
+const SCROLLBAR_CONFIG = 'overflow-y-auto overflow-x-hidden themed-scrollbar';
 
 const PageContainer = ({
   children,

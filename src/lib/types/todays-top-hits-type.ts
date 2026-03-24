@@ -18,6 +18,7 @@ export type apiTodaysTopHitsType = {
   id: string;
   inventory?: top_inventory;
   quantity: number;
+  unit_price: number;
   total_price: number;
   sold_at: string;
   rank: number;
@@ -34,7 +35,7 @@ export type TransformedTodaysTopHits = {
   class: string;
   quantity: number;
   totalRevenue: number;
-  price: number;
+  unitPrice: number;
   updatedAt: string;
   maxQuantity: number;
 };

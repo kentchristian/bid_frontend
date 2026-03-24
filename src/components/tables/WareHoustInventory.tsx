@@ -1,4 +1,4 @@
-import { Button, Switch } from '@mui/material';
+import { Button } from '@mui/material';
 import { useState } from 'react';
 import { FiEdit2, FiMinus, FiPlus } from 'react-icons/fi';
 import { cn } from '../../lib/helpers/cn';
@@ -139,20 +139,20 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
         className="warehouse-inventory flex-1 min-w-0 min-h-165"
         info="Provides a structured view of warehouse stock levels.
 Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
-        customFunction={
-          <Switch
-            sx={{
-              '& .MuiSwitch-switchBase.Mui-checked': {
-                color: 'var(--accent-positive)', // thumb color
-              },
-              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                backgroundColor: 'var(--accent-positive)', // track color
-              },
-            }}
-          />
-        }
+        // customFunction={
+        //   <Switch
+        //     sx={{
+        //       '& .MuiSwitch-switchBase.Mui-checked': {
+        //         color: 'var(--accent-positive)', // thumb color
+        //       },
+        //       '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+        //         backgroundColor: 'var(--accent-positive)', // track color
+        //       },
+        //     }}
+        //   />
+        // }
       >
-        <div className="flex flex-col rounded-sm sm:flex-row mb-4 shadow-2xl">
+        <div className="warehouse-status-tabs flex flex-col rounded-sm sm:flex-row mb-4 shadow-2xl">
           {statusTabs.map((tab) => {
             const isActive = activeStatus === tab.key;
             const styles = statusStyles[tab.key];

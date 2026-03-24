@@ -40,12 +40,12 @@ Displays revenue generated, quantity sold, remaining inventory, unit price, prod
     >
       {data && (
         <ul className="space-y-3">
-          {data.map((product) => {
+          {data.map((product: TransformedTodaysTopHits) => {
             const rankStyle =
               rankPalette[product.rank - 1] ??
               rankPalette[rankPalette.length - 1];
             const quantityPct = Math.round(
-              (product.quantity / product.max_quantity) * 100,
+              (product.quantity / product.maxQuantity) * 100,
             );
             const remainingPct = 100 - quantityPct;
             const progressTone =
@@ -115,7 +115,7 @@ Displays revenue generated, quantity sold, remaining inventory, unit price, prod
                       align="right"
                       className="text-[color:var(--sidebar-muted)]"
                     >
-                      ₱ {product.price.toLocaleString()} / unit
+                      ₱ {product.unitPrice} / unit
                     </Typography>
 
                     <div className="top-hits-progress mt-2 flex items-center justify-end gap-2">

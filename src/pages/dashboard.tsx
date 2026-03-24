@@ -103,7 +103,7 @@ const Dashboard = () => {
           class: item?.inventory?.category?.name ?? 'Uncategorized',
           quantity: item?.quantity ?? 0,
           totalRevenue: item?.total_price ?? 0,
-          price: item?.inventory?.unit_price ?? 0,
+          unitPrice: item?.unit_price ?? 0,
           updatedAt: getTwelveHourFormat(item?.sold_at) ?? 'N/A',
           maxQuantity: item?.inventory?.max_quantity ?? 0,
         }),
