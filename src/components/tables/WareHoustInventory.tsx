@@ -136,7 +136,7 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     <>
       <CardContainer
         title="Warehouse Inventory"
-        className="flex-1 min-w-0 min-h-165"
+        className="warehouse-inventory flex-1 min-w-0 min-h-165"
         info="Provides a structured view of warehouse stock levels.
 Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
         customFunction={
@@ -152,56 +152,51 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
           />
         }
       >
-        <div
-          role="tablist"
-          aria-label="Inventory status filters"
-          className="mb-4 rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card)] p-1"
-        >
-          <div className="flex flex-col gap-2 sm:flex-row">
-            {statusTabs.map((tab) => {
-              const isActive = activeStatus === tab.key;
-              const styles = statusStyles[tab.key];
+        <div className="flex flex-col rounded-sm sm:flex-row mb-4 shadow-2xl">
+          {statusTabs.map((tab) => {
+            const isActive = activeStatus === tab.key;
+            const styles = statusStyles[tab.key];
 
-              return (
-                <button
-                  key={tab.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActiveStatus(tab.key)}
-                  className={cn(
-                    'hover:cursor-pointer flex-1 rounded-xl px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-primary)]',
-                    isActive
-                      ? 'bg-[color:var(--sidebar-bg)] shadow-sm'
-                      : 'hover:bg-[color:var(--sidebar-bg)]',
-                  )}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={cn('h-2.5 w-2.5 rounded-full', styles.dot)}
-                      />
-                      <Typography
-                        variant="h3"
-                        className="text-[color:var(--main-text)]"
-                      >
-                        {tab.label}
-                      </Typography>
-                    </div>
+            return (
+              <button
+                card-border
+                key={tab.key}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => setActiveStatus(tab.key)}
+                className={cn(
+                  'rounded-sm hover:cursor-pointer w-150 flex-1 border border-(--card-border) px-4 py-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--accent-primary)]',
+                  isActive
+                    ? 'bg-[color:var(--sidebar-bg)] shadow-sm'
+                    : 'hover:bg-[color:var(--sidebar-bg)]',
+                )}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={cn('h-2.5 w-2.5 rounded-full', styles.dot)}
+                    />
                     <Typography
-                      variant="caption"
-                      className={cn(
-                        'inline-flex items-center rounded-full border px-2 py-0.5',
-                        styles.pill,
-                      )}
+                      variant="h3"
+                      className="text-[color:var(--main-text)]"
                     >
-                      {statusCounts[tab.key]}
+                      {tab.label}
                     </Typography>
                   </div>
-                </button>
-              );
-            })}
-          </div>
+                  <Typography
+                    variant="caption"
+                    className={cn(
+                      'inline-flex items-center rounded-full border px-2 py-0.5',
+                      styles.pill,
+                    )}
+                  >
+                    {statusCounts[tab.key]}
+                  </Typography>
+                </div>
+              </button>
+            );
+          })}
         </div>
 
         <DynamicDataGrid
@@ -209,6 +204,7 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
           rows={filteredRows}
           loading={loading}
           minHeight={450}
+          className="warehouse-data-grid"
         />
       </CardContainer>
     </>

@@ -39,7 +39,7 @@
 
   .card-container {
     padding: 16px;
-    
+  
     
   }
 
@@ -48,8 +48,8 @@
   }
 
   .card-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
     margin-bottom: 12px;
   }
@@ -65,6 +65,20 @@
   .MuiDataGrid-columnHeaders,
   .MuiDataGrid-cell {
     font-size: 0.8rem;
+  }
+
+
+
+  .warehouse-inventory{
+    min-height: 840;
+    width: "100%";
+    overflow-x: auto;
+    scrollbar-width: thin;
+    
+  }
+  .warehouse-data-grid{
+    min-width: 600;
+    overflow: 'hidden'
   }
   
   .top-hits-container {
