@@ -4,6 +4,7 @@ import { NavLink } from 'react-router';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
 import { useThemeMode, useToggleMode } from '../../lib/store/useMode';
+import { useUserData } from '../../lib/store/useUserData';
 import Logout from '../../pages/auth/logout';
 
 const navItems = [
@@ -24,6 +25,7 @@ const SideBar = ({ className }: SideBarProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const logoSrc = mode === 'dark' ? '/logo.svg' : '/logo-light.svg';
+  const tenant = useUserData((state) => state.userData?.tenant?.name);
 
   useEffect(() => {
     window.dispatchEvent(new Event('resize'));
@@ -144,7 +146,9 @@ const SideBar = ({ className }: SideBarProps) => {
         >
           <icons.menu size={24} />
         </IconButton>
-        <img src={logoSrc} alt="BID logo" className="mobile-nav__logo" />
+        <span className="mobile-nav__tenant" title={tenant ?? 'Tenant'}>
+          {tenant ?? 'Tenant'}
+        </span>
         <span className="h-10 w-10" aria-hidden="false" />
       </div>
 

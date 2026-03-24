@@ -25,6 +25,10 @@
     z-index: 1200;
   }
 
+  .app-header {
+    display: none;
+  }
+
   .page-container {
     padding: 12px;
   }

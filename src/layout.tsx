@@ -17,7 +17,7 @@ const Layout = () => {
       <div className="flex flex-col flex-1 min-w-0 h-full">
         <header
           className={`
-          flex justify-center items-center px-4 bg-(--main-bg) overflow-hidden
+          app-header flex justify-center items-center px-4 bg-(--main-bg) overflow-hidden
           border-b border-[color:var(--sidebar-border)]
           transition-[max-height,opacity,transform,padding] duration-300
           ${isScrolled ? 'max-h-0 py-0 opacity-0 -translate-y-2 pointer-events-none border-transparent' : 'max-h-16 py-2 opacity-100 translate-y-0'}
