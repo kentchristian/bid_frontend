@@ -8,42 +8,50 @@ import { Typography } from '../common/Typography';
 
 export interface DateRangeRef {
   getRange: () => {
-    from: Date;
+    from: Date | null;
     to: Date | null;
   };
 }
 
 const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
   // only care for ref prop
-  const [fromDate, setFromDate] = useState<Date>(() => startOfDay(new Date()));
+  const [fromDate, setFromDate] = useState<Date | null>(null);
   const [toDate, setToDate] = useState<Date | null>(null);
+  const today = useMemo(() => startOfDay(new Date()), []);
 
   // Expose Variable
   useImperativeHandle(ref, () => ({
     getRange: () => ({
       from: fromDate,
-      to: toDate,
+      to: fromDate ? (toDate ?? fromDate) : null,
     }),
   }));
 
   // defaul min date
-  const minToDate = useMemo(() => startOfMonth(fromDate), [fromDate]);
+  const minToDate = useMemo(
+    () => startOfMonth(fromDate ?? today),
+    [fromDate, today],
+  );
 
   // defaul maxdate for from
-  const maxFromDate = useMemo(() => endOfMonth(fromDate), [fromDate]);
+  const maxFromDate = useMemo(
+    () => endOfMonth(fromDate ?? today),
+    [fromDate, today],
+  );
 
   const handleFromChange = (newValue: Date | null) => {
     if (!newValue || Number.isNaN(newValue.getTime())) return;
     const normalized = startOfDay(newValue);
     setFromDate(normalized);
 
-    if (toDate && isBefore(toDate, normalized)) {
-      setToDate(null);
+    if (!toDate || isBefore(toDate, normalized)) {
+      setToDate(normalized);
     }
   };
 
   const handleToChange = (newValue: Date | null) => {
     if (!newValue || Number.isNaN(newValue.getTime())) return;
+    if (!fromDate) return;
     const normalized = startOfDay(newValue);
     if (isBefore(normalized, fromDate)) return;
     setToDate(normalized);
@@ -61,6 +69,7 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
             onChange={handleFromChange}
             onAccept={handleFromChange}
             maxDate={maxFromDate}
+            referenceDate={fromDate ?? today}
             // Disable any date in the past if needed,
             // or leave open depending on your requirements
             slotProps={{
@@ -74,14 +83,19 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
         <Box>
           <Typography variant="body-lg">End Date</Typography>
           <StaticDatePicker
-            key={`to-picker-${fromDate.getTime()}`}
+            key={
+              fromDate ? `to-picker-${fromDate.getTime()}` : 'to-picker-empty'
+            }
             displayStaticWrapperAs="desktop"
             value={toDate}
             onChange={handleToChange}
             onAccept={handleToChange}
             minDate={minToDate}
             referenceDate={minToDate}
-            shouldDisableDate={(date) => isBefore(date, fromDate)}
+            shouldDisableDate={(date) =>
+              fromDate ? isBefore(date, fromDate) : false
+            }
+            disabled={!fromDate}
             slotProps={{
               toolbar: { hidden: true },
               actionBar: { actions: [] },
@@ -89,16 +103,6 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
           />
         </Box>
       </div>
-      {/* <Divider />
-
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <Typography variant="body-sm" className="text-gray-500">
-                Start: {format(fromDate, 'MMM dd, yyyy')}
-              </Typography>
-              <Typography variant="body-sm" className="text-gray-500">
-                End: {toDate ? format(toDate, 'MMM dd, yyyy') : 'Select end date'}
-              </Typography>
-            </div> */}
     </LocalizationProvider>
   );
 });
