@@ -5,6 +5,7 @@
   --app-bg: #f2f2f2;
   --main-bg: #f5f5f5;
   --main-text: #1f2937;
+  --invert-text: #f4f4f5;
   --card: #ffffff;
   --card-border: #e6e6e6;
   --sidebar-bg: #f7f7f7;
@@ -19,8 +20,12 @@
   --sidebar-logo-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   --sidebar-logo-filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
   --accent-positive: #059669;
+  --accent-positive-hover: #05875F;
+  --accent-positive-active: #047854;
   --positive-chip-text: #ffffff;
   --accent-negative: #DC2626;
+  --accent-negative-hover: #C82020;
+  --accent-negative-active: #B21D1D;
   --accent-warning: #E6C900 ;
   --scrollbar-size: 6px;
   --scrollbar-track: #e5e7eb;
@@ -32,6 +37,7 @@
   --app-bg: #1f1f1f;
   --main-bg: #202020;
   --main-text: #f4f4f5;
+  --invert-text: #1f2937;
   --card: #2f2f2f;
   --card-border: #3a3a3a;
   --sidebar-bg: #282828;
@@ -46,8 +52,12 @@
   --sidebar-logo-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
   --sidebar-logo-filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
   --accent-positive: #34d399;
+  --accent-positive-hover: #45D7A2;
+  --accent-positive-active: #57DAAA;
   --positive-chip-text: #1f1f1f;
   --accent-negative: #F87171;
+  --accent-negative-hover: #F98D8D;
+  --accent-negative-active: #FBA8A8;
   --accent-warning: #FFF066 ;
   --scrollbar-size: 6px;
   --scrollbar-track: #1f1f1f;
