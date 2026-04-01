@@ -2,7 +2,13 @@ import { Box } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { endOfMonth, isBefore, startOfDay, startOfMonth } from 'date-fns';
+import {
+  endOfMonth,
+  format,
+  isBefore,
+  startOfDay,
+  startOfMonth,
+} from 'date-fns';
 import { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
 import { Typography } from '../common/Typography';
 
@@ -62,7 +68,13 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
       <div className="flex flex-col gap-4 md:flex-row">
         {/* FROM CALENDAR */}
         <div>
-          <Typography variant="body-lg">Start Date</Typography>
+          <div className="flex flex-row gap-2 items-center justify-between">
+            <Typography variant="body-lg">Start Date</Typography>
+            <Typography variant="caption">
+              {fromDate && format(fromDate, 'MMM dd, yyyy')}
+            </Typography>
+          </div>
+
           <StaticDatePicker
             displayStaticWrapperAs="desktop"
             value={fromDate}
@@ -81,7 +93,12 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
 
         {/* TO CALENDAR */}
         <Box>
-          <Typography variant="body-lg">End Date</Typography>
+          <div className="flex flex-row gap-2 items-center justify-between">
+            <Typography variant="body-lg">End Date</Typography>
+            <Typography variant="caption">
+              {toDate && format(toDate, 'MMM dd, yyyy')}
+            </Typography>
+          </div>
           <StaticDatePicker
             key={
               fromDate ? `to-picker-${fromDate.getTime()}` : 'to-picker-empty'
