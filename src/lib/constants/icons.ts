@@ -6,11 +6,10 @@ import { FaRegChartBar } from "react-icons/fa";
 import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
 import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
 import { IoTrendingDownSharp } from "react-icons/io5";
-import { MdArrowDropDown, MdArrowDropUp, MdClose, MdDashboard, MdInventory, MdMenu, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { MdArrowDropDown, MdArrowDropUp, MdClose, MdCompareArrows, MdDashboard, MdInventory, MdMenu, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
 import { first, second, third } from "../../assets/rank-icons";
-
 
 export const icons = {
   expand: GoSidebarCollapse,
@@ -32,6 +31,7 @@ export const icons = {
   logout: RiLogoutCircleLine,
   warning: IoMdWarning,
   check: CiCircleCheck,
+  reverseArrows: MdCompareArrows,
 
   // Visiblitye MUI 
   visbilityOn: Visibility,
