@@ -5,6 +5,7 @@ import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 import { Typography } from '../common/Typography';
+import SearchBar from '../filters/SearchBar';
 
 interface SalesEntry {
   id: string;
@@ -213,11 +214,22 @@ const SalesHistory = ({ data = [], loading }: SalesHistoryProps) => {
     },
   ];
 
+  const handleSearch = () => {
+    return;
+  };
   return (
     <CardContainer
       title="Sales History"
       className="sales-history flex-1 min-w-0 min-h-180 mt-7"
       info="Transaction log synced with tenant inventory."
+      customFunction={
+        <div className="flex flex-row gap-2">
+          <Button disabled className="w-50">
+            Apply Filters
+          </Button>
+          <SearchBar onChange={handleSearch} value="" />
+        </div>
+      }
     >
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <SummaryTile

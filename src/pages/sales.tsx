@@ -66,7 +66,6 @@ const Sales = () => {
         <DateRangePicker ref={dateRangeRef} />
         <RevenueByCategory />
       </div>
-
       <SalesHistory />
     </PageContainer>
   );
