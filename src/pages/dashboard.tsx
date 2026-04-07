@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { getInventoryMetrics } from '../api/inventory';
-import { getSalesDashboardMetrics, getTodaysTopHits } from '../api/sales';
+import { getTodaysTopHits } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
@@ -14,6 +13,8 @@ import { useMemo } from 'react';
 import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
 import { icons } from '../lib/constants/icons';
+
+import { useInventoryMetrics, useSalesMetrics } from '../lib/hooks/useMetrics';
 import type {
   MoneyInSalesType,
   TransformedMoneyInSalesType,
@@ -23,10 +24,6 @@ import {
   type TodaysTopHitsType,
   type TransformedTodaysTopHits,
 } from '../lib/types/todays-top-hits-type';
-import {
-  type DashboardSalesMetrics,
-  type InventoryMetrics,
-} from '../lib/types/usequery-types';
 import type {
   InventoryHealthItems,
   TransformedHealthItems,
@@ -45,21 +42,13 @@ const Dashboard = () => {
     data: sales,
     isLoading: salesLoading,
     status: salesStatus,
-  } = useQuery<DashboardSalesMetrics>({
-    queryKey: ['user', csrftoken, 'dashboard-metrics'],
-    queryFn: getSalesDashboardMetrics,
-    enabled: isAuthenticated,
-  });
+  } = useSalesMetrics();
 
   const {
     data: inventoryMetrics,
     isLoading: inventoryMetricsLoading,
     status: inventoryMetricsStatus,
-  } = useQuery<InventoryMetrics>({
-    queryKey: ['user', csrftoken, 'inventory-metrics'],
-    queryFn: getInventoryMetrics,
-    enabled: isAuthenticated,
-  });
+  } = useInventoryMetrics();
 
   const {
     data: todaysTopHitsData,

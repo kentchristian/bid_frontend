@@ -3,6 +3,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { CiCircleCheck } from "react-icons/ci";
 import { FaRegChartBar } from "react-icons/fa";
+import { FiEdit2, FiEye, FiTrash2 } from 'react-icons/fi';
 import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
 import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
 import { IoReceiptOutline, IoTrendingDownSharp } from "react-icons/io5";
@@ -32,6 +33,10 @@ export const icons = {
   check: CiCircleCheck,
   reverseArrows: MdCompareArrows,
   receipt: IoReceiptOutline,
+  edit: FiEdit2,
+  show: FiEye,
+  delete: FiTrash2,
+
 
   // Visiblitye MUI 
   visbilityOn: Visibility,

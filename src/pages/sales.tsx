@@ -1,13 +1,17 @@
 import { Button } from '@mui/material';
 import { format } from 'date-fns';
 import { useRef } from 'react';
+
+import { RevenueByCategory } from '../components/cards/RevenueByCategory';
 import PageContainer from '../components/common/PageContainer';
 import { Typography } from '../components/common/Typography';
 import DateRangePicker, {
   type DateRangeRef,
 } from '../components/filters/DateRangePicker';
 import HeaderContent from '../components/nav/HeaderContent';
+import SalesHistory from '../components/tables/SalesHistory';
 import { icons } from '../lib/constants/icons';
+
 const Sales = () => {
   // reference to the picker
   const dateRangeRef = useRef<DateRangeRef>(null);
@@ -27,6 +31,12 @@ const Sales = () => {
       );
     }
   };
+
+  // const {
+  //   data: sales,
+  //   isLoading: salesLoading,
+  //   status: salesStatus,
+  // } = useSalesMetrics();
 
   return (
     <PageContainer className="flex flex-col gap-2">
@@ -51,7 +61,13 @@ const Sales = () => {
           <Typography variant="body">Create Sales</Typography>
         </Button>
       </div>
-      <DateRangePicker ref={dateRangeRef} />
+
+      <div className="flex flex-col lg:flex-row gap-4">
+        <DateRangePicker ref={dateRangeRef} />
+        <RevenueByCategory />
+      </div>
+
+      <SalesHistory />
     </PageContainer>
   );
 };

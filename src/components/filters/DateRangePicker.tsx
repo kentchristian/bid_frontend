@@ -63,6 +63,11 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
     setToDate(normalized);
   };
 
+  const shadowRadius = {
+    boxShadow: '4px 0 16px rgba(0, 0, 0, 0.05)',
+    borderRadius: 1,
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <div className="flex flex-col gap-4 md:flex-row">
@@ -88,6 +93,7 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
               toolbar: { hidden: true },
               actionBar: { actions: [] },
             }}
+            sx={shadowRadius}
           />
         </div>
 
@@ -117,6 +123,7 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
               toolbar: { hidden: true },
               actionBar: { actions: [] },
             }}
+            sx={shadowRadius}
           />
         </Box>
       </div>
