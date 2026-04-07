@@ -2,10 +2,12 @@ import { Button } from '@mui/material';
 import { format } from 'date-fns';
 import { useRef } from 'react';
 import PageContainer from '../components/common/PageContainer';
+import { Typography } from '../components/common/Typography';
 import DateRangePicker, {
   type DateRangeRef,
 } from '../components/filters/DateRangePicker';
 import HeaderContent from '../components/nav/HeaderContent';
+import { icons } from '../lib/constants/icons';
 const Sales = () => {
   // reference to the picker
   const dateRangeRef = useRef<DateRangeRef>(null);
@@ -36,6 +38,7 @@ const Sales = () => {
           and synchronize multi-tenant records."
         />
         <Button
+          startIcon={<icons.receipt />}
           sx={{
             color: 'var(--invert-text)',
             backgroundColor: 'var(--accent-positive)',
@@ -45,7 +48,7 @@ const Sales = () => {
             },
           }}
         >
-          Create Sale
+          <Typography variant="body">Create Sales</Typography>
         </Button>
       </div>
       <DateRangePicker ref={dateRangeRef} />
