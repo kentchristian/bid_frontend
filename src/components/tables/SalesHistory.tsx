@@ -1,6 +1,8 @@
 import { Button } from '@mui/material'; // Assuming MUI based on your sx prop usage
 import type { GridColDef } from '@mui/x-data-grid';
 
+import { format } from 'date-fns';
+import { useRef } from 'react';
 import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
@@ -21,6 +23,7 @@ interface SalesEntry {
 interface SalesHistoryProps {
   data?: SalesEntry[];
   loading?: boolean;
+  getSelectedDates: () => { from: Date | null; to: Date | null };
 }
 
 const dummySalesData: SalesEntry[] = [
@@ -126,7 +129,11 @@ const dummySalesData: SalesEntry[] = [
   },
 ];
 
-const SalesHistory = ({ data = [], loading }: SalesHistoryProps) => {
+const SalesHistory = ({
+  data = [],
+  loading,
+  getSelectedDates,
+}: SalesHistoryProps) => {
   const totalSalesCount = data.length;
   const totalRevenue = data.reduce(
     (acc, curr) => acc + Number(curr.total_price),
@@ -214,8 +221,32 @@ const SalesHistory = ({ data = [], loading }: SalesHistoryProps) => {
     },
   ];
 
-  const handleSearch = () => {
-    return;
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSearch = (searchTerm: string) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(() => {
+      if (searchTerm) alert(searchTerm);
+    }, 500);
+  };
+
+  const handleDateFilter = () => {
+    // getSelectedDates();
+    const { from, to } = getSelectedDates();
+
+    if (!from) {
+      alert('Please select date.');
+    }
+
+    from &&
+      alert(
+        `Date: ${format(from, 'MMM dd, yyyy')} - ${format(
+          to ?? from,
+          'MMM dd, yyyy',
+        )}`,
+      );
   };
   return (
     <CardContainer
@@ -224,10 +255,10 @@ const SalesHistory = ({ data = [], loading }: SalesHistoryProps) => {
       info="Transaction log synced with tenant inventory."
       customFunction={
         <div className="flex flex-row gap-2">
-          <Button disabled className="w-50">
-            Apply Filters
+          <Button onClick={handleDateFilter} className="w-50">
+            Apply Date Filter
           </Button>
-          <SearchBar onChange={handleSearch} value="" />
+          <SearchBar onChange={handleSearch} />
         </div>
       }
     >

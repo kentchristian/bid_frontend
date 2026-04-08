@@ -1,8 +1,8 @@
 import { IconButton, InputAdornment, TextField } from '@mui/material';
-import { FiSearch, FiX } from 'react-icons/fi';
+import { useState } from 'react';
+import { icons } from '../../lib/constants/icons';
 
 interface SearchBarProps {
-  value: string;
   onChange: (value: string) => void;
   onClear?: () => void;
   placeholder?: string;
@@ -10,20 +10,23 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({
-  value,
   onChange,
   onClear,
   placeholder = 'Search...',
   className,
 }: SearchBarProps) => {
+  const [value, setValue] = useState('');
   return (
     <TextField
       fullWidth
       size="small"
       variant="outlined"
-      placeholder={placeholder}
       value={value}
-      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      onChange={(e) => {
+        onChange(e.target.value);
+        setValue(e.target.value);
+      }}
       className={className}
       sx={{
         '& .MuiOutlinedInput-root': {
@@ -47,7 +50,10 @@ const SearchBar = ({
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <FiSearch size={18} style={{ color: 'var(--accent-primary)' }} />
+            <icons.search
+              size={18}
+              style={{ color: 'var(--accent-primary)' }}
+            />
           </InputAdornment>
         ),
         endAdornment: value && (
@@ -56,11 +62,12 @@ const SearchBar = ({
               size="small"
               onClick={() => {
                 onChange('');
+                setValue('');
                 onClear?.();
               }}
               sx={{ color: 'var(--accent-negative)', padding: '2px' }}
             >
-              <FiX size={16} />
+              <icons.miniClose size={16} />
             </IconButton>
           </InputAdornment>
         ),

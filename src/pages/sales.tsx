@@ -1,5 +1,4 @@
 import { Button } from '@mui/material';
-import { format } from 'date-fns';
 import { useRef } from 'react';
 
 import { RevenueByCategory } from '../components/cards/RevenueByCategory';
@@ -16,27 +15,12 @@ const Sales = () => {
   // reference to the picker
   const dateRangeRef = useRef<DateRangeRef>(null);
 
-  const handleApplyFilter = () => {
+  const getSelectedDates = () => {
     if (dateRangeRef.current) {
-      const { from, to } = dateRangeRef.current.getRange();
-      if (!from) {
-        alert('Please select a start date.');
-        return;
-      }
-      alert(
-        `Filtering data: ${format(from, 'MMM dd, yyyy')} - ${format(
-          to ?? from,
-          'MMM dd, yyyy',
-        )}`,
-      );
+      return dateRangeRef.current.getRange();
     }
+    return { from: null, to: null };
   };
-
-  // const {
-  //   data: sales,
-  //   isLoading: salesLoading,
-  //   status: salesStatus,
-  // } = useSalesMetrics();
 
   return (
     <PageContainer className="flex flex-col gap-2">
@@ -66,7 +50,7 @@ const Sales = () => {
         <DateRangePicker ref={dateRangeRef} />
         <RevenueByCategory />
       </div>
-      <SalesHistory />
+      <SalesHistory getSelectedDates={getSelectedDates} />
     </PageContainer>
   );
 };

@@ -3,7 +3,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { CiCircleCheck } from "react-icons/ci";
 import { FaRegChartBar } from "react-icons/fa";
-import { FiEdit2, FiEye, FiTrash2 } from 'react-icons/fi';
+import { FiEdit2, FiEye, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
 import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
 import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
 import { IoReceiptOutline, IoTrendingDownSharp } from "react-icons/io5";
@@ -11,6 +11,7 @@ import { MdArrowDropDown, MdArrowDropUp, MdClose, MdCompareArrows, MdDashboard, 
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
 import { first, second, third } from "../../assets/rank-icons";
+
 export const icons = {
   expand: GoSidebarCollapse,
   collapse: TbLayoutSidebarLeftCollapse,
@@ -36,6 +37,8 @@ export const icons = {
   edit: FiEdit2,
   show: FiEye,
   delete: FiTrash2,
+  search: FiSearch,
+  miniClose: FiX,
 
 
   // Visiblitye MUI 
