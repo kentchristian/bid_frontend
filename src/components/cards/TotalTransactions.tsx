@@ -4,7 +4,7 @@ import type { statusQuery } from '../../lib/types/usequery-types';
 import CardContainer from '../common/CardContainer';
 import { Typography } from '../common/Typography';
 
-interface TotalUnitsSoldCardProps {
+interface TotalTransactionsProps {
   title: string;
   totalUnitsSold: number;
   totalUnitsYesterday: number;
@@ -16,14 +16,14 @@ interface TotalUnitsSoldCardProps {
 /* A component to visualize if totalUnitsYesterday for units sold is achieved
    To visualize if today's sales was a loss or sucessful
 **/
-const TotalUnitsSoldCard = ({
+const TotalTransactions = ({
   title,
   totalUnitsSold,
   totalUnitsYesterday,
   loading,
   status,
   info,
-}: TotalUnitsSoldCardProps) => {
+}: TotalTransactionsProps) => {
   const trendUp = totalUnitsSold > totalUnitsYesterday;
   const mdArrow = trendUp ? (
     <icons.mdArrowUp color="50C878" size={20} />
@@ -62,4 +62,4 @@ const TotalUnitsSoldCard = ({
   );
 };
 
-export default TotalUnitsSoldCard;
+export default TotalTransactions;

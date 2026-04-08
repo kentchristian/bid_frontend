@@ -4,7 +4,6 @@ import { getTodaysTopHits } from '../api/sales';
 import CriticalstacksAlert from '../components/cards/CriticalStacksAlert';
 import TodaysTopHits from '../components/cards/TodaysTopHits';
 import TotalRevenueCard from '../components/cards/TotalRevenueCard';
-import TotalUnitsSoldCard from '../components/cards/TotalUnitsSoldCard';
 import InventoryHealthPieChart from '../components/charts/InventoryHealthPieChart';
 import SalesTrendAreaChart from '../components/charts/SalesTrendAreaChart';
 import PageContainer from '../components/common/PageContainer';
@@ -14,6 +13,7 @@ import MoneyInSales from '../components/tables/MoneyInSales';
 import WareHouseInventory from '../components/tables/WareHoustInventory';
 import { icons } from '../lib/constants/icons';
 
+import TotalTransactions from '../components/cards/TotalTransactions';
 import { useInventoryMetrics, useSalesMetrics } from '../lib/hooks/useMetrics';
 import type {
   MoneyInSalesType,
@@ -156,8 +156,8 @@ const Dashboard = () => {
           status={salesStatus}
           loading={salesLoading}
         />
-        <TotalUnitsSoldCard
-          title={'Total Units Sold'}
+        <TotalTransactions
+          title={'Total Transactions'}
           info={
             'Total units successfully sold in the last 24 hours (resets at midnight).'
           }
