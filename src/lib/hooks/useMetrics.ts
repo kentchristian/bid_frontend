@@ -16,7 +16,7 @@ const useAuthQuery = <T>(key: string, fetcher: () => Promise<T>) => {
   return useQuery<T>({
     queryKey: [csrftoken, key],
     queryFn: fetcher,
-    enabled: !!isAuthenticated && !!csrftoken,
+    enabled: !!isAuthenticated,
   })
 }
 
