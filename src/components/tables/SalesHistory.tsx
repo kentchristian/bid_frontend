@@ -9,6 +9,8 @@ import DynamicDataGrid from '../common/DynamicDataGrid';
 import { Typography } from '../common/Typography';
 import SearchBar from '../filters/SearchBar';
 
+import { useSnackbar } from '../../lib/providers/SnackbarProvider';
+
 interface SalesEntry {
   id: string;
   productName: string;
@@ -222,6 +224,7 @@ const SalesHistory = ({
   ];
 
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { showSnackbar } = useSnackbar();
 
   const handleSearch = (searchTerm: string) => {
     if (searchTimeoutRef.current) {
@@ -237,7 +240,7 @@ const SalesHistory = ({
     const { from, to } = getSelectedDates();
 
     if (!from) {
-      alert('Please select date.');
+      showSnackbar('Please select a date!', { variant: 'error' });
     }
 
     from &&
