@@ -1,7 +1,8 @@
 import { Button } from '@mui/material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import { RevenueByCategory } from '../components/cards/RevenueByCategory';
+import DynamicModal from '../components/common/DynamicModal';
 import PageContainer from '../components/common/PageContainer';
 import { Typography } from '../components/common/Typography';
 import DateRangePicker, {
@@ -20,6 +21,16 @@ const Sales = () => {
       return dateRangeRef.current.getRange();
     }
     return { from: null, to: null };
+  };
+
+  const [isCreateSalesOpen, setCreateSalesOpen] = useState(false);
+
+  const handleCreateSales = () => {
+    setCreateSalesOpen(true);
+  };
+
+  const handleCreateSalesClose = () => {
+    setCreateSalesOpen(false);
   };
 
   return (
@@ -41,6 +52,7 @@ const Sales = () => {
               color: 'var(--invert-text)',
             },
           }}
+          onClick={handleCreateSales}
         >
           <Typography variant="body">Create Sales</Typography>
         </Button>
@@ -51,6 +63,12 @@ const Sales = () => {
         <RevenueByCategory />
       </div>
       <SalesHistory getSelectedDates={getSelectedDates} />
+      <DynamicModal
+        open={isCreateSalesOpen}
+        onClose={handleCreateSalesClose}
+        maxWidth={500}
+        children={<div>Somethasfasdfasdf asdf asdf asing</div>}
+      />
     </PageContainer>
   );
 };

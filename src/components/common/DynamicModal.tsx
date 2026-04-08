@@ -1,4 +1,5 @@
-import { Box, Modal } from '@mui/material';
+import { Box, Button, Modal } from '@mui/material';
+import { icons } from '../../lib/constants/icons';
 
 type CenteredModalProps = {
   open: boolean;
@@ -40,6 +41,19 @@ const CenteredModal = ({
           overflowY: 'auto',
         }}
       >
+        <div className="flex flex-row items-center justify-between">
+          <header>Title</header>
+          <Button
+            className="flex items-center justify-center"
+            onClick={onClose}
+            sx={{
+              backgroundColor: 'var(--accent-negative)',
+            }}
+          >
+            <icons.close size={20} />
+          </Button>
+        </div>
+
         {children}
       </Box>
     </Modal>
