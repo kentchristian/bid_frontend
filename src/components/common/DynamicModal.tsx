@@ -5,14 +5,14 @@ type CenteredModalProps = {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  maxWidth?: number | string;
+  minWidth?: number | string;
 };
 
 const CenteredModal = ({
   open,
   onClose,
   children,
-  maxWidth = 500,
+  minWidth = 500,
 }: CenteredModalProps) => {
   return (
     <Modal
@@ -36,13 +36,12 @@ const CenteredModal = ({
           borderRadius: 0.5,
           p: 2,
           width: 'auto',
-          maxWidth: maxWidth,
+          minWidth: minWidth,
           maxHeight: '90vh',
           overflowY: 'auto',
         }}
       >
-        <div className="flex flex-row items-center justify-between">
-          <header>Title</header>
+        <div className="flex flex-row items-center justify-end">
           <Button
             className="flex items-center justify-center"
             onClick={onClose}

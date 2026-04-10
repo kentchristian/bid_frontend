@@ -8,6 +8,7 @@ import { Typography } from '../components/common/Typography';
 import DateRangePicker, {
   type DateRangeRef,
 } from '../components/filters/DateRangePicker';
+import CreateSalesForm from '../components/forms/CreateSalesForm';
 import HeaderContent from '../components/nav/HeaderContent';
 import SalesHistory from '../components/tables/SalesHistory';
 import { icons } from '../lib/constants/icons';
@@ -66,8 +67,8 @@ const Sales = () => {
       <DynamicModal
         open={isCreateSalesOpen}
         onClose={handleCreateSalesClose}
-        maxWidth={500}
-        children={<div>Somethasfasdfasdf asdf asdf asing</div>}
+        minWidth={400}
+        children={<CreateSalesForm />}
       />
     </PageContainer>
   );
