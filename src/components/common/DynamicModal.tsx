@@ -1,11 +1,13 @@
 import { Box, Button, Modal } from '@mui/material';
 import { icons } from '../../lib/constants/icons';
+import { Typography } from './Typography';
 
 type CenteredModalProps = {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
   minWidth?: number | string;
+  title?: string;
 };
 
 const CenteredModal = ({
@@ -13,6 +15,7 @@ const CenteredModal = ({
   onClose,
   children,
   minWidth = 500,
+  title,
 }: CenteredModalProps) => {
   return (
     <Modal
@@ -41,12 +44,20 @@ const CenteredModal = ({
           overflowY: 'auto',
         }}
       >
-        <div className="flex flex-row items-center justify-end">
+        <div className="flex flex-row items-center justify-between md-2">
+          <Typography variant="h3">{title}</Typography>
           <Button
             className="flex items-center justify-center"
             onClick={onClose}
             sx={{
               backgroundColor: 'var(--accent-negative)',
+              color: 'var(--invert-text)',
+              '&:hover': {
+                // Option A: Use a specific hover variable if your theme has one
+                backgroundColor: 'var(--accent-negative-hover)',
+                // Ensure the cursor changes
+                cursor: 'pointer',
+              },
             }}
           >
             <icons.close size={20} />

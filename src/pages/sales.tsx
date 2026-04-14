@@ -67,8 +67,9 @@ const Sales = () => {
       <DynamicModal
         open={isCreateSalesOpen}
         onClose={handleCreateSalesClose}
-        minWidth={400}
+        // minWidth={200}
         children={<CreateSalesForm />}
+        title="Create New Sales Transaction"
       />
     </PageContainer>
   );

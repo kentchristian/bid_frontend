@@ -12,7 +12,7 @@ export default function HeaderContent({
   return (
     <div className="flex flex-col gap-2 mb-10">
       <Typography variant="h3">{title}</Typography>
-      <Typography variant="caption" className="inline text-(--main-text)">
+      <Typography variant="body" className="inline text-(--main-text)">
         {description}
       </Typography>
     </div>
