@@ -112,7 +112,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
   const DateSection = () => {
     return (
       <div className="flex-1">
-        <Typography variant="h4" className="text-base text-gray-700">
+        <Typography variant="h4" className="text-base text-(--main-text)">
           Transaction Details
         </Typography>
         <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
@@ -157,7 +157,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
   const SoldBySection = () => {
     return (
       <div className="flex-1">
-        <Typography variant="body-sm" className="text-gray-500">
+        <Typography variant="body-sm" className="text-(--main-text)">
           Sold By
         </Typography>
         <div className="mt-2 flex items-center gap-2">
@@ -199,6 +199,9 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
           onChange={(event: SelectChangeEvent) =>
             setSalesForm({ ...salesForm, category: event.target.value })
           }
+          sx={{
+            color: 'var-(--main-text)',
+          }}
         >
           <MenuItem value="all">All Categories</MenuItem>
           <MenuItem value="electronics">Electronics</MenuItem>
@@ -231,6 +234,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
         )}
         sx={{
           flexGrow: 1,
+          color: 'var-(--main-text)',
           '& .MuiOutlinedInput-root': {
             height: 40, // match your other field
           },
@@ -306,7 +310,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
         >
           <Table size="small" aria-label="sales line items">
             <TableHead>
-              <TableRow className="bg-gray-50">
+              <TableRow className="bg-(--main-bg)">
                 <TableCell>Product (Item)</TableCell>
                 <TableCell>Category</TableCell>
                 <TableCell align="right">Unit Price (USD)</TableCell>
@@ -357,7 +361,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
 
       <section className="rounded-xl border border-gray-200/70 p-4">
         <div className="flex flex-col gap-3">
-          <Typography variant="h4" className="text-base text-gray-700">
+          <Typography variant="h4" className="text-base text-(--main-text)">
             Add Items
           </Typography>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
@@ -406,14 +410,14 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
       </section>
 
       <section className="rounded-xl border border-gray-200/70 p-4">
-        <Typography variant="h4" className="text-base text-gray-700">
+        <Typography variant="h4" className="text-base text-(--main-text)">
           Sales Line Items
         </Typography>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row">
           <TableSection />
           <aside className="w-full lg:w-80 rounded-lg border border-gray-100 bg-gray-50 p-4">
             <div className="flex items-center justify-between">
-              <Typography variant="body-sm" className="text-gray-500">
+              <Typography variant="body-sm" className="text-(--main-text)">
                 Subtotal
               </Typography>
               <Typography variant="body" className="font-semibold">
@@ -421,7 +425,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
               </Typography>
             </div>
             <div className="mt-2 flex items-center justify-between">
-              <Typography variant="body-sm" className="text-gray-500">
+              <Typography variant="body-sm" className="text-(--main-text)">
                 Tax ({Math.round(taxRate * 100)}%)
               </Typography>
               <Typography variant="body" className="font-semibold">

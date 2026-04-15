@@ -44,7 +44,7 @@ const CenteredModal = ({
           overflowY: 'auto',
         }}
       >
-        <div className="flex flex-row items-center justify-between md-2">
+        <div className="flex flex-row items-center justify-between mb-2">
           <Typography variant="h3">{title}</Typography>
           <Button
             className="flex items-center justify-center"
