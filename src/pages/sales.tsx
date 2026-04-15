@@ -68,7 +68,9 @@ const Sales = () => {
         open={isCreateSalesOpen}
         onClose={handleCreateSalesClose}
         // minWidth={200}
-        children={<CreateSalesForm />}
+        children={
+          <CreateSalesForm handleCreateSalesClose={handleCreateSalesClose} />
+        }
         title="Create New Sales Transaction"
       />
     </PageContainer>

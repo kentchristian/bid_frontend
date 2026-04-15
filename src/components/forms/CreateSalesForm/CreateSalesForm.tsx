@@ -19,11 +19,11 @@ import {
 import type { SelectChangeEvent } from '@mui/material/Select';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import type { PickerValue } from '@mui/x-date-pickers/internals';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import { useState, type FormEvent } from 'react';
 import { icons } from '../../../lib/constants/icons';
+import { cn } from '../../../lib/helpers/cn';
 import { Typography } from '../../common/Typography';
 
 export type CreateSalesLineItem = {
@@ -35,39 +35,78 @@ export type CreateSalesLineItem = {
 };
 
 type CreateSalesFormProps = {
-  lineItems: CreateSalesLineItem[];
-  quantity: number;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  subtotal: number;
-  tax: number;
-  taxRate: number;
-  total: number;
-  currency: Intl.NumberFormat;
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 };
 
-const CreateSalesForm = ({
-  lineItems,
-  quantity,
-  onSubmit,
-  subtotal,
-  tax,
-  taxRate,
-  total,
-  currency,
-}: CreateSalesFormProps) => {
-  const [transactionDate, setTransactionDate] = useState<Dayjs | null>(dayjs());
-  const [soldBy, setSoldBy] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
-  const [product, setProduct] = useState<string>('');
-  const [productQuantity, setProductQuantity] = useState<number>(0);
+const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
+  type SalesFormType = {
+    transactionDate: Dayjs | null;
+    soldBy: string;
+    category: string;
+    product: string;
+    quantity: number;
+  };
 
+  // Constant Button Color
+  const confirmButtonSx = {
+    background: 'var(--accent-positive)',
+    color: 'var(--invert-text)',
+    '&:hover': {
+      background: 'var(--accent-positive-hover)',
+      color: 'var(--invert-text)',
+    },
+  };
+
+  const [salesForm, setSalesForm] = useState<SalesFormType>({
+    transactionDate: dayjs(),
+    soldBy: '',
+    category: '',
+    product: '',
+    quantity: 0,
+  });
+
+  const [lineItems, setLineItems] = useState<CreateSalesLineItem[]>([
+    {
+      id: 1,
+      product: 'X200 Wireless Mouse',
+      category: 'Electronics',
+      unitPrice: 25,
+      qty: 3,
+    },
+    {
+      id: 2,
+      product: 'Ergonomic Office Chair',
+      category: 'Office Furniture',
+      unitPrice: 150,
+      qty: 1,
+    },
+  ]);
+
+  const subtotal = lineItems.reduce(
+    (sum, item) => sum + item.unitPrice * item.qty,
+    0,
+  );
+  const taxRate = 0.08;
+  const tax = Number((subtotal * taxRate).toFixed(2));
+  const total = subtotal + tax;
+  const currency = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
+  const isToday = salesForm?.transactionDate?.isSame(dayjs(), 'day'); // present Day checker
+  const isAddTolistDisabled =
+    !salesForm.category || !salesForm.product || !salesForm.quantity;
+  const isFinalTransaction =
+    lineItems.length <= 0 || !salesForm.transactionDate || !salesForm.soldBy;
+
+  /* Quantity */
+  const handleIncrement = () => {
+    setSalesForm({ ...salesForm, quantity: salesForm?.quantity + 1 });
+  };
   const handleDecrement = () => {
-    setProductQuantity((prev) => prev - 1);
+    setSalesForm({ ...salesForm, quantity: salesForm?.quantity - 1 });
   };
-  const handleIcrement = () => {
-    setProductQuantity((prev) => prev + 1);
-  };
-  const isToday = transactionDate?.isSame(dayjs(), 'day'); // present Day checker
 
   /* Date Section */
   const DateSection = () => {
@@ -80,16 +119,20 @@ const CreateSalesForm = ({
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               label="Transaction Date"
-              value={transactionDate as PickerValue}
-              onChange={(newValue: PickerValue) => {
-                setTransactionDate(newValue);
+              value={salesForm?.transactionDate}
+              onChange={(newValue) => {
+                const dayjsValue = newValue ? dayjs(newValue) : null;
+                setSalesForm({
+                  ...salesForm,
+                  transactionDate: dayjsValue,
+                });
               }}
               slotProps={{
                 textField: {
                   size: 'small',
                   fullWidth: true,
 
-                  error: !transactionDate,
+                  error: !salesForm?.transactionDate,
                 },
               }}
             />
@@ -100,7 +143,7 @@ const CreateSalesForm = ({
             size="small"
             className="whitespace-nowrap"
             onClick={() => {
-              setTransactionDate(dayjs());
+              setSalesForm({ ...salesForm, transactionDate: dayjs() });
             }}
           >
             Now
@@ -125,9 +168,12 @@ const CreateSalesForm = ({
               labelId="sold-by-label"
               label="Sales Manager"
               defaultValue="john-doe"
-              value={soldBy}
+              value={salesForm?.soldBy}
               onChange={(event: SelectChangeEvent) =>
-                setSoldBy(event.target.value as string)
+                setSalesForm({
+                  ...salesForm,
+                  soldBy: event.target.value as string,
+                })
               }
             >
               <MenuItem value="john-doe">John Doe</MenuItem>
@@ -149,9 +195,9 @@ const CreateSalesForm = ({
           labelId="category-label"
           label="Category"
           defaultValue="all"
-          value={category}
+          value={salesForm?.category}
           onChange={(event: SelectChangeEvent) =>
-            setCategory(event.target.value)
+            setSalesForm({ ...salesForm, category: event.target.value })
           }
         >
           <MenuItem value="all">All Categories</MenuItem>
@@ -163,16 +209,23 @@ const CreateSalesForm = ({
   };
 
   /* ProductSection */
-  const options = ['Something', 'What i it'];
+  const options = [
+    { id: 1, product: 'Sample', quantityStock: 3, unitPrice: 3 },
+    { id: 2, product: 'Sample3', quantityStock: 3, unitPrice: 6 },
+  ];
+
+  const transformedOptions = options.map((item) => {
+    return item.product;
+  });
   const ProductSection = () => {
     return (
       <Autocomplete
         disablePortal
-        value={product}
+        value={salesForm?.product}
         onChange={(_event, newValue: string | null) =>
-          setProduct(newValue as string)
+          setSalesForm({ ...salesForm, product: newValue as string })
         }
-        options={options}
+        options={transformedOptions}
         renderInput={(params) => (
           <TextField {...params} placeholder="Search / Select Product" />
         )}
@@ -190,8 +243,111 @@ const CreateSalesForm = ({
     );
   };
 
+  const handleAddLines = () => {
+    // Find the unit price
+    const foundItem = options.find((item) => {
+      if (item.product === salesForm?.product) {
+        return item.unitPrice ?? 0;
+      }
+    });
+
+    // addLine
+    const addLine: CreateSalesLineItem = {
+      id: lineItems.length + 1,
+      product: salesForm?.product,
+      category: salesForm?.category,
+      unitPrice: foundItem?.unitPrice ?? 0,
+      qty: salesForm?.quantity,
+    };
+
+    // setLine
+    setLineItems([...lineItems, addLine]);
+
+    // Reset Items
+    setSalesForm({
+      ...salesForm,
+      category: '',
+      product: '',
+      quantity: 0,
+    });
+  };
+
+  const handleRemoveLine = (id: number) => {
+    const updated = lineItems.filter((item) => item.id !== id);
+    setLineItems(updated);
+  };
+
+  const handleClearForm = () => {
+    // clear sales form
+    setSalesForm({
+      transactionDate: null,
+      soldBy: '',
+      category: '',
+      product: '',
+      quantity: 0,
+    });
+
+    // clear table
+    setLineItems([]);
+  };
+
+  /* TableSection */
+  const TableSection = () => {
+    return (
+      <div className="flex-1">
+        <TableContainer
+          component="div"
+          className={cn(
+            'max-h-50',
+            'overflow-y-auto rounded-lg border border-gray-100',
+            'z-9999 overscroll-contain',
+            'themed-scrollbar',
+          )}
+        >
+          <Table size="small" aria-label="sales line items">
+            <TableHead>
+              <TableRow className="bg-gray-50">
+                <TableCell>Product (Item)</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell align="right">Unit Price (USD)</TableCell>
+                <TableCell align="right">Qty</TableCell>
+                <TableCell align="right">Total Price (USD)</TableCell>
+                <TableCell align="center">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {lineItems.map((item) => (
+                <TableRow key={item.id} hover>
+                  <TableCell>{item.product}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell align="right">
+                    {currency.format(item.unitPrice)}
+                  </TableCell>
+                  <TableCell align="right">{item.qty}</TableCell>
+                  <TableCell align="right">
+                    {currency.format(item.unitPrice * item.qty)}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    onClick={() => {
+                      handleRemoveLine(item.id);
+                    }}
+                  >
+                    <IconButton size="small" aria-label="remove item">
+                      <icons.delete size={16} />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
+    );
+  };
+
   return (
-    <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
       <section className="rounded-xl border border-gray-200/70 p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <DateSection />
@@ -212,13 +368,13 @@ const CreateSalesForm = ({
               <TextField
                 label="Quantity"
                 size="small"
-                value={productQuantity}
+                value={salesForm?.quantity}
                 InputProps={{ readOnly: true }}
                 sx={{ width: 110 }}
               />
               <div className="flex gap-1">
                 <Button
-                  disabled={productQuantity < 1}
+                  disabled={salesForm?.quantity < 1}
                   variant="outlined"
                   size="small"
                   onClick={handleDecrement}
@@ -228,7 +384,7 @@ const CreateSalesForm = ({
                 <Button
                   variant="outlined"
                   size="small"
-                  onClick={handleIcrement}
+                  onClick={handleIncrement}
                 >
                   +
                 </Button>
@@ -236,8 +392,9 @@ const CreateSalesForm = ({
             </div>
             <Button
               variant="contained"
-              color="primary"
-              className="whitespace-nowrap"
+              disabled={isAddTolistDisabled}
+              sx={confirmButtonSx}
+              onClick={handleAddLines}
             >
               Add to List
             </Button>
@@ -253,46 +410,7 @@ const CreateSalesForm = ({
           Sales Line Items
         </Typography>
         <div className="mt-3 flex flex-col gap-4 lg:flex-row">
-          <div className="flex-1">
-            <TableContainer
-              component="div"
-              className="overflow-hidden rounded-lg border border-gray-100"
-            >
-              <Table size="small" aria-label="sales line items">
-                <TableHead>
-                  <TableRow className="bg-gray-50">
-                    <TableCell>Product (Item)</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell align="right">Unit Price (USD)</TableCell>
-                    <TableCell align="right">Qty</TableCell>
-                    <TableCell align="right">Total Price (USD)</TableCell>
-                    <TableCell align="center">Action</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {lineItems.map((item) => (
-                    <TableRow key={item.id} hover>
-                      <TableCell>{item.product}</TableCell>
-                      <TableCell>{item.category}</TableCell>
-                      <TableCell align="right">
-                        {currency.format(item.unitPrice)}
-                      </TableCell>
-                      <TableCell align="right">{item.qty}</TableCell>
-                      <TableCell align="right">
-                        {currency.format(item.unitPrice * item.qty)}
-                      </TableCell>
-                      <TableCell align="center">
-                        <IconButton size="small" aria-label="remove item">
-                          <icons.delete size={16} />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </div>
-
+          <TableSection />
           <aside className="w-full lg:w-80 rounded-lg border border-gray-100 bg-gray-50 p-4">
             <div className="flex items-center justify-between">
               <Typography variant="body-sm" className="text-gray-500">
@@ -313,15 +431,21 @@ const CreateSalesForm = ({
             <Divider className="my-3" />
             <div className="flex items-center justify-between">
               <Typography variant="h4">Total</Typography>
-              <Typography variant="h3" className="text-blue-600">
+              <Typography variant="h3" className="text-(--accent-positive)">
                 {currency.format(total)}
               </Typography>
             </div>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <Button variant="outlined" fullWidth>
+              <Button variant="outlined" fullWidth onClick={handleClearForm}>
                 Clear Form
               </Button>
-              <Button variant="contained" fullWidth>
+              <Button
+                disabled={isFinalTransaction}
+                variant="contained"
+                fullWidth
+                type="submit"
+                sx={confirmButtonSx}
+              >
                 Finalize Sales Transaction
               </Button>
             </div>

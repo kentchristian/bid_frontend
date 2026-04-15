@@ -4,45 +4,15 @@ import { icons } from '../../../lib/constants/icons';
 import { cn } from '../../../lib/helpers/cn';
 import CardContainer from '../../common/CardContainer';
 import { Typography } from '../../common/Typography';
-import CreateSalesForm, { type CreateSalesLineItem } from './CreateSalesForm';
+import CreateSalesForm from './CreateSalesForm';
 
-const CreateSalesFormContainer = () => {
+interface CreateSalesFormContainerProps {
+  handleCreateSalesClose: () => void;
+}
+const CreateSalesFormContainer = ({
+  handleCreateSalesClose,
+}: CreateSalesFormContainerProps) => {
   const [activeTab, setActiveTab] = useState<number | null>(1);
-  const [quantity, setQuantity] = useState(1);
-
-  const lineItems: CreateSalesLineItem[] = [
-    {
-      id: 1,
-      product: 'X200 Wireless Mouse',
-      category: 'Electronics',
-      unitPrice: 25,
-      qty: 3,
-    },
-    {
-      id: 2,
-      product: 'Ergonomic Office Chair',
-      category: 'Office Furniture',
-      unitPrice: 150,
-      qty: 1,
-    },
-  ];
-
-  const subtotal = lineItems.reduce(
-    (sum, item) => sum + item.unitPrice * item.qty,
-    0,
-  );
-  const taxRate = 0.08;
-  const tax = Number((subtotal * taxRate).toFixed(2));
-  const total = subtotal + tax;
-  const currency = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  });
-
-  const handleIncrementQuantity = () =>
-    setQuantity((prev) => Math.min(prev + 1, 999));
-  const handleDecrementQuantity = () =>
-    setQuantity((prev) => Math.max(prev - 1, 1));
 
   const handleActiveTab = (tab: number) => {
     setActiveTab(tab);
@@ -50,6 +20,7 @@ const CreateSalesFormContainer = () => {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    handleCreateSalesClose();
   };
 
   return (
@@ -89,16 +60,7 @@ const CreateSalesFormContainer = () => {
           <Typography variant="h4">Manual Sales Entry</Typography>
         </section>
       </header>
-      <CreateSalesForm
-        lineItems={lineItems}
-        quantity={quantity}
-        onSubmit={handleSubmit}
-        subtotal={subtotal}
-        tax={tax}
-        taxRate={taxRate}
-        total={total}
-        currency={currency}
-      />
+      <CreateSalesForm handleSubmit={handleSubmit} />
     </CardContainer>
   );
 };

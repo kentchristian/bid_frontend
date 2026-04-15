@@ -55,6 +55,7 @@ const CenteredModal = ({
               '&:hover': {
                 // Option A: Use a specific hover variable if your theme has one
                 backgroundColor: 'var(--accent-negative-hover)',
+                color: 'var(--invert-text)',
                 // Ensure the cursor changes
                 cursor: 'pointer',
               },
