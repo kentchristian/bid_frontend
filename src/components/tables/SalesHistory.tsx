@@ -149,8 +149,8 @@ const SalesHistory = ({
     width: 32,
     height: 32,
     padding: 0,
-    borderRadius: 0.5,
-    border: `1px solid var(${colorVar})`,
+    // borderRadius: 0.5,
+    // border: `1px solid var(${colorVar})`,
     color: `var(${colorVar})`,
     backgroundColor: 'transparent',
     '&:hover': {

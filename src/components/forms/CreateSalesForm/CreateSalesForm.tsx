@@ -100,6 +100,8 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
   const isFinalTransaction =
     lineItems.length <= 0 || !salesForm.transactionDate || !salesForm.soldBy;
 
+  const isProductDisabled = !salesForm.category;
+
   /* Quantity */
   const handleIncrement = () => {
     setSalesForm({ ...salesForm, quantity: salesForm?.quantity + 1 });
@@ -224,6 +226,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
     return (
       <Autocomplete
         disablePortal
+        disabled={isProductDisabled}
         value={salesForm?.product}
         onChange={(_event, newValue: string | null) =>
           setSalesForm({ ...salesForm, product: newValue as string })
@@ -240,7 +243,6 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
           },
           '& .MuiOutlinedInput-input': {
             padding: '0 14px',
-            textAlign: 'center',
           },
         }}
       />
@@ -338,7 +340,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
                     }}
                   >
                     <IconButton size="small" aria-label="remove item">
-                      <icons.delete size={16} />
+                      <icons.delete size={16} color="var(--accent-negative)" />
                     </IconButton>
                   </TableCell>
                 </TableRow>
