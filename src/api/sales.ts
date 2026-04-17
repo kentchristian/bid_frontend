@@ -15,3 +15,4 @@ export const getTodaysTopHits = async (): Promise<TodaysTopHitsType> => {
 
   return data;
 }
+

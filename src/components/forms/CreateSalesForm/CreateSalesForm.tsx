@@ -2,11 +2,13 @@ import {
   Autocomplete,
   Avatar,
   Button,
+  CircularProgress,
   Divider,
   FormControl,
   IconButton,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Select,
   Table,
   TableBody,
@@ -24,6 +26,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { useState, type FormEvent } from 'react';
 import { icons } from '../../../lib/constants/icons';
 import { cn } from '../../../lib/helpers/cn';
+import { useSalesFormOptions } from '../../../lib/hooks/useSalesFormOptions';
 import { Typography } from '../../common/Typography';
 
 export type CreateSalesLineItem = {
@@ -39,6 +42,31 @@ type CreateSalesFormProps = {
 };
 
 const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
+  // API Fetch
+  const {
+    data: salesFormOptions,
+    isLoading: salesFormOptionsLoading,
+    status: salesFormOptionsStatus,
+  } = useSalesFormOptions();
+
+  // DropDown Props STYLE
+  const isSalesFormLoading =
+    salesFormOptionsLoading && salesFormOptionsStatus === 'pending';
+  const DropDownProps = {
+    IconComponent: isSalesFormLoading ? () => null : undefined,
+    input: (
+      <OutlinedInput
+        label="Sales Manager"
+        endAdornment={
+          isSalesFormLoading ? (
+            <CircularProgress color="inherit" size={20} sx={{ mr: 2 }} />
+          ) : null
+        }
+      />
+    ),
+    loading: isSalesFormLoading,
+  };
+
   type SalesFormType = {
     transactionDate: Dayjs | null;
     soldBy: string;
@@ -65,22 +93,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
     quantity: 0,
   });
 
-  const [lineItems, setLineItems] = useState<CreateSalesLineItem[]>([
-    {
-      id: 1,
-      product: 'X200 Wireless Mouse',
-      category: 'Electronics',
-      unitPrice: 25,
-      qty: 3,
-    },
-    {
-      id: 2,
-      product: 'Ergonomic Office Chair',
-      category: 'Office Furniture',
-      unitPrice: 150,
-      qty: 1,
-    },
-  ]);
+  const [lineItems, setLineItems] = useState<CreateSalesLineItem[]>([]);
 
   const subtotal = lineItems.reduce(
     (sum, item) => sum + item.unitPrice * item.qty,
@@ -177,10 +190,13 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
                   soldBy: event.target.value as string,
                 })
               }
+              disabled={DropDownProps?.loading}
+              IconComponent={DropDownProps?.IconComponent}
+              input={DropDownProps?.input}
             >
-              <MenuItem value="john-doe">John Doe</MenuItem>
-              <MenuItem value="maria-k">Maria K.</MenuItem>
-              <MenuItem value="staff">Sales Staff</MenuItem>
+              {salesFormOptions?.users?.map((user) => (
+                <MenuItem value={user?.id}>{user?.name}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </div>
@@ -201,13 +217,16 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
           onChange={(event: SelectChangeEvent) =>
             setSalesForm({ ...salesForm, category: event.target.value })
           }
+          disabled={DropDownProps?.loading}
+          IconComponent={DropDownProps?.IconComponent}
+          input={DropDownProps?.input}
           sx={{
             color: 'var-(--main-text)',
           }}
         >
-          <MenuItem value="all">All Categories</MenuItem>
-          <MenuItem value="electronics">Electronics</MenuItem>
-          <MenuItem value="office">Office Supplies</MenuItem>
+          {salesFormOptions?.categories?.map((category) => (
+            <MenuItem value={category?.name}>{category?.name}</MenuItem>
+          ))}
         </Select>
       </FormControl>
     );
