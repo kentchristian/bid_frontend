@@ -3,7 +3,6 @@ import {
   Avatar,
   Button,
   CircularProgress,
-  Divider,
   FormControl,
   IconButton,
   InputLabel,
@@ -23,10 +22,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
-import { useState, type FormEvent } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import { icons } from '../../../lib/constants/icons';
 import { cn } from '../../../lib/helpers/cn';
-import { useSalesFormOptions } from '../../../lib/hooks/useSalesFormOptions';
+import {
+  useInventoryByCategory,
+  useSalesFormOptions,
+} from '../../../lib/hooks/useSales';
 import { Typography } from '../../common/Typography';
 
 export type CreateSalesLineItem = {
@@ -94,14 +96,18 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
   });
 
   const [lineItems, setLineItems] = useState<CreateSalesLineItem[]>([]);
+  const [maxQuantity, setMaxQuantity] = useState<number>(0);
 
-  const subtotal = lineItems.reduce(
+  // const subtotal = lineItems.reduce(
+  //   (sum, item) => sum + item.unitPrice * item.qty,
+  //   0,
+  // );
+  // const taxRate = 0.08;
+  // const tax = Number((subtotal * taxRate).toFixed(2));
+  const total = lineItems.reduce(
     (sum, item) => sum + item.unitPrice * item.qty,
     0,
   );
-  const taxRate = 0.08;
-  const tax = Number((subtotal * taxRate).toFixed(2));
-  const total = subtotal + tax;
   const currency = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -109,7 +115,10 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
 
   const isToday = salesForm?.transactionDate?.isSame(dayjs(), 'day'); // present Day checker
   const isAddTolistDisabled =
-    !salesForm.category || !salesForm.product || !salesForm.quantity;
+    !salesForm.category ||
+    !salesForm.product ||
+    !salesForm.quantity ||
+    salesForm.quantity >= maxQuantity;
   const isFinalTransaction =
     lineItems.length <= 0 || !salesForm.transactionDate || !salesForm.soldBy;
 
@@ -233,46 +242,124 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
   };
 
   /* ProductSection */
-  const options = [
-    { id: 1, product: 'Sample', quantityStock: 3, unitPrice: 3 },
-    { id: 2, product: 'Sample3', quantityStock: 3, unitPrice: 6 },
-  ];
 
-  const transformedOptions = options.map((item) => {
-    return item.product;
-  });
+  // Enabled When Category exist
+  const { data: inventoryByCategory, isLoading: inventoryByCategoryLoading } =
+    useInventoryByCategory(salesForm?.category);
   const ProductSection = () => {
+    // 1. Memoize options to prevent unnecessary re-renders
+    const productOptions = useMemo(() => {
+      return (
+        inventoryByCategory?.inventory?.map(
+          (item, index) => `${index + 1}. ${item.product_name}`,
+        ) || []
+      );
+    }, [inventoryByCategory]);
+
     return (
       <Autocomplete
+        // Forces a fresh start when the category changes
+        key={salesForm.category}
         disablePortal
-        disabled={isProductDisabled}
-        value={salesForm?.product}
-        onChange={(_event, newValue: string | null) =>
-          setSalesForm({ ...salesForm, product: newValue as string })
-        }
-        options={transformedOptions}
+        autoHighlight // Automatically highlights the first search result
+        disabled={isProductDisabled || inventoryByCategoryLoading}
+        options={productOptions}
+        // Control the selected value
+        value={salesForm?.product || null}
+        onChange={(_event, newValue: string | null) => {
+          const cleanedName = newValue?.split('. ').slice(1).join('. ');
+
+          setSalesForm({
+            ...salesForm,
+            product: cleanedName ?? '',
+          });
+
+          // set Max Quantity For Product
+          const productMaxQuantity = inventoryByCategory?.inventory?.find(
+            (item) => {
+              if (item.product_name === cleanedName) {
+                return item;
+              }
+            },
+          );
+
+          setMaxQuantity(productMaxQuantity?.stock_quantity ?? 0); // set Max Quantity Here
+        }}
+        // 2. The "Narrow-Down" Search Engine
+        filterOptions={(options, state) => {
+          const query = state.inputValue.toLowerCase().trim();
+
+          // If nothing is typed, show the full list
+          if (!query) return options;
+
+          // Narrow down: only items containing the letters
+          const filtered = options.filter((option) =>
+            option.toLowerCase().includes(query),
+          );
+
+          // Sort: Bring "Starts With" matches to the very top (Ascending)
+          return filtered.sort((a, b) => {
+            const aLower = a.toLowerCase();
+            const bLower = b.toLowerCase();
+            const aStarts = aLower.startsWith(query);
+            const bStarts = bLower.startsWith(query);
+
+            if (aStarts && !bStarts) return -1;
+            if (!aStarts && bStarts) return 1;
+            return aLower.localeCompare(bLower); // Alphabetical fallback
+          });
+        }}
+        getOptionLabel={(option) => option || ''}
         renderInput={(params) => (
-          <TextField {...params} placeholder="Search / Select Product" />
+          <TextField
+            {...params}
+            placeholder="Search / Select Product"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {inventoryByCategoryLoading ? (
+                    <CircularProgress
+                      color="inherit"
+                      size={18}
+                      sx={{ mr: 1 }}
+                    />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
         )}
+        // 3. Custom Scrollbar Styling
+        ListboxProps={{
+          className: 'themed-scrollbar',
+          sx: {
+            maxHeight: 250, // Standard height for dropdown menus
+            '& .MuiAutocomplete-option': {
+              fontSize: '14px', // Matches standard form text
+            },
+          },
+        }}
+        // 4. Input Field Styling
         sx={{
           flexGrow: 1,
-          color: 'var-(--main-text)',
           '& .MuiOutlinedInput-root': {
-            height: 40, // match your other field
+            height: 40,
+            paddingRight: '30px !important', // Ensure space for the spinner/arrow
           },
           '& .MuiOutlinedInput-input': {
-            padding: '0 14px',
+            padding: '0 14px !important',
           },
         }}
       />
     );
   };
-
   const handleAddLines = () => {
     // Find the unit price
-    const foundItem = options.find((item) => {
-      if (item.product === salesForm?.product) {
-        return item.unitPrice ?? 0;
+    const foundItem = inventoryByCategory?.inventory.find((item) => {
+      if (item.product_name === salesForm?.product) {
+        return item.unit_price ?? 0;
       }
     });
 
@@ -281,7 +368,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
       id: lineItems.length + 1,
       product: salesForm?.product,
       category: salesForm?.category,
-      unitPrice: foundItem?.unitPrice ?? 0,
+      unitPrice: foundItem?.unit_price ?? 0,
       qty: salesForm?.quantity,
     };
 
@@ -391,11 +478,37 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
 
             <div className="flex items-end gap-2">
               <TextField
+                disabled={!salesForm.product}
                 label="Quantity"
                 size="small"
                 value={salesForm?.quantity}
-                InputProps={{ readOnly: true }}
-                sx={{ width: 110 }}
+                onChange={(event) => {
+                  setSalesForm({
+                    ...salesForm,
+                    quantity: Number(event.target.value),
+                  });
+                }}
+                inputProps={{
+                  min: 1,
+                  max: maxQuantity,
+                }}
+                error={maxQuantity !== 0 && salesForm.quantity >= maxQuantity}
+                // 2. Display the message only when there is an error
+                helperText={
+                  maxQuantity !== 0 && salesForm.quantity >= maxQuantity
+                    ? 'Max Quantity'
+                    : ''
+                }
+                sx={{
+                  width: 110,
+                  // Optional: MUI adds space for helperText which might shift your layout.
+                  // If you want it to not push other elements down, you can use:
+                  '& .MuiFormHelperText-root': {
+                    position: 'absolute',
+                    bottom: '-20px',
+                    whiteSpace: 'nowrap',
+                  },
+                }}
               />
               <div className="flex gap-1">
                 <Button
@@ -407,6 +520,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
                   -
                 </Button>
                 <Button
+                  disabled={salesForm.quantity >= maxQuantity}
                   variant="outlined"
                   size="small"
                   onClick={handleIncrement}
@@ -437,7 +551,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
         <div className="mt-3 flex flex-col gap-4 lg:flex-row">
           <TableSection />
           <aside className="w-full lg:w-80 rounded-lg border border-gray-100 bg-gray-50 p-4">
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <Typography variant="body-sm" className="text-(--main-text)">
                 Subtotal
               </Typography>
@@ -452,8 +566,8 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
               <Typography variant="body" className="font-semibold">
                 {currency.format(tax)}
               </Typography>
-            </div>
-            <Divider className="my-3" />
+            </div> */}
+            {/* <Divider className="my-3" /> */}
             <div className="flex items-center justify-between">
               <Typography variant="h4">Total</Typography>
               <Typography variant="h3" className="text-(--accent-positive)">

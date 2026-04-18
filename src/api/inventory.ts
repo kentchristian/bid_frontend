@@ -1,3 +1,4 @@
+import type { InventoryByCategoryType } from "../lib/types/inventory-by-category";
 import type { SalesFormOptionsType } from "../lib/types/sales-form-options-types";
 import type { InventoryMetrics } from "../lib/types/usequery-types";
 import { baseApi } from "../services/axiosClient";
@@ -17,3 +18,10 @@ export const getSalesFormOptions = async (): Promise<SalesFormOptionsType> => {
   return data;
 
 }
+
+export const getInventoryByCategory = async (category: string): Promise<InventoryByCategoryType> => {
+  const { data } = await baseApi.get<InventoryByCategoryType>(`/api/inventory/inventory_by_category/?category=${category}`)
+  return data;
+}
+
+
