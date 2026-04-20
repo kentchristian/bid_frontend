@@ -26,24 +26,36 @@ import { useMemo, useState, type FormEvent } from 'react';
 import { icons } from '../../../lib/constants/icons';
 import { cn } from '../../../lib/helpers/cn';
 import {
+  useCreateSale,
   useInventoryByCategory,
   useSalesFormOptions,
 } from '../../../lib/hooks/useSales';
+import { useUserData } from '../../../lib/store/useUserData';
+import type { SalesTransactionPayload } from '../../../lib/types/sales-transaction';
 import { Typography } from '../../common/Typography';
 
 export type CreateSalesLineItem = {
   id: number;
-  product: string;
+  product: {
+    id: string;
+    product_name: string;
+  };
   category: string;
   unitPrice: number;
+  totalPrice: number;
   qty: number;
 };
 
-type CreateSalesFormProps = {
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-};
+// type CreateSalesFormProps = {
+//   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+// };
 
-const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
+interface CreateSalesFormProps {
+  handleCreateSalesClose: () => void;
+}
+const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
+  const { mutate: startTransaction, isPending: transactionLoading } =
+    useCreateSale({ handleCreateSalesClose, handleClearForm });
   // API Fetch
   const {
     data: salesFormOptions,
@@ -87,9 +99,11 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
     },
   };
 
+  const userID = useUserData((state) => state.userData?.id);
+
   const [salesForm, setSalesForm] = useState<SalesFormType>({
     transactionDate: dayjs(),
-    soldBy: '',
+    soldBy: userID ?? '',
     category: '',
     product: '',
     quantity: 0,
@@ -199,7 +213,8 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
                   soldBy: event.target.value as string,
                 })
               }
-              disabled={DropDownProps?.loading}
+              //TODO: Disable if role not admin
+              disabled={DropDownProps?.loading || true}
               IconComponent={DropDownProps?.IconComponent}
               input={DropDownProps?.input}
             >
@@ -363,12 +378,17 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
       }
     });
 
+    const totalPrice = (foundItem?.unit_price ?? 0) * salesForm?.quantity;
     // addLine
     const addLine: CreateSalesLineItem = {
       id: lineItems.length + 1,
-      product: salesForm?.product,
+      product: {
+        id: foundItem?.id ?? 'Unknown',
+        product_name: salesForm?.product,
+      },
       category: salesForm?.category,
       unitPrice: foundItem?.unit_price ?? 0,
+      totalPrice: totalPrice,
       qty: salesForm?.quantity,
     };
 
@@ -389,11 +409,11 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
     setLineItems(updated);
   };
 
-  const handleClearForm = () => {
+  function handleClearForm() {
     // clear sales form
     setSalesForm({
       transactionDate: null,
-      soldBy: '',
+      soldBy: userID ?? '', //TODO: fix with actual userID later on
       category: '',
       product: '',
       quantity: 0,
@@ -401,7 +421,8 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
 
     // clear table
     setLineItems([]);
-  };
+    setMaxQuantity(0);
+  }
 
   /* TableSection */
   const TableSection = () => {
@@ -430,7 +451,7 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
             <TableBody>
               {lineItems.map((item) => (
                 <TableRow key={item.id} hover>
-                  <TableCell>{item.product}</TableCell>
+                  <TableCell>{item.product?.product_name}</TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell align="right">
                     {currency.format(item.unitPrice)}
@@ -456,6 +477,37 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
         </TableContainer>
       </div>
     );
+  };
+
+  // HandleSubmit
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const items = lineItems.map((item) => {
+      return {
+        inventory: item.product.id,
+        quantity: item.qty,
+        unit_price: item.unitPrice,
+        total_price: item.totalPrice,
+      };
+    });
+
+    if (!salesForm.transactionDate) {
+      return alert('No transaction Date!');
+    }
+    const sold_at = salesForm.transactionDate.toISOString();
+
+    // Transform Payload
+    const payload: SalesTransactionPayload = {
+      sold_at: sold_at,
+      created_by: salesForm?.soldBy,
+      items: items,
+    };
+
+    // Invoke Mutation
+    startTransaction(payload);
+
+    // TODO: handle API for Category
   };
 
   return (
@@ -579,11 +631,12 @@ const CreateSalesForm = ({ handleSubmit }: CreateSalesFormProps) => {
                 Clear Form
               </Button>
               <Button
-                disabled={isFinalTransaction}
+                disabled={isFinalTransaction || transactionLoading}
                 variant="contained"
                 fullWidth
                 type="submit"
                 sx={confirmButtonSx}
+                loading={transactionLoading}
               >
                 Finalize Sales Transaction
               </Button>

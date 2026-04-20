@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { type FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { icons } from '../../../lib/constants/icons';
 import { cn } from '../../../lib/helpers/cn';
 import CardContainer from '../../common/CardContainer';
@@ -16,11 +16,6 @@ const CreateSalesFormContainer = ({
 
   const handleActiveTab = (tab: number) => {
     setActiveTab(tab);
-  };
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    handleCreateSalesClose();
   };
 
   return (
@@ -60,7 +55,7 @@ const CreateSalesFormContainer = ({
           <Typography variant="h4">Manual Sales Entry</Typography>
         </section>
       </header>
-      <CreateSalesForm handleSubmit={handleSubmit} />
+      <CreateSalesForm handleCreateSalesClose={handleCreateSalesClose} />
     </CardContainer>
   );
 };
