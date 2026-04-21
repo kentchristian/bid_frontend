@@ -19,27 +19,11 @@ import React from 'react';
 
 // Custom Typography Import
 import { useTransactionTicket } from '../../lib/store/useTransactionTicket';
+import type { SalesTransactionPayload } from '../../lib/types/sales-transaction';
 import { Typography } from '../common/Typography';
 
-// --- Interfaces ---
-
-interface SaleItem {
-  id: string;
-  inventory_name: string;
-  quantity: number;
-  unit_price: number;
-  total_price: number;
-}
-
-interface TransactionData {
-  transaction_id: string;
-  sold_at: string;
-  created_by: string;
-  items: SaleItem[];
-}
-
 interface TransactionReceiptProps {
-  data?: TransactionData;
+  data?: SalesTransactionPayload;
 }
 
 // --- Styled Components ---
@@ -63,60 +47,13 @@ const ReceiptPaper = styled(Box)(({ theme }) => ({
   },
 }));
 
-// --- Default Data ---
-
-const DUMMY_TRANSACTION: TransactionData = {
-  transaction_id: 'TXN-7B9D6BCD',
-  sold_at: new Date().toISOString(),
-  created_by: 'Admin User (admin@quantumanalytics.io)',
-  items: [
-    {
-      id: '1',
-      inventory_name: 'Quantum Processor Unit',
-      quantity: 2,
-      unit_price: 15000,
-      total_price: 30000,
-    },
-    {
-      id: '2',
-      inventory_name: 'BI Dashboard License',
-      quantity: 1,
-      unit_price: 5000,
-      total_price: 5000,
-    },
-    {
-      id: '3',
-      inventory_name: 'Cloud Storage (1TB)',
-      quantity: 3,
-      unit_price: 1200,
-      total_price: 3600,
-    },
-    {
-      id: '4',
-      inventory_name: 'Security Firewall',
-      quantity: 1,
-      unit_price: 8500,
-      total_price: 8500,
-    },
-    {
-      id: '5',
-      inventory_name: 'Extended Support',
-      quantity: 1,
-      unit_price: 2000,
-      total_price: 2000,
-    },
-  ],
-};
-
-// --- Main Component ---
-
 export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
-  data = DUMMY_TRANSACTION,
+  data,
 }) => {
   const { open, onClose } = useTransactionTicket();
 
-  const totalAmount = data.items.reduce(
-    (sum, item) => sum + item.total_price,
+  const totalAmount = data?.items.reduce(
+    (sum, item) => sum + item?.total_price,
     0,
   );
 
@@ -178,12 +115,12 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             <Typography variant="caption">ID</Typography>
             <Box display="flex" alignItems="center" gap={0.5}>
               <Typography variant="code" weight={700}>
-                {data.transaction_id}
+                {data?.transaction_id}
               </Typography>
               <IconButton
                 size="small"
                 sx={{ p: 0.5 }}
-                onClick={() => handleCopy(data.transaction_id)}
+                onClick={() => handleCopy(data?.transaction_id ?? 'Unknown')}
               >
                 <CopyIcon sx={{ fontSize: 14 }} />
               </IconButton>
@@ -193,21 +130,23 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           <Box display="flex" justifyContent="space-between">
             <Typography variant="caption">Date</Typography>
             <Typography variant="body-sm" weight={600}>
-              {new Date(data.sold_at).toLocaleString('en-PH', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              })}
+              {data?.sold_at
+                ? new Date(data.sold_at).toLocaleString('en-PH', {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  })
+                : 'N/A'}
             </Typography>
           </Box>
 
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="caption">Cashier</Typography>
+            <Typography variant="caption">Created By</Typography>
             <Typography
               variant="body-sm"
               weight={600}
               className="truncate max-w-[180px]"
             >
-              {data.created_by.split(' (')[0]}
+              {data?.created_by_name ?? 'Unknown'}
             </Typography>
           </Box>
         </Stack>
@@ -237,9 +176,9 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           }}
         >
           <Stack spacing={2}>
-            {data.items.map((item) => (
+            {data?.items.map((item, idx: number) => (
               <Box
-                key={item.id}
+                key={idx}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="flex-start"
@@ -250,7 +189,7 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
                     weight={600}
                     className="leading-tight"
                   >
-                    {item.inventory_name}
+                    {item?.product_name}
                   </Typography>
                   <Typography variant="caption">
                     {item.quantity} x ₱{item.unit_price.toLocaleString()}
@@ -277,7 +216,7 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             TOTAL AMOUNT
           </Typography>
           <Typography variant="h4" weight={900} className="text-primary">
-            ₱{totalAmount.toLocaleString()}
+            ₱{totalAmount?.toLocaleString() ?? 0}
           </Typography>
         </Box>
       </DialogContent>

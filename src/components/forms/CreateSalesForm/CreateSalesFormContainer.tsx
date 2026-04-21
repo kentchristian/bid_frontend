@@ -55,7 +55,7 @@ const CreateSalesFormContainer = ({
           <Typography variant="h4">Manual Sales Entry</Typography>
         </section>
       </header>
-      <CreateSalesForm handleCreateSalesClose={handleCreateSalesClose} />
+      <CreateSalesForm />
     </CardContainer>
   );
 };

@@ -34,6 +34,7 @@ import {
 import { useUserData } from '../../../lib/store/useUserData';
 import type { SalesTransactionPayload } from '../../../lib/types/sales-transaction';
 import { Typography } from '../../common/Typography';
+import TransactionReceipt from '../../modals/TransactionReceipt';
 
 export type CreateSalesLineItem = {
   id: number;
@@ -51,19 +52,19 @@ export type CreateSalesLineItem = {
 //   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 // };
 
-interface CreateSalesFormProps {
-  handleCreateSalesClose: () => void;
-}
-const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
+const CreateSalesForm = () => {
   // Create Sales Hook
   const { mutate: startTransaction, isPending: transactionLoading } =
-    useCreateSale({ handleCreateSalesClose, handleClearForm });
+    useCreateSale({ handleClearForm });
   // API Fetch
   const {
     data: salesFormOptions,
     isLoading: salesFormOptionsLoading,
     status: salesFormOptionsStatus,
   } = useSalesFormOptions();
+
+  const [transactionReceipt, setTransactionReceipt] =
+    useState<SalesTransactionPayload>();
 
   // DropDown Props STYLE
   const isSalesFormLoading =
@@ -102,6 +103,7 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
   };
 
   const userID = useUserData((state) => state.userData?.id);
+  const userName = useUserData((state) => state.userData?.name);
 
   const [salesForm, setSalesForm] = useState<SalesFormType>({
     transactionDate: dayjs(),
@@ -126,7 +128,7 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
   );
   const currency = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'PHP',
   });
 
   const isToday = salesForm?.transactionDate?.isSame(dayjs(), 'day'); // present Day checker
@@ -413,8 +415,7 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
   function handleClearForm() {
     // clear sales form
     setSalesForm({
-      transactionDate: null,
-      soldBy: userID ?? '', //TODO: fix with actual userID later on
+      ...salesForm,
       category: '',
       product: '',
       quantity: 0,
@@ -443,9 +444,9 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
               <TableRow className="bg-(--main-bg)">
                 <TableCell>Product (Item)</TableCell>
                 <TableCell>Category</TableCell>
-                <TableCell align="right">Unit Price (USD)</TableCell>
+                <TableCell align="right">Unit Price (PHP)</TableCell>
                 <TableCell align="right">Qty</TableCell>
-                <TableCell align="right">Total Price (USD)</TableCell>
+                <TableCell align="right">Total Price (PHP)</TableCell>
                 <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
@@ -487,9 +488,11 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
     const items = lineItems.map((item) => {
       return {
         inventory: item.product.id,
+        category: item.category,
+        product_name: item.product.product_name,
         quantity: item.qty,
         unit_price: item.unitPrice,
-        total_price: item.totalPrice,
+        total_price: Math.round(item.totalPrice * 100) / 100, // ensures 2 decimal places
       };
     });
 
@@ -508,104 +511,104 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
 
     // Invoke Mutation
     startTransaction(payload);
-
-    // TODO: handle API for Category
+    setTransactionReceipt({ ...payload, created_by_name: userName }); // set The Value Directly and control to when to show the modal
   };
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-      <section className="rounded-xl border border-gray-200/70 p-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <DateSection />
-          <SoldBySection />
-        </div>
-      </section>
-
-      <section className="rounded-xl border border-gray-200/70 p-4">
-        <div className="flex flex-col gap-3">
-          <Typography variant="h4" className="text-base text-(--main-text)">
-            Add Items
-          </Typography>
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
-            <CategorySection />
-            <ProductSection />
-
-            <div className="flex items-end gap-2">
-              <TextField
-                disabled={!salesForm.product}
-                label="Quantity"
-                size="small"
-                value={salesForm?.quantity}
-                onChange={(event) => {
-                  setSalesForm({
-                    ...salesForm,
-                    quantity: Number(event.target.value),
-                  });
-                }}
-                inputProps={{
-                  min: 1,
-                  max: maxQuantity,
-                }}
-                error={maxQuantity !== 0 && salesForm.quantity >= maxQuantity}
-                // 2. Display the message only when there is an error
-                helperText={
-                  maxQuantity !== 0 && salesForm.quantity >= maxQuantity
-                    ? 'Max Quantity'
-                    : ''
-                }
-                sx={{
-                  width: 110,
-                  // Optional: MUI adds space for helperText which might shift your layout.
-                  // If you want it to not push other elements down, you can use:
-                  '& .MuiFormHelperText-root': {
-                    position: 'absolute',
-                    bottom: '-20px',
-                    whiteSpace: 'nowrap',
-                  },
-                }}
-              />
-              <div className="flex gap-1">
-                <Button
-                  disabled={salesForm?.quantity < 1}
-                  variant="outlined"
-                  size="small"
-                  onClick={handleDecrement}
-                >
-                  -
-                </Button>
-                <Button
-                  disabled={salesForm.quantity >= maxQuantity}
-                  variant="outlined"
-                  size="small"
-                  onClick={handleIncrement}
-                >
-                  +
-                </Button>
-              </div>
-            </div>
-            <Button
-              variant="contained"
-              disabled={isAddTolistDisabled}
-              sx={confirmButtonSx}
-              onClick={handleAddLines}
-            >
-              Add to List
-            </Button>
-            <Button disabled variant="outlined" className="whitespace-nowrap">
-              Scan Barcode
-            </Button>
+    <>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+        <section className="rounded-xl border border-gray-200/70 p-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <DateSection />
+            <SoldBySection />
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="rounded-xl border border-gray-200/70 p-4">
-        <Typography variant="h4" className="text-base text-(--main-text)">
-          Sales Line Items
-        </Typography>
-        <div className="mt-3 flex flex-col gap-4 lg:flex-row">
-          <TableSection />
-          <aside className="w-full lg:w-80 rounded-lg border border-gray-100 bg-gray-50 p-4">
-            {/* <div className="flex items-center justify-between">
+        <section className="rounded-xl border border-gray-200/70 p-4">
+          <div className="flex flex-col gap-3">
+            <Typography variant="h4" className="text-base text-(--main-text)">
+              Add Items
+            </Typography>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
+              <CategorySection />
+              <ProductSection />
+
+              <div className="flex items-end gap-2">
+                <TextField
+                  disabled={!salesForm.product}
+                  label="Quantity"
+                  size="small"
+                  value={salesForm?.quantity}
+                  onChange={(event) => {
+                    setSalesForm({
+                      ...salesForm,
+                      quantity: Number(event.target.value),
+                    });
+                  }}
+                  inputProps={{
+                    min: 1,
+                    max: maxQuantity,
+                  }}
+                  error={maxQuantity !== 0 && salesForm.quantity >= maxQuantity}
+                  // 2. Display the message only when there is an error
+                  helperText={
+                    maxQuantity !== 0 && salesForm.quantity >= maxQuantity
+                      ? 'Max Quantity'
+                      : ''
+                  }
+                  sx={{
+                    width: 110,
+                    // Optional: MUI adds space for helperText which might shift your layout.
+                    // If you want it to not push other elements down, you can use:
+                    '& .MuiFormHelperText-root': {
+                      position: 'absolute',
+                      bottom: '-20px',
+                      whiteSpace: 'nowrap',
+                    },
+                  }}
+                />
+                <div className="flex gap-1">
+                  <Button
+                    disabled={salesForm?.quantity < 1}
+                    variant="outlined"
+                    size="small"
+                    onClick={handleDecrement}
+                  >
+                    -
+                  </Button>
+                  <Button
+                    disabled={salesForm.quantity >= maxQuantity}
+                    variant="outlined"
+                    size="small"
+                    onClick={handleIncrement}
+                  >
+                    +
+                  </Button>
+                </div>
+              </div>
+              <Button
+                variant="contained"
+                disabled={isAddTolistDisabled}
+                sx={confirmButtonSx}
+                onClick={handleAddLines}
+              >
+                Add to List
+              </Button>
+              <Button disabled variant="outlined" className="whitespace-nowrap">
+                Scan Barcode
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-gray-200/70 p-4">
+          <Typography variant="h4" className="text-base text-(--main-text)">
+            Sales Line Items
+          </Typography>
+          <div className="mt-3 flex flex-col gap-4 lg:flex-row">
+            <TableSection />
+            <aside className="w-full lg:w-80 rounded-lg border border-gray-100 bg-gray-50 p-4">
+              {/* <div className="flex items-center justify-between">
               <Typography variant="body-sm" className="text-(--main-text)">
                 Subtotal
               </Typography>
@@ -621,32 +624,34 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
                 {currency.format(tax)}
               </Typography>
             </div> */}
-            {/* <Divider className="my-3" /> */}
-            <div className="flex items-center justify-between">
-              <Typography variant="h4">Total</Typography>
-              <Typography variant="h3" className="text-(--accent-positive)">
-                {currency.format(total)}
-              </Typography>
-            </div>
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <Button variant="outlined" fullWidth onClick={handleClearForm}>
-                Clear Form
-              </Button>
-              <Button
-                disabled={isFinalTransaction || transactionLoading}
-                variant="contained"
-                fullWidth
-                type="submit"
-                sx={confirmButtonSx}
-                loading={transactionLoading}
-              >
-                Finalize Sales Transaction
-              </Button>
-            </div>
-          </aside>
-        </div>
-      </section>
-    </form>
+              {/* <Divider className="my-3" /> */}
+              <div className="flex items-center justify-between">
+                <Typography variant="h4">Total</Typography>
+                <Typography variant="h3" className="text-(--accent-positive)">
+                  {currency.format(total)}
+                </Typography>
+              </div>
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                <Button variant="outlined" fullWidth onClick={handleClearForm}>
+                  Clear Form
+                </Button>
+                <Button
+                  disabled={isFinalTransaction || transactionLoading}
+                  variant="contained"
+                  fullWidth
+                  type="submit"
+                  sx={confirmButtonSx}
+                  loading={transactionLoading}
+                >
+                  Finalize Sales Transaction
+                </Button>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </form>
+      <TransactionReceipt data={transactionReceipt} />;
+    </>
   );
 };
 
