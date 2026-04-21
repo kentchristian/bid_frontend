@@ -85,9 +85,9 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
       {/* Header */}
       <DialogTitle sx={{ textAlign: 'center', pt: 4, pb: 1 }}>
         <Typography
-          variant="overline"
+          variant="h3"
           weight={900}
-          className="tracking-[0.2em] text-gray-500"
+          className="tracking-[0.2em] text-(--main-text) text-center mb-6"
         >
           Transaction Receipt
         </Typography>
@@ -112,9 +112,15 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
             justifyContent="space-between"
             alignItems="center"
           >
-            <Typography variant="caption">ID</Typography>
+            <Typography variant="caption" className="text-(--main-text)">
+              ID
+            </Typography>
             <Box display="flex" alignItems="center" gap={0.5}>
-              <Typography variant="code" weight={700}>
+              <Typography
+                variant="code"
+                weight={700}
+                className="text-(--main-text) bg-(--main-bg)"
+              >
                 {data?.transaction_id}
               </Typography>
               <IconButton
@@ -128,7 +134,9 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           </Box>
 
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="caption">Date</Typography>
+            <Typography variant="caption" className="text-(--main-text)">
+              Date
+            </Typography>
             <Typography variant="body-sm" weight={600}>
               {data?.sold_at
                 ? new Date(data.sold_at).toLocaleString('en-PH', {
@@ -140,7 +148,9 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           </Box>
 
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="caption">Created By</Typography>
+            <Typography variant="caption" className="text-(--main-text)">
+              Created By
+            </Typography>
             <Typography
               variant="body-sm"
               weight={600}
@@ -157,7 +167,7 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
         <Typography
           variant="overline"
           weight={800}
-          className="mb-3 block text-gray-400"
+          className="mb-3 block text-(--main-text)"
         >
           ITEMS
         </Typography>
@@ -215,7 +225,11 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
           <Typography variant="body" weight={800}>
             TOTAL AMOUNT
           </Typography>
-          <Typography variant="h4" weight={900} className="text-primary">
+          <Typography
+            variant="h4"
+            weight={900}
+            className="text-(--accent-positive)"
+          >
             ₱{totalAmount?.toLocaleString() ?? 0}
           </Typography>
         </Box>
