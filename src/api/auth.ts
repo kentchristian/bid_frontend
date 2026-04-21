@@ -1,5 +1,5 @@
-import { baseApi } from '../services/axiosClient';
 import { getCookie } from '../lib/utils/getCookie';
+import { baseApi } from '../services/axiosClient';
 
 export type LoginPayload = {
   email: string;
@@ -17,7 +17,7 @@ export const login = async ({ email, password }: LoginPayload) => {
 /* Get CSRF TOKEN and Logout **/
 const csrfCookieName = 'csrftoken';
 
-async function getCsrfToken(forceRefresh = false) {
+export async function getCsrfToken(forceRefresh = false) {
   if (!forceRefresh) {
     const existingToken =
       typeof document !== 'undefined' ? getCookie(csrfCookieName) : null;
