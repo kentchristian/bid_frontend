@@ -7,6 +7,7 @@ export type LoginPayload = {
 };
 
 export const login = async ({ email, password }: LoginPayload) => {
+  await getCsrfToken();
   const response = await baseApi.post('/auth/login/', { email, password });
   return response.data;
 };
@@ -35,23 +36,15 @@ export async function getCsrfToken(forceRefresh = false) {
 
 export const logout = async () => {
   try {
-    const token = await getCsrfToken();
-    const response = await baseApi.post(
-      '/auth/logout/',
-      null,
-      token ? { headers: { 'X-CSRFToken': token } } : undefined,
-    );
+    await getCsrfToken();
+    const response = await baseApi.post('/auth/logout/');
     return response.data;
   } catch (error) {
     const status = (error as { response?: { status?: number } }).response
       ?.status;
     if (status === 403) {
-      const token = await getCsrfToken(true);
-      const response = await baseApi.post(
-        '/auth/logout/',
-        null,
-        token ? { headers: { 'X-CSRFToken': token } } : undefined,
-      );
+      await getCsrfToken(true);
+      const response = await baseApi.post('/auth/logout/');
       return response.data;
     }
     throw error;
