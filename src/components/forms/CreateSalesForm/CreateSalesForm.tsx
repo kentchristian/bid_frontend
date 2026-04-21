@@ -23,6 +23,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
 import { useMemo, useState, type FormEvent } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { icons } from '../../../lib/constants/icons';
 import { cn } from '../../../lib/helpers/cn';
 import {
@@ -54,6 +55,7 @@ interface CreateSalesFormProps {
   handleCreateSalesClose: () => void;
 }
 const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
+  // Create Sales Hook
   const { mutate: startTransaction, isPending: transactionLoading } =
     useCreateSale({ handleCreateSalesClose, handleClearForm });
   // API Fetch
@@ -398,7 +400,6 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
     // Reset Items
     setSalesForm({
       ...salesForm,
-      category: '',
       product: '',
       quantity: 0,
     });
@@ -501,6 +502,7 @@ const CreateSalesForm = ({ handleCreateSalesClose }: CreateSalesFormProps) => {
     const payload: SalesTransactionPayload = {
       sold_at: sold_at,
       created_by: salesForm?.soldBy,
+      transaction_id: uuidv4(),
       items: items,
     };
 

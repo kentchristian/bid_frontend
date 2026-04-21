@@ -3,6 +3,7 @@
 export type SalesTransactionPayload = {
   sold_at: string | Date;
   created_by?: string;
+  transaction_id: string;
   items: {
     inventory: string;
     quantity: number;
