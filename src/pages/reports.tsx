@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import ComingSoon from '../components/common/ComingSoon';
 import PageContainer from '../components/common/PageContainer';
-import TransactionTicketModal from '../components/modals/TransactionTicketModal';
+import TransactionReceipt from '../components/modals/TransactionReceipt';
 import { useTransactionTicket } from '../lib/store/useTransactionTicket';
 
 const Reports = () => {
@@ -15,7 +15,7 @@ const Reports = () => {
       </p>
       <ComingSoon />
       <Button onClick={onOpen}>Open</Button>
-      <TransactionTicketModal />;
+      <TransactionReceipt />;
     </PageContainer>
   );
 };

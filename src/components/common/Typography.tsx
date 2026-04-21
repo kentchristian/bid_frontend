@@ -1,26 +1,26 @@
-import React, { type ReactElement } from "react";
+import React, { type ReactElement } from 'react';
 import { cn } from '../../lib/helpers/cn';
 
 type Variant =
-  | "display"
-  | "h1"
-  | "h2"
-  | "h3"
-  | "h4"
-  | "body-lg"
-  | "body"
-  | "body-sm"
-  | "caption"
-  | "overline"
-  | "code";
+  | 'display'
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'body-lg'
+  | 'body'
+  | 'body-sm'
+  | 'caption'
+  | 'overline'
+  | 'code';
 
-type Align = "left" | "center" | "right" | "justify";
+type Align = 'left' | 'center' | 'right' | 'justify';
 
 type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 
 type TypographyProps = {
   /**
-   * Visual style of the text.  
+   * Visual style of the text.
    * Controls font-size, font-weight, and other text styles.
    * Default: `"body"`
    */
@@ -60,42 +60,42 @@ type TypographyProps = {
  * Mapping of variants to Tailwind classes
  */
 const styles: Record<Variant, string> = {
-  display: "text-6xl font-bold",
-  h1: "text-4xl font-bold",
-  h2: "text-3xl font-semibold",
-  h3: "text-2xl font-semibold",
-  h4: "text-xl font-semibold",
-  "body-lg": "text-lg",
-  body: "text-base",
-  "body-sm": "text-sm",
-  caption: "text-xs text-gray-500",
-  overline: "text-[11px] uppercase tracking-wider font-semibold",
-  code: "font-mono text-sm bg-gray-100 px-1 rounded",
+  display: 'text-6xl font-bold',
+  h1: 'text-4xl font-bold',
+  h2: 'text-3xl font-semibold',
+  h3: 'text-2xl font-semibold',
+  h4: 'text-xl font-semibold',
+  'body-lg': 'text-lg',
+  body: 'text-base',
+  'body-sm': 'text-sm',
+  caption: 'text-xs text-gray-500',
+  overline: 'text-[11px] uppercase tracking-wider font-semibold',
+  code: 'font-mono text-sm bg-gray-100 px-1 rounded',
 };
 
 /**
  * Tailwind text alignment classes
  */
 const alignStyles: Record<Align, string> = {
-  left: "text-left",
-  center: "text-center",
-  right: "text-right",
-  justify: "text-justify",
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+  justify: 'text-justify',
 };
 
 /**
  * Tailwind font-weight classes
  */
 const weightMap: Record<FontWeight, string> = {
-  100: "font-thin",
-  200: "font-extralight",
-  300: "font-light",
-  400: "font-normal",
-  500: "font-medium",
-  600: "font-semibold",
-  700: "font-bold",
-  800: "font-extrabold",
-  900: "font-black",
+  100: 'font-thin',
+  200: 'font-extralight',
+  300: 'font-light',
+  400: 'font-normal',
+  500: 'font-medium',
+  600: 'font-semibold',
+  700: 'font-bold',
+  800: 'font-extrabold',
+  900: 'font-black',
 };
 
 /**
@@ -133,8 +133,8 @@ const weightMap: Record<FontWeight, string> = {
  * </Typography>
  */
 export function Typography({
-  variant = "body",
-  align = "left",
+  variant = 'body',
+  align = 'left',
   weight,
   className,
   children,
@@ -143,8 +143,8 @@ export function Typography({
   const classes = cn(
     styles[variant],
     alignStyles[align],
-    weight ? weightMap[weight] : "",
-    className
+    weight ? weightMap[weight] : '',
+    className,
   );
 
   // If asChild, clone the child element and inject classes
