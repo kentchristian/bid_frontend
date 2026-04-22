@@ -7,6 +7,7 @@ import type { InventoryByCategoryType } from "../types/inventory-by-category";
 import type { SalesFormOptionsType } from "../types/sales-form-options-types";
 import type { SalesTransactionPayload } from "../types/sales-transaction";
 import type { TransactionHistory } from "../types/transaction-history";
+import { getCookie } from "../utils/getCookie";
 import { useAuthQuery } from "./useAuthQuery";
 
 
@@ -36,23 +37,24 @@ export const useCreateSale = ({ handleClearForm }: useCreateSaleProps) => {
   const { showSnackbar } = useSnackbar();
 
   const { onOpen } = useTransactionTicket();
+  const csrftoken = getCookie('csrftoken');
 
   return useMutation({
     mutationFn: (payload: SalesTransactionPayload) => createSalesTransaction(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['transaction-history'] });
       const message = "Transaction Created Successfuly!";
-
       
       // handleCreateSalesClose(); // Close Form
       handleClearForm();
       showSnackbar(message, { variant: 'success' });
-
       
       onOpen() // Open Transaction Receipt On Success
       
-      
     },
+    onSettled: () => {
+       const transactionHistoryQueryKey = [csrftoken, 'transaction-history'];
+       queryClient.invalidateQueries({ queryKey: transactionHistoryQueryKey });
+    }
   })
 
 }
