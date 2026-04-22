@@ -20,6 +20,7 @@ import React from 'react';
 // Custom Typography Import
 import { useTransactionTicket } from '../../lib/store/useTransactionTicket';
 import type { SalesTransactionPayload } from '../../lib/types/sales-transaction';
+import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import { Typography } from '../common/Typography';
 
 interface TransactionReceiptProps {
@@ -138,12 +139,7 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
               Date
             </Typography>
             <Typography variant="body-sm" weight={600}>
-              {data?.sold_at
-                ? new Date(data.sold_at).toLocaleString('en-PH', {
-                    dateStyle: 'medium',
-                    timeStyle: 'short',
-                  })
-                : 'N/A'}
+              {data?.sold_at ? dateMonthDayTimeFormatter(data?.sold_at) : 'N/A'}
             </Typography>
           </Box>
 

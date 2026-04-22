@@ -2,7 +2,7 @@ import { Button } from '@mui/material'; // Assuming MUI based on your sx prop us
 import type { GridColDef } from '@mui/x-data-grid';
 
 import { format } from 'date-fns';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
@@ -10,31 +10,16 @@ import SearchBar from '../filters/SearchBar';
 
 import { useTransactionHistory } from '../../lib/hooks/useSales';
 import { useSnackbar } from '../../lib/providers/SnackbarProvider';
+import type { Transactions } from '../../lib/types/transaction-history';
 import { currency } from '../../lib/utils/currency';
+import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import SummaryTile from '../cards/SummaryTile';
 
-interface SalesEntry {
-  id: string;
-  productName: string;
-  category: string;
-  quantity: number;
-  unit_price: number | string;
-  total_price: number | string;
-  sold_at: string;
-  created_by: string;
-}
-
 interface SalesHistoryProps {
-  data?: SalesEntry[];
-  loading?: boolean;
   getSelectedDates: () => { from: Date | null; to: Date | null };
 }
 
-const SalesHistory = ({
-  data = [],
-  loading,
-  getSelectedDates,
-}: SalesHistoryProps) => {
+const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
   const {
     data: transactionHistory,
     isLoading: transactionHistoryLoading,
@@ -47,23 +32,43 @@ const SalesHistory = ({
     sub: string;
   };
 
-  const summary: SummaryType[] = [
-    {
-      label: 'Total Revenue',
-      value: currency.format(transactionHistory?.total_revenue ?? 0) ?? 0,
-      sub: 'Gross income',
-    },
-    {
-      label: 'Transactions',
-      value: transactionHistory?.total_transactions ?? 0,
-      sub: 'Total Orders',
-    },
-    {
-      label: 'Unit Sold',
-      value: '',
-      sub: 'Volume',
-    },
-  ];
+  const transformedRows = useMemo(() => {
+    if (!transactionHistory?.total_transactions) {
+      return []; // return empty
+    }
+
+    return transactionHistory?.transactions.map((transaction: Transactions) => {
+      return {
+        id: transaction?.transaction_id ?? 'Unknown',
+        transactionID: transaction?.transaction_id ?? 'Unknown',
+        createdBy: transaction?.created_by ?? 'Unknown',
+        soldAt: transaction?.sold_at ?? 'Unknown',
+        quantity: transaction?.items_in_transaction ?? 0,
+        totalPrice: transaction?.overall_transaction_amount ?? 0,
+      };
+    });
+  }, [transactionHistory?.transactions]);
+
+  // Memoized Summary
+  const summary: SummaryType[] = useMemo(() => {
+    return [
+      {
+        label: 'Total Revenue',
+        value: currency.format(transactionHistory?.total_revenue ?? 0) ?? 0,
+        sub: 'Gross income',
+      },
+      {
+        label: 'Transactions',
+        value: transactionHistory?.total_transactions ?? 0,
+        sub: 'Total Orders',
+      },
+      {
+        label: 'Unit Sold',
+        value: transactionHistory?.units_sold ?? 0,
+        sub: 'Volume',
+      },
+    ];
+  }, [transactionHistory]);
 
   // Restored and adapted button styles
   const actionButtonSx = (colorVar: string) => ({
@@ -87,27 +92,29 @@ const SalesHistory = ({
       headerName: 'Transaction ID',
       flex: 1,
     },
-    { field: 'created_by', headerName: 'Sold By', flex: 1 },
+    { field: 'createdBy', headerName: 'Sold By', flex: 2 },
     {
-      field: 'sold_at',
+      field: 'soldAt',
       headerName: 'Date & Time',
-      flex: 1.2,
-      renderCell: (params: any) => new Date(params.value).toLocaleString(),
+      flex: 1,
+      renderCell: (params: any) => {
+        const date = dateMonthDayTimeFormatter(new Date(params.value));
+
+        return date.toLocaleString();
+      },
     },
     {
       field: 'quantity',
       headerName: 'Items In Transaction',
       flex: 0.6,
-      align: 'right',
-      headerAlign: 'right',
     },
     {
-      field: 'total_price',
+      field: 'totalPrice',
       headerName: 'Total Price',
       flex: 1,
       renderCell: (params: any) => (
         <span className="font-semibold text-[color:var(--accent-positive)]">
-          {`$${Number(params.value).toLocaleString()}`}
+          {`${currency.format(params.value)}`}
         </span>
       ),
     },
@@ -123,7 +130,7 @@ const SalesHistory = ({
             <Button
               aria-label={`View Details for ${id}`}
               sx={actionButtonSx('--accent-primary')}
-              onClick={() => console.log(`View sale: ${id}`)}
+              onClick={() => alert(`View sale: ${id}`)}
             >
               <icons.show size={16} />
             </Button>
@@ -206,7 +213,7 @@ const SalesHistory = ({
 
       <DynamicDataGrid
         columns={columns}
-        rows={[]}
+        rows={transformedRows ?? []}
         loading={
           transactionHistoryLoading && transactionHistoryStatus === 'pending'
         }

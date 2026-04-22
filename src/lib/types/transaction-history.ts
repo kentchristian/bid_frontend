@@ -24,6 +24,7 @@ export type Sales = {
 }
 
 export type Transactions = {
+  id?: string; // used in Data Grid -- same value as transaction_id
   transaction_id: string;
   created_by: string;
   tenant: string;
@@ -37,6 +38,7 @@ export type Transactions = {
 export type TransactionHistory = {
   total_transactions: number;
   total_revenue: number;
+  units_sold: number;
   transactions: Transactions[];
 }
 
