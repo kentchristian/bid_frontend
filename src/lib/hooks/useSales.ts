@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getInventoryByCategory, getSalesFormOptions } from "../../api/inventory";
-import { createSalesTransaction } from "../../api/sales";
+import { createSalesTransaction, getTransactionHistory } from "../../api/sales";
 import { useSnackbar } from "../providers/SnackbarProvider";
 import { useTransactionTicket } from "../store/useTransactionTicket";
 import type { InventoryByCategoryType } from "../types/inventory-by-category";
 import type { SalesFormOptionsType } from "../types/sales-form-options-types";
 import type { SalesTransactionPayload } from "../types/sales-transaction";
+import type { TransactionHistory } from "../types/transaction-history";
 import { useAuthQuery } from "./useAuthQuery";
 
 
@@ -39,7 +40,7 @@ export const useCreateSale = ({ handleClearForm }: useCreateSaleProps) => {
   return useMutation({
     mutationFn: (payload: SalesTransactionPayload) => createSalesTransaction(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['TBD'] });
+      queryClient.invalidateQueries({ queryKey: ['transaction-history'] });
       const message = "Transaction Created Successfuly!";
 
       
@@ -54,4 +55,11 @@ export const useCreateSale = ({ handleClearForm }: useCreateSaleProps) => {
     },
   })
 
+}
+
+export const useTransactionHistory = () => {
+  return useAuthQuery<TransactionHistory>(
+    'transaction-history',
+    getTransactionHistory
+  );
 }

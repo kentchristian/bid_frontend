@@ -1,5 +1,6 @@
 import type { SalesTransactionPayload } from "../lib/types/sales-transaction";
 import type { TodaysTopHitsType } from "../lib/types/todays-top-hits-type";
+import type { TransactionHistory } from "../lib/types/transaction-history";
 import type { DashboardSalesMetrics } from "../lib/types/usequery-types";
 import { baseApi } from "../services/axiosClient";
 import { getCsrfToken } from "./auth";
@@ -30,4 +31,10 @@ export const createSalesTransaction = async (payload: SalesTransactionPayload): 
 
   console.log("CREATE SALES: ", response)
   return response?.data;
+}
+
+export const getTransactionHistory = async (): Promise<TransactionHistory> => {
+  const { data } = await baseApi.get<TransactionHistory>('/api/sales/transaction_history/');
+
+  return data;
 }
