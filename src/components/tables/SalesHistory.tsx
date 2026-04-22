@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'; // Assuming MUI based on your sx prop usage
+import { Button, CircularProgress } from '@mui/material'; // Assuming MUI based on your sx prop usage
 import type { GridColDef } from '@mui/x-data-grid';
 
 import { format } from 'date-fns';
@@ -14,6 +14,7 @@ import type { Transactions } from '../../lib/types/transaction-history';
 import { currency } from '../../lib/utils/currency';
 import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import SummaryTile from '../cards/SummaryTile';
+import { Typography } from '../common/Typography';
 
 interface SalesHistoryProps {
   getSelectedDates: () => { from: Date | null; to: Date | null };
@@ -24,6 +25,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
     data: transactionHistory,
     isLoading: transactionHistoryLoading,
     status: transactionHistoryStatus,
+    isRefetching: transactionHistoryRefetching,
   } = useTransactionHistory();
 
   type SummaryType = {
@@ -186,7 +188,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
   return (
     <CardContainer
       title="Sales History"
-      className="sales-history flex-1 min-w-0 min-h-180 mt-7"
+      className="relative sales-history flex-1 min-w-0 min-h-180 mt-7"
       info="Transaction log synced with tenant inventory."
       customFunction={
         <div className="flex flex-row gap-2">
@@ -210,6 +212,15 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
           />
         ))}
       </div>
+
+      {transactionHistoryRefetching && (
+        <div className="absolute right-8 top-50 z-99">
+          <div className="flex flex-row items-center gap-2">
+            <Typography variant="caption">Refetching</Typography>
+            <CircularProgress sx={{ color: 'var(--main-text)' }} size={10} />
+          </div>
+        </div>
+      )}
 
       <DynamicDataGrid
         columns={columns}
