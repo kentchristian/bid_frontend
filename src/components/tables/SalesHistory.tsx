@@ -31,6 +31,8 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
     isRefetching: transactionHistoryRefetching,
   } = useTransactionHistory();
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   type SummaryType = {
     label: string;
     value: string | number;
@@ -42,20 +44,29 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
       return []; // return empty
     }
 
-    return transactionHistory?.transactions.map(
-      (transaction: Transactions, idx: number) => {
-        return {
-          id: idx, // temporary TOOD: replace with UUID for uniqueness
-          transactionID: transaction?.transaction_id ?? 'Unknown',
-          createdBy: transaction?.created_by ?? 'Unknown',
-          soldAt: transaction?.sold_at ?? 'Unknown',
-          quantity: transaction?.items_in_transaction ?? 0,
-          totalPrice: transaction?.overall_transaction_amount ?? 0,
-          items: transaction?.items ?? [], // Sales type from TransactionHistory
-        };
-      },
-    );
-  }, [transactionHistory?.transactions]);
+    const baseTransactions = transactionHistory?.transactions || [];
+
+    return baseTransactions
+      .map((transaction: Transactions, idx: number) => ({
+        id: idx, // temporary TOOD: replace with UUID for uniqueness
+        transactionID: transaction?.transaction_id ?? 'Unknown',
+        createdBy: transaction?.created_by ?? 'Unknown',
+        soldAt: transaction?.sold_at ?? 'Unknown',
+        quantity: transaction?.items_in_transaction ?? 0,
+        totalPrice: transaction?.overall_transaction_amount ?? 0,
+        items: transaction?.items ?? [], // Sales type from TransactionHistory
+      }))
+      .filter((row) => {
+        if (!searchTerm) return true; // if search Term does not exist return everything
+
+        const searchLower = searchTerm.toLowerCase();
+
+        return (
+          row?.transactionID?.toLocaleLowerCase().includes(searchLower) ||
+          row?.createdBy?.toLocaleLowerCase().includes(searchLower)
+        );
+      });
+  }, [transactionHistory?.transactions, searchTerm]);
 
   // Memoized Summary
   const summary: SummaryType[] = useMemo(() => {
@@ -191,6 +202,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
           <div className="flex items-center justify-start gap-2 h-full">
             <Button
               aria-label={`View Details for ${id}`}
+              variant="outlined"
               sx={actionButtonSx('--accent-primary')}
               onClick={() => handleShowReceipt(transactionID, soldAt, items)}
             >
@@ -199,13 +211,14 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
             <Button
               aria-label={`Edit product ID ${id}`}
               variant="outlined"
-              sx={actionButtonSx('--accent-primary')}
+              sx={actionButtonSx('--sidebar-muted')}
               onClick={() => alert(`Edit product ID ${id}`)}
             >
               <icons.edit size={16} />
             </Button>
             <Button
               aria-label={`Delete record ${id}`}
+              variant="outlined"
               sx={actionButtonSx('--accent-negative')}
               onClick={() => alert(`Initiate refund/delete for: ${id}`)}
             >
@@ -224,8 +237,9 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
+
     searchTimeoutRef.current = setTimeout(() => {
-      if (searchTerm) alert(searchTerm);
+      setSearchTerm(searchTerm);
     }, 500);
   };
 
@@ -248,7 +262,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
   return (
     <CardContainer
       title="Sales History"
-      className="relative sales-history flex-1 min-w-0 min-h-180 mt-7"
+      className="relative sales-history flex-1 min-w-0 min-h-185 mt-7"
       info="Transaction log synced with tenant inventory."
       customFunction={
         <div className="flex flex-row gap-2">

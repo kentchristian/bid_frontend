@@ -54,7 +54,7 @@ export const TransactionReceipt: React.FC<TransactionReceiptProps> = ({
   const { open, onClose } = useTransactionTicket();
 
   const totalAmount = data?.items.reduce(
-    (sum, item) => sum + item?.total_price,
+    (sum, item) => sum + Number(item?.total_price) || 0,
     0,
   );
 
