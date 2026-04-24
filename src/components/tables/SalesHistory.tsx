@@ -2,7 +2,7 @@ import { Button, CircularProgress } from '@mui/material'; // Assuming MUI based 
 import type { GridColDef } from '@mui/x-data-grid';
 
 import { format } from 'date-fns';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
@@ -10,11 +10,14 @@ import SearchBar from '../filters/SearchBar';
 
 import { useTransactionHistory } from '../../lib/hooks/useSales';
 import { useSnackbar } from '../../lib/providers/SnackbarProvider';
-import type { Transactions } from '../../lib/types/transaction-history';
+import { useTransactionTicket } from '../../lib/store/useTransactionTicket';
+import type { SalesTransactionPayload } from '../../lib/types/sales-transaction';
+import type { Sales, Transactions } from '../../lib/types/transaction-history';
 import { currency } from '../../lib/utils/currency';
 import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import SummaryTile from '../cards/SummaryTile';
 import { Typography } from '../common/Typography';
+import TransactionReceipt from '../modals/TransactionReceipt';
 
 interface SalesHistoryProps {
   getSelectedDates: () => { from: Date | null; to: Date | null };
@@ -39,16 +42,19 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
       return []; // return empty
     }
 
-    return transactionHistory?.transactions.map((transaction: Transactions) => {
-      return {
-        id: transaction?.transaction_id ?? 'Unknown',
-        transactionID: transaction?.transaction_id ?? 'Unknown',
-        createdBy: transaction?.created_by ?? 'Unknown',
-        soldAt: transaction?.sold_at ?? 'Unknown',
-        quantity: transaction?.items_in_transaction ?? 0,
-        totalPrice: transaction?.overall_transaction_amount ?? 0,
-      };
-    });
+    return transactionHistory?.transactions.map(
+      (transaction: Transactions, idx: number) => {
+        return {
+          id: idx, // temporary TOOD: replace with UUID for uniqueness
+          transactionID: transaction?.transaction_id ?? 'Unknown',
+          createdBy: transaction?.created_by ?? 'Unknown',
+          soldAt: transaction?.sold_at ?? 'Unknown',
+          quantity: transaction?.items_in_transaction ?? 0,
+          totalPrice: transaction?.overall_transaction_amount ?? 0,
+          items: transaction?.items ?? [], // Sales type from TransactionHistory
+        };
+      },
+    );
   }, [transactionHistory?.transactions]);
 
   // Memoized Summary
@@ -88,6 +94,59 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
     },
   });
 
+  const [transactionData, setTransactionData] = useState<
+    SalesTransactionPayload | undefined
+  >();
+  const { onOpen } = useTransactionTicket();
+
+  // Define Transformed type
+  interface transformedItemsType {
+    inventory: string;
+    product_name: string;
+    unit_price: number;
+    quantity: number;
+    total_price: number;
+  }
+
+  const handleShowReceipt = (
+    transactionID: string,
+    sold_at: string,
+    items: Sales[],
+  ) => {
+    // Payload is untranformed | partial
+
+    // Set CreatedBy name --
+    const createdBy = items[0]?.created_by?.name; // Always the createdby here are designed to be the same
+
+    // Transform payload?.items to items: Sales Type
+    const transformedItems = items.reduce((acc, item) => {
+      const newObject = {
+        inventory: item?.inventory?.id,
+        product_name: item?.inventory?.product_name,
+        unit_price: item?.inventory?.unit_price,
+        quantity: item?.quantity,
+        total_price: item?.total_price,
+      };
+
+      acc.push(newObject);
+
+      return acc;
+    }, [] as transformedItemsType[]);
+
+    // Assign to Payload
+    const payload = {
+      sold_at: sold_at,
+      transaction_id: transactionID,
+      created_by_name: createdBy,
+      items: transformedItems,
+    };
+
+    // set Data for transactionReceipt
+    setTransactionData(payload);
+
+    onOpen();
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'transactionID',
@@ -99,7 +158,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
       field: 'soldAt',
       headerName: 'Date & Time',
       flex: 1,
-      renderCell: (params: any) => {
+      renderCell: (params) => {
         const date = dateMonthDayTimeFormatter(new Date(params.value));
 
         return date.toLocaleString();
@@ -126,13 +185,14 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
       flex: 0.8,
       sortable: false,
       renderCell: (params: any) => {
-        const { id } = params.row;
+        const { id, transactionID, soldAt, items } = params.row;
+
         return (
           <div className="flex items-center justify-start gap-2 h-full">
             <Button
               aria-label={`View Details for ${id}`}
               sx={actionButtonSx('--accent-primary')}
-              onClick={() => alert(`View sale: ${id}`)}
+              onClick={() => handleShowReceipt(transactionID, soldAt, items)}
             >
               <icons.show size={16} />
             </Button>
@@ -231,6 +291,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
         minHeight={500}
         className="sales-data-grid"
       />
+      <TransactionReceipt data={transactionData} />
     </CardContainer>
   );
 };

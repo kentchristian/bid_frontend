@@ -19,7 +19,7 @@ export type Sales = {
   created_by: {
     id: string;
     name: string;
-    roel: string;
+    role: string;
   }
 }
 
@@ -42,3 +42,10 @@ export type TransactionHistory = {
   transactions: Transactions[];
 }
 
+
+
+export type handleShowTransactionType = {
+          sold_at: string;
+          transaction_id: string;
+          items: Sales;
+        };
