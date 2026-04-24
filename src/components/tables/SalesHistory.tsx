@@ -22,9 +22,13 @@ type DateType = { from: Date | null; to: Date | null };
 
 interface SalesHistoryProps {
   getSelectedDates: () => DateType;
+  handleClearDate: () => void;
 }
 
-const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
+const SalesHistory = ({
+  getSelectedDates,
+  handleClearDate,
+}: SalesHistoryProps) => {
   const {
     data: transactionHistory,
     isLoading: transactionHistoryLoading,
@@ -286,6 +290,16 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
 
     handleSearch('');
   };
+
+  const handleClearDateFilter = () => {
+    setDateSearch({
+      from: null,
+      to: null,
+    });
+
+    handleClearDate();
+    handleSearch('');
+  };
   return (
     <CardContainer
       title="Sales History"
@@ -293,9 +307,43 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
       info="Transaction log synced with tenant inventory."
       customFunction={
         <div className="flex flex-row gap-2">
-          <Button onClick={handleDateFilter} className="w-50">
-            Apply Date Filter
-          </Button>
+          {[
+            {
+              name: 'Apply Date Filter',
+              fn: handleDateFilter,
+              sx: {
+                mainBg: 'var(--accent-positive)',
+                hoverBg: 'var(--accent-positive-hover)',
+              },
+            },
+            {
+              name: 'Clear Date Filter',
+              fn: handleClearDateFilter,
+              sx: {
+                mainBg: 'var(--accent-negative)',
+                hoverBg: 'var(--accent-negative-hover)',
+              },
+              disabled: !dateSearch,
+            },
+          ].map((item) => (
+            <Button
+              disabled={item?.name === 'Clear Date Filter' && item?.disabled}
+              key={item?.name}
+              onClick={item?.fn}
+              className="w-50"
+              sx={{
+                color: 'var(--invert-text)',
+                backgroundColor: item?.sx?.mainBg,
+                '&:hover': {
+                  backgroundColor: item?.sx?.hoverBg,
+                  color: 'var(--invert-text)',
+                },
+                minWidth: 150,
+              }}
+            >
+              {item?.name}
+            </Button>
+          ))}
           <SearchBar onChange={handleSearch} />
         </div>
       }

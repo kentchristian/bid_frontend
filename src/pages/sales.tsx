@@ -24,6 +24,10 @@ const Sales = () => {
     return { from: null, to: null };
   };
 
+  const handleClearDate = () => {
+    return dateRangeRef.current?.clearDate();
+  };
+
   const [isCreateSalesOpen, setCreateSalesOpen] = useState(false);
 
   const handleCreateSales = () => {
@@ -63,7 +67,10 @@ const Sales = () => {
         <DateRangePicker ref={dateRangeRef} />
         <RevenueByCategory />
       </div>
-      <SalesHistory getSelectedDates={getSelectedDates} />
+      <SalesHistory
+        getSelectedDates={getSelectedDates}
+        handleClearDate={handleClearDate}
+      />
       <DynamicModal
         open={isCreateSalesOpen}
         onClose={handleCreateSalesClose}

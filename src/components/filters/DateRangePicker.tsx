@@ -17,6 +17,10 @@ export interface DateRangeRef {
     from: Date | null;
     to: Date | null;
   };
+  clearDate: () => {
+    from: null;
+    to: null;
+  };
 }
 
 const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
@@ -31,6 +35,12 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
       from: fromDate,
       to: fromDate ? (toDate ?? fromDate) : null,
     }),
+    clearDate: () => {
+      setFromDate(null);
+      setToDate(null);
+      // Return nulls explicitly since state updates are async
+      return { from: null, to: null };
+    },
   }));
 
   // defaul min date
@@ -83,8 +93,8 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
           <StaticDatePicker
             displayStaticWrapperAs="desktop"
             value={fromDate}
-            onChange={handleFromChange}
-            onAccept={handleFromChange}
+            onChange={(val) => handleFromChange(val as Date | null)}
+            onAccept={(val) => handleFromChange(val as Date | null)}
             maxDate={maxFromDate}
             referenceDate={fromDate ?? today}
             // Disable any date in the past if needed,
@@ -111,12 +121,12 @@ const DateRangePicker = forwardRef<DateRangeRef>((_props, ref) => {
             }
             displayStaticWrapperAs="desktop"
             value={toDate}
-            onChange={handleToChange}
-            onAccept={handleToChange}
+            onChange={(val) => handleToChange(val as Date | null)}
+            onAccept={(val) => handleToChange(val as Date | null)}
             minDate={minToDate}
             referenceDate={minToDate}
             shouldDisableDate={(date) =>
-              fromDate ? isBefore(date, fromDate) : false
+              fromDate ? isBefore(date as Date, fromDate) : false
             }
             disabled={!fromDate}
             slotProps={{
