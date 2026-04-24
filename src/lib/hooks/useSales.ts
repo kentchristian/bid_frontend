@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getInventoryByCategory, getSalesFormOptions } from "../../api/inventory";
-import { createSalesTransaction, getTransactionHistory } from "../../api/sales";
+import { createSalesTransaction, getOverallRevenue, getTransactionHistory } from "../../api/sales";
 import { useSnackbar } from "../providers/SnackbarProvider";
 import { useTransactionTicket } from "../store/useTransactionTicket";
 import type { InventoryByCategoryType } from "../types/inventory-by-category";
+import type { OverallRevenueType } from "../types/overall_revenue";
 import type { SalesFormOptionsType } from "../types/sales-form-options-types";
 import type { SalesTransactionPayload } from "../types/sales-transaction";
 import type { TransactionHistory } from "../types/transaction-history";
@@ -52,8 +53,12 @@ export const useCreateSale = ({ handleClearForm }: useCreateSaleProps) => {
       
     },
     onSettled: () => {
-       const transactionHistoryQueryKey = [csrftoken, 'transaction-history'];
-       queryClient.invalidateQueries({ queryKey: transactionHistoryQueryKey });
+       const subKeys = ['transaction-history', 'overall-revenue']
+        
+        subKeys.forEach((key) => {
+           queryClient.invalidateQueries({ queryKey: [csrftoken, key] });
+        })
+      
     }
   })
 
@@ -64,4 +69,11 @@ export const useTransactionHistory = () => {
     'transaction-history',
     getTransactionHistory
   );
+}
+
+export const useOverallRevenue = () => {
+  return useAuthQuery<OverallRevenueType>(
+    'overall-revenue',
+    getOverallRevenue,
+  )
 }

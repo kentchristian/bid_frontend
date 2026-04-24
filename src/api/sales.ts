@@ -1,3 +1,4 @@
+import type { OverallRevenueType } from "../lib/types/overall_revenue";
 import type { SalesTransactionPayload } from "../lib/types/sales-transaction";
 import type { TodaysTopHitsType } from "../lib/types/todays-top-hits-type";
 import type { TransactionHistory } from "../lib/types/transaction-history";
@@ -20,6 +21,21 @@ export const getTodaysTopHits = async (): Promise<TodaysTopHitsType> => {
 }
 
 
+export const getTransactionHistory = async (): Promise<TransactionHistory> => {
+  const { data } = await baseApi.get<TransactionHistory>('/api/sales/transaction_history/');
+
+  return data;
+}
+
+export const getOverallRevenue = async (): Promise<OverallRevenueType> => {
+  const { data } = await baseApi.get<OverallRevenueType>('/api/sales/overall_revenue/');
+  
+  return data;
+}
+
+
+
+// POST
 export const createSalesTransaction = async (payload: SalesTransactionPayload): Promise<SalesTransactionPayload> => {
   const token = await getCsrfToken();
 
@@ -31,10 +47,4 @@ export const createSalesTransaction = async (payload: SalesTransactionPayload): 
 
   console.log("CREATE SALES: ", response)
   return response?.data;
-}
-
-export const getTransactionHistory = async (): Promise<TransactionHistory> => {
-  const { data } = await baseApi.get<TransactionHistory>('/api/sales/transaction_history/');
-
-  return data;
 }
