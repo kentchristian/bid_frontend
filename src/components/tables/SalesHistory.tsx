@@ -1,7 +1,6 @@
 import { Button, CircularProgress } from '@mui/material'; // Assuming MUI based on your sx prop usage
 import type { GridColDef } from '@mui/x-data-grid';
 
-import { format } from 'date-fns';
 import { useMemo, useRef, useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
@@ -19,8 +18,10 @@ import SummaryTile from '../cards/SummaryTile';
 import { Typography } from '../common/Typography';
 import TransactionReceipt from '../modals/TransactionReceipt';
 
+type DateType = { from: Date | null; to: Date | null };
+
 interface SalesHistoryProps {
-  getSelectedDates: () => { from: Date | null; to: Date | null };
+  getSelectedDates: () => DateType;
 }
 
 const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
@@ -32,6 +33,7 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
   } = useTransactionHistory();
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [dateSearch, setDateSearch] = useState<DateType>();
 
   type SummaryType = {
     label: string;
@@ -57,16 +59,30 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
         items: transaction?.items ?? [], // Sales type from TransactionHistory
       }))
       .filter((row) => {
-        if (!searchTerm) return true; // if search Term does not exist return everything
+        const searchLower = searchTerm.toLowerCase().trim();
 
-        const searchLower = searchTerm.toLowerCase();
+        // --- 1. Text Search Logic ---
+        // If no search term, this is ALWAYS true.
+        // If there is a term, it must match ID or Creator.
+        const matchesSearch =
+          !searchLower ||
+          String(row.transactionID).toLowerCase().includes(searchLower) ||
+          String(row.createdBy).toLowerCase().includes(searchLower);
 
-        return (
-          row?.transactionID?.toLocaleLowerCase().includes(searchLower) ||
-          row?.createdBy?.toLocaleLowerCase().includes(searchLower)
-        );
+        // --- 2. Date Range Logic ---
+        const rowDate = new Date(row.soldAt);
+
+        // If no 'from' date, this is ALWAYS true.
+        const matchesFrom = !dateSearch?.from || rowDate >= dateSearch.from;
+
+        // If no 'to' date, this is ALWAYS true.
+        const matchesTo = !dateSearch?.to || rowDate <= dateSearch.to;
+
+        // --- 3. The Combined "Gate" ---
+        // The row only stays if it matches the Search AND the Date Range.
+        return matchesSearch && matchesFrom && matchesTo;
       });
-  }, [transactionHistory?.transactions, searchTerm]);
+  }, [transactionHistory?.transactions, searchTerm, dateSearch]);
 
   // Memoized Summary
   const summary: SummaryType[] = useMemo(() => {
@@ -244,20 +260,31 @@ const SalesHistory = ({ getSelectedDates }: SalesHistoryProps) => {
   };
 
   const handleDateFilter = () => {
-    // getSelectedDates();
     const { from, to } = getSelectedDates();
 
     if (!from) {
       showSnackbar('Please select a date!', { variant: 'error' });
     }
 
-    from &&
-      alert(
-        `Date: ${format(from, 'MMM dd, yyyy')} - ${format(
-          to ?? from,
-          'MMM dd, yyyy',
-        )}`,
-      );
+    // from &&
+    //   alert(
+    //     `Date: ${format(from, 'MMM dd, yyyy')} - ${format(
+    //       to ?? from,
+    //       'MMM dd, yyyy',
+    //     )} }`,
+    //   );
+
+    // Set 'to' date to 23:59:59 so it includes the whole day
+    const adjustedTo = to
+      ? new Date(new Date(to).setHours(23, 59, 59, 999))
+      : null;
+
+    setDateSearch({
+      from: from,
+      to: adjustedTo,
+    });
+
+    handleSearch('');
   };
   return (
     <CardContainer
