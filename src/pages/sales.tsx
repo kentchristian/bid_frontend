@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { useRef, useState } from 'react';
 
-import { RevenueByCategory } from '../components/cards/RevenueByCategory';
+import { RevenueByCategory } from '../components/charts/RevenueByCategory';
 import DynamicModal from '../components/common/DynamicModal';
 import PageContainer from '../components/common/PageContainer';
 import { Typography } from '../components/common/Typography';
