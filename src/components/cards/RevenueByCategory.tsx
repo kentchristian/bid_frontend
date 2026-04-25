@@ -85,12 +85,12 @@ export const RevenueByCategory = () => {
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: any) => {
+              formatter={(value: any, category) => {
                 if (value === undefined || value === null)
                   return ['$0', 'Revenue'];
 
                 const numericValue = Number(value);
-                return [`$${numericValue.toLocaleString()}`, 'Revenue'];
+                return [`$${numericValue.toLocaleString()}`, `${category}`];
               }}
             />
             <Legend verticalAlign="bottom" height={36} />

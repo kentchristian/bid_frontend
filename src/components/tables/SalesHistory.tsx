@@ -16,6 +16,7 @@ import { currency } from '../../lib/utils/currency';
 import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import SummaryTile from '../cards/SummaryTile';
 import { Typography } from '../common/Typography';
+import CancelTransaction from '../modals/CancelTransaction';
 import TransactionReceipt from '../modals/TransactionReceipt';
 
 type DateType = { from: Date | null; to: Date | null };
@@ -36,8 +37,14 @@ const SalesHistory = ({
     isRefetching: transactionHistoryRefetching,
   } = useTransactionHistory();
 
+  // Filter
   const [searchTerm, setSearchTerm] = useState('');
   const [dateSearch, setDateSearch] = useState<DateType>();
+
+  // Cancel Modal state
+  const [openCancelModal, setOpenCancelModal] = useState<boolean>(false);
+  const [selectedTransactionID, setSelectedTransactionID] =
+    useState<string>('');
 
   type SummaryType = {
     label: string;
@@ -178,6 +185,16 @@ const SalesHistory = ({
     onOpen();
   };
 
+  const handleCancelTransaction = (transactionID: string) => {
+    setSelectedTransactionID(transactionID);
+    setOpenCancelModal(true);
+
+    // Handle the mutation inside this cancelTransaction
+  };
+  const handleCloseCancelTransaction = () => {
+    setOpenCancelModal(false);
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'transactionID',
@@ -236,7 +253,7 @@ const SalesHistory = ({
                 aria-label={`Delete record ${id}`}
                 variant="outlined"
                 sx={actionButtonSx('--accent-negative')}
-                onClick={() => alert(`Initiate refund/delete for: ${id}`)}
+                onClick={() => handleCancelTransaction(transactionID)}
               >
                 <icons.cancel size={16} />
               </Button>
@@ -378,6 +395,11 @@ const SalesHistory = ({
         className="sales-data-grid"
       />
       <TransactionReceipt data={transactionData} />
+      <CancelTransaction
+        open={openCancelModal}
+        transactionID={selectedTransactionID}
+        onClose={handleCloseCancelTransaction}
+      />
     </CardContainer>
   );
 };
