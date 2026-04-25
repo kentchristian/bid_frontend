@@ -7,7 +7,7 @@ import { FiEdit2, FiEye, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
 import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
 import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
 import { IoReceiptOutline, IoTrendingDownSharp } from "react-icons/io5";
-import { MdArrowDropDown, MdArrowDropUp, MdClose, MdCompareArrows, MdDashboard, MdInventory, MdMenu, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { MdArrowDropDown, MdArrowDropUp, MdCancel, MdClose, MdCompareArrows, MdDashboard, MdInventory, MdMenu, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
 import { first, second, third } from "../../assets/rank-icons";
@@ -39,6 +39,7 @@ export const icons = {
   search: FiSearch,
   miniClose: FiX,
   upload: FaCloudUploadAlt,
+  cancel: MdCancel,
 
 
   // Visiblitye MUI 

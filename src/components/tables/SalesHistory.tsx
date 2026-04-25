@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from '@mui/material'; // Assuming MUI based on your sx prop usage
+import { Button, CircularProgress, Tooltip } from '@mui/material'; // Assuming MUI based on your sx prop usage
 import type { GridColDef } from '@mui/x-data-grid';
 
 import { useMemo, useRef, useState } from 'react';
@@ -220,30 +220,27 @@ const SalesHistory = ({
 
         return (
           <div className="flex items-center justify-start gap-2 h-full">
-            <Button
-              aria-label={`View Details for ${id}`}
-              variant="outlined"
-              sx={actionButtonSx('--accent-primary')}
-              onClick={() => handleShowReceipt(transactionID, soldAt, items)}
-            >
-              <icons.show size={16} />
-            </Button>
-            <Button
-              aria-label={`Edit product ID ${id}`}
-              variant="outlined"
-              sx={actionButtonSx('--sidebar-muted')}
-              onClick={() => alert(`Edit product ID ${id}`)}
-            >
-              <icons.edit size={16} />
-            </Button>
-            <Button
-              aria-label={`Delete record ${id}`}
-              variant="outlined"
-              sx={actionButtonSx('--accent-negative')}
-              onClick={() => alert(`Initiate refund/delete for: ${id}`)}
-            >
-              <icons.delete size={16} />
-            </Button>
+            <Tooltip title="View Transaction" arrow>
+              <Button
+                aria-label={`View Details for ${id}`}
+                variant="outlined"
+                sx={actionButtonSx('--accent-primary')}
+                onClick={() => handleShowReceipt(transactionID, soldAt, items)}
+              >
+                <icons.show size={16} />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Cancel Transaction" arrow>
+              <Button
+                aria-label={`Delete record ${id}`}
+                variant="outlined"
+                sx={actionButtonSx('--accent-negative')}
+                onClick={() => alert(`Initiate refund/delete for: ${id}`)}
+              >
+                <icons.cancel size={16} />
+              </Button>
+            </Tooltip>
           </div>
         );
       },
