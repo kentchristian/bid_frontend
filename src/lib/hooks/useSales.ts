@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getInventoryByCategory, getSalesFormOptions } from "../../api/inventory";
-import { createSalesTransaction, getOverallRevenue, getTransactionHistory } from "../../api/sales";
+import { cancelTransaction, createSalesTransaction, getOverallRevenue, getTransactionHistory } from "../../api/sales";
 import { useSnackbar } from "../providers/SnackbarProvider";
 import { useTransactionTicket } from "../store/useTransactionTicket";
+import type { CancelTransactionType } from "../types/cancel-transaction";
 import type { InventoryByCategoryType } from "../types/inventory-by-category";
 import type { OverallRevenueType } from "../types/overall_revenue";
 import type { SalesFormOptionsType } from "../types/sales-form-options-types";
@@ -33,6 +34,7 @@ export const useInventoryByCategory = (category: string) => {
 interface useCreateSaleProps {
   handleClearForm: () => void;
 }
+
 export const useCreateSale = ({ handleClearForm }: useCreateSaleProps) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
@@ -76,4 +78,38 @@ export const useOverallRevenue = () => {
     'overall-revenue',
     getOverallRevenue,
   )
+}
+
+
+
+
+interface useCancelTransactionProps {
+  handleClose: () => void;
+}
+export const useCancelTransaction = ({ handleClose }: useCancelTransactionProps) => {
+  const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
+  const csrftoken = getCookie('csrftoken');
+
+  return useMutation({
+    mutationFn: (payload: CancelTransactionType) => cancelTransaction(payload),
+    onSuccess: () => {
+      const message = "Transaction Cancelled Successfully!";
+      
+      showSnackbar(message, { variant: 'success' });
+      
+ 
+    },
+    onSettled: () => {
+       const subKeys = ['transaction-history', 'overall-revenue']
+        
+        subKeys.forEach((key) => {
+           queryClient.invalidateQueries({ queryKey: [csrftoken, key] });
+        })
+
+      handleClose(); // close after settled
+      
+    }
+  })
+
 }

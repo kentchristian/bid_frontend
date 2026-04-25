@@ -1,3 +1,4 @@
+import type { CancelTransactionType } from "../lib/types/cancel-transaction";
 import type { OverallRevenueType } from "../lib/types/overall_revenue";
 import type { SalesTransactionPayload } from "../lib/types/sales-transaction";
 import type { TodaysTopHitsType } from "../lib/types/todays-top-hits-type";
@@ -46,5 +47,19 @@ export const createSalesTransaction = async (payload: SalesTransactionPayload): 
   });
 
   console.log("CREATE SALES: ", response)
+  return response?.data;
+}
+
+
+// PATCH | UPDATE
+export const cancelTransaction = async (payload: CancelTransactionType): Promise<CancelTransactionType> => {
+  const token = await getCsrfToken();
+
+  const response = await baseApi.patch('/api/sales/cancel_transaction/', payload, {
+    headers: {
+      'X-CSRFToken': token,
+    }
+  });
+  
   return response?.data;
 }

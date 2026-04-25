@@ -13,6 +13,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { icons } from '../../lib/constants/icons';
+import { useCancelTransaction } from '../../lib/hooks/useSales';
+import type { CancelTransactionType } from '../../lib/types/cancel-transaction';
 import { Typography } from '../common/Typography';
 
 const modalStyle = {
@@ -56,13 +58,19 @@ const CancelTransaction = ({
     details: '',
   });
 
+  const { mutate: cancelTransaction, isPending: cancelTransactionPending } =
+    useCancelTransaction({ handleClose: onClose }); // passing the close function for cancelTransaction modal
+
   const handleConfirm = () => {
-    alert(`
-      Reason: ${reason.reason}
-      Details: ${reason.details}  
-    `);
-    // setReason('');
-    onClose();
+    // Transform reason
+    const cancelReason = reason?.reason + reason?.details;
+
+    const payload: CancelTransactionType = {
+      transaction_id: transactionID,
+      cancel_reason: cancelReason,
+    };
+
+    cancelTransaction(payload);
   };
 
   return (
@@ -122,6 +130,7 @@ const CancelTransaction = ({
                 sx={{
                   bgcolor: 'var(--main-bg)',
                 }}
+                required
               >
                 {VOID_REASONS.map((item) => (
                   <MenuItem key={item} value={item}>
@@ -149,6 +158,7 @@ const CancelTransaction = ({
             {/* Action Buttons */}
             <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
               <Button
+                disabled={cancelTransactionPending}
                 onClick={onClose}
                 variant="outlined"
                 fullWidth
@@ -161,10 +171,11 @@ const CancelTransaction = ({
                 GO BACK
               </Button>
               <Button
+                loading={cancelTransactionPending}
                 onClick={handleConfirm}
                 variant="contained"
                 fullWidth
-                disabled={!reason}
+                disabled={!reason?.reason}
                 sx={{
                   py: 1.5,
                   bgcolor: 'var(--accent-negative)',
