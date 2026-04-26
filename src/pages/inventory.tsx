@@ -26,6 +26,7 @@ const Inventory = () => {
     data: inventoryMetrics,
     isLoading: inventoryMetricsLoading,
     status: inventoryMetricsStatus,
+    isRefetching: inventoryMetricsReFetching,
   } = useInventoryMetrics();
 
   const inventoryKPIData = [
@@ -34,7 +35,7 @@ const Inventory = () => {
       details: `The total market value of the stock if sold at current unit prices. 
             Excluding tax and discounts.`,
       data: currency.format(
-        inventoryMetrics?.stock_valuation?.total_inventory_revenue ?? 0,
+        inventoryMetrics?.stock_valuation?.item_valuation ?? 0,
       ),
       caption: 'Quantity * Unit Price',
     },
@@ -99,7 +100,7 @@ const Inventory = () => {
           inventory across all store locations."
         />
         <Button
-          endIcon={<icons.circlePlus size={30} />}
+          startIcon={<icons.plus size={25} />}
           sx={{
             color: 'var(--invert-text)',
             backgroundColor: 'var(--accent-positive)',
@@ -129,7 +130,13 @@ const Inventory = () => {
           ))}
         </div>
 
-        <InventoryByCategory />
+        <InventoryByCategory
+          data={inventoryMetrics?.stock_valuation?.inventory_by_category ?? []}
+          loading={
+            inventoryMetricsLoading && inventoryMetricsStatus === 'pending'
+          }
+          // reFetching={inventoryMetricsReFetching}
+        />
       </div>
       <WareHouseInventory
         data={inventoryWareHouse}

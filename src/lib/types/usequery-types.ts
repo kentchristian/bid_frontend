@@ -55,12 +55,12 @@ export type IventoryByCategoryType = {
   category__name: string,
   category__color: string,
   total_inventory_items: number,
-  total_inventory_revenue: number
+  item_valuation: number
 }
 
 export type StockValuationType = {
   total_inventory_items: number,
-  total_inventory_revenue: number,
+  item_valuation: number,
   inventory_by_category: IventoryByCategoryType[],
 }
 

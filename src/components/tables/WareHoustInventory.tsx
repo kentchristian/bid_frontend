@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { Button, Tooltip } from '@mui/material';
+import { useRef, useState } from 'react';
+import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
 import type {
   TransformedHealthItems,
@@ -7,6 +9,7 @@ import type {
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 import { Typography } from '../common/Typography';
+import SearchBar from '../filters/SearchBar';
 
 type InventoryStatus = 'Healthy' | 'Low' | 'Empty';
 
@@ -17,6 +20,8 @@ interface WareHouseInventoryProps {
 
 const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
   const [activeStatus, setActiveStatus] = useState<InventoryStatus>('Healthy');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const actionButtonSx = (colorVar: string) => ({
     minWidth: 0,
@@ -33,6 +38,30 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     },
   });
 
+  const buttonProps = [
+    {
+      label: `Add stock for ID`,
+      accent: '--accent-positive',
+      icon: <icons.plus size={16} />,
+      toolTip: 'Add Quantity',
+      action: (id: string) => alert(`Add stock for ID ${id}`),
+    },
+    {
+      label: ``,
+      accent: '--accent-negative',
+      icon: <icons.minus size={16} />,
+      toolTip: 'Subtract Quantity',
+      action: (id: string) => alert(`Minus stock for ID ${id}`),
+    },
+    {
+      label: `Edit product ID`,
+      accent: '--accent-primary',
+      icon: <icons.edit size={16} />,
+      toolTip: 'Edit Inventory',
+      action: (id: string) => alert(`Edit product ID ${id}`),
+    },
+  ];
+
   const columns = [
     { field: 'productName', headerName: 'Product Name', flex: 1 },
     { field: 'category', headerName: 'Category', flex: 1 },
@@ -41,42 +70,31 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     { field: 'reorderThreshold', headerName: 'Re-order Threshold', flex: 1 },
     { field: 'unitPrice', headerName: 'Unit Price', flex: 1 },
     { field: 'status', headerName: 'Status', flex: 1 },
-    // {
-    //   field: 'actions',
-    //   headerName: 'Actions',
-    //   flex: 1.5,
-    //   renderCell: (params: any) => {
-    //     const { id } = params.row;
-    //     return (
-    //       <div className="flex items-center justify-start gap-2 p-2">
-    //         <Button
-    //           aria-label={`Add stock for ID ${id}`}
-    //           variant="outlined"
-    //           sx={actionButtonSx('--accent-positive')}
-    //           onClick={() => alert(`Add stock for ID ${id}`)}
-    //         >
-    //           <FiPlus size={16} />
-    //         </Button>
-    //         <Button
-    //           aria-label={`Minus stock for ID ${id}`}
-    //           variant="outlined"
-    //           sx={actionButtonSx('--accent-negative')}
-    //           onClick={() => alert(`Minus stock for ID ${id}`)}
-    //         >
-    //           <FiMinus size={16} />
-    //         </Button>
-    //         <Button
-    //           aria-label={`Edit product ID ${id}`}
-    //           variant="outlined"
-    //           sx={actionButtonSx('--accent-primary')}
-    //           onClick={() => alert(`Edit product ID ${id}`)}
-    //         >
-    //           <FiEdit2 size={16} />
-    //         </Button>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      flex: 1.5,
+      renderCell: (params: any) => {
+        const { id } = params.row;
+        return (
+          <div className="flex items-center justify-start gap-2 p-2">
+            {buttonProps.map((item, index) => (
+              <Tooltip title={item?.toolTip} arrow>
+                <Button
+                  key={index}
+                  aria-label={`${item.label}: ${id}`}
+                  variant="outlined"
+                  sx={actionButtonSx(item.accent)}
+                  onClick={() => item.action(id)}
+                >
+                  {item.icon}
+                </Button>
+              </Tooltip>
+            ))}
+          </div>
+        );
+      },
+    },
   ];
 
   const statusData: Record<InventoryStatus, TransformedWareHouseType[]> = {
@@ -130,6 +148,16 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
 
   const filteredRows = statusData[activeStatus];
 
+  const handleSearch = (text: string) => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(() => {
+      setSearchTerm(text);
+    }, 500);
+  };
+
   return (
     <>
       <CardContainer
@@ -137,18 +165,11 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
         className="warehouse-inventory flex-1 min-w-0 min-h-165"
         info="Provides a structured view of warehouse stock levels.
 Enables monitoring of inventory thresholds and supports direct quantity adjustments through add, subtract, and inline modification actions."
-        // customFunction={
-        //   <Switch
-        //     sx={{
-        //       '& .MuiSwitch-switchBase.Mui-checked': {
-        //         color: 'var(--accent-positive)', // thumb color
-        //       },
-        //       '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-        //         backgroundColor: 'var(--accent-positive)', // track color
-        //       },
-        //     }}
-        //   />
-        // }
+        customFunction={
+          <div className="flex flex-end min-w-100">
+            <SearchBar onChange={handleSearch} />
+          </div>
+        }
       >
         <div className="warehouse-status-tabs flex flex-col rounded-sm sm:flex-row mb-4 shadow-2xl">
           {statusTabs.map((tab) => {
