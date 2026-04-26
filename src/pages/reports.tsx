@@ -1,6 +1,7 @@
 import { Button } from '@mui/material';
 import ComingSoon from '../components/common/ComingSoon';
 import PageContainer from '../components/common/PageContainer';
+import AddInventory from '../components/modals/AddInventory';
 import TransactionReceipt from '../components/modals/TransactionReceipt';
 import { useTransactionTicket } from '../lib/store/useTransactionTicket';
 
@@ -16,6 +17,7 @@ const Reports = () => {
       <ComingSoon />
       <Button onClick={onOpen}>Open</Button>
       <TransactionReceipt />;
+      <AddInventory open={true} onClose={() => {}} />
     </PageContainer>
   );
 };
