@@ -1,11 +1,9 @@
-import type { statusQuery } from '../../lib/types/usequery-types';
 import CardContainer from './CardContainer';
 import { Typography } from './Typography';
 
 interface InventoryKPICountProps {
   title: string;
   loading?: boolean;
-  status?: statusQuery;
   info?: string;
   data?: string | number;
   caption?: string;
@@ -17,7 +15,6 @@ interface InventoryKPICountProps {
 const InventoryKPICount = ({
   title,
   loading,
-  status,
   info,
   data,
   caption,
@@ -26,7 +23,7 @@ const InventoryKPICount = ({
     <CardContainer
       title={title}
       info={info}
-      loading={loading && status === 'pending'}
+      loading={loading}
       className="h-40 flex-1 min-w-100"
     >
       <div className="flex flex-col gap-2">

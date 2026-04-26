@@ -26,11 +26,16 @@ export type TransformedWareHouseType = {
 }
 
 
+
+
 export type InventoryHealthItems = {
   healthy_stock_items: WareHouseInventoryType[],
   low_stock: WareHouseInventoryType[],
   empty_stock: WareHouseInventoryType[],
 }
+
+
+
 
 export type TransformedHealthItems = {
   healthy_stock_items: TransformedWareHouseType[],

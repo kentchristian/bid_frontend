@@ -49,7 +49,24 @@ export type Inventoryhealth = {
   items: InventoryHealthItems;
    
 }
+
+
+export type IventoryByCategoryType = {
+  category__name: string,
+  category__color: string,
+  total_inventory_items: number,
+  total_inventory_revenue: number
+}
+
+export type StockValuationType = {
+  total_inventory_items: number,
+  total_inventory_revenue: number,
+  inventory_by_category: IventoryByCategoryType[],
+}
+
+
 export type InventoryMetrics = {
+  stock_valuation: StockValuationType,
   items_below_threshold: ItemsBelowThreshold,
   inventory_health: Inventoryhealth,
 }

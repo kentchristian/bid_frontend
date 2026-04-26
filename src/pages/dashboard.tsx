@@ -10,7 +10,6 @@ import PageContainer from '../components/common/PageContainer';
 
 import { useMemo } from 'react';
 import MoneyInSales from '../components/tables/MoneyInSales';
-import WareHouseInventory from '../components/tables/WareHoustInventory';
 import { icons } from '../lib/constants/icons';
 
 import TotalTransactions from '../components/cards/TotalTransactions';
@@ -24,12 +23,6 @@ import {
   type TodaysTopHitsType,
   type TransformedTodaysTopHits,
 } from '../lib/types/todays-top-hits-type';
-import type {
-  InventoryHealthItems,
-  TransformedHealthItems,
-  TransformedWareHouseType,
-  WareHouseInventoryType,
-} from '../lib/types/warehouse-inventory-type';
 import { getCookie } from '../lib/utils/getCookie';
 import { getTwelveHourFormat } from '../lib/utils/getTwelveHourFormat';
 import { useMiddleware } from '../middleware/MiddlewareProvider';
@@ -101,48 +94,6 @@ const Dashboard = () => {
     return transformedTodaysTopHits;
   }, [todaysTopHitsData?.todays_top_hits]);
 
-  const inventoryWareHouse = useMemo(() => {
-    // Explicitly casting or typing the sourceData
-    const sourceData: InventoryHealthItems | undefined =
-      inventoryMetrics?.inventory_health?.items;
-
-    if (!sourceData) {
-      return {
-        healthy_stock_items: [],
-        low_stock: [],
-        empty_stock: [],
-      };
-    }
-
-    // Now 'inventory' is strictly typed as an array of WareHouseInventoryType
-    const transformFunction = (
-      inventory: WareHouseInventoryType[],
-      status: 'Healthy' | 'Low' | 'Empty', // Literal types for better safety
-    ): TransformedWareHouseType[] => {
-      return inventory.map((item: WareHouseInventoryType) => ({
-        id: item?.id,
-        productName: item?.product_name ?? 'Unknown',
-        category: item?.category?.name ?? 'Uncategorized',
-        currentStock: item?.stock_quantity ?? 0,
-        maxQuantity: item?.max_quantity ?? 0,
-        reorderThreshold: item?.reorder_threshold ?? 0,
-        unitPrice: item?.unit_price ?? 0,
-        status: status,
-      }));
-    };
-
-    const transformedHealthItems: TransformedHealthItems = {
-      healthy_stock_items: transformFunction(
-        sourceData?.healthy_stock_items ?? [],
-        'Healthy',
-      ),
-      low_stock: transformFunction(sourceData.low_stock ?? [], 'Low'),
-      empty_stock: transformFunction(sourceData.empty_stock ?? [], 'Empty'),
-    };
-
-    return transformedHealthItems;
-  }, [inventoryMetrics?.inventory_health?.items]);
-
   return (
     <PageContainer className="gap-2 flex flex-col">
       <div className="dashboard-row flex flex-row gap-2">
@@ -205,13 +156,6 @@ const Dashboard = () => {
           data={todaysTopHits || []}
         />
       </div>
-
-      <WareHouseInventory
-        data={inventoryWareHouse}
-        loading={
-          inventoryMetricsLoading && inventoryMetricsStatus === 'pending'
-        }
-      />
     </PageContainer>
   );
 };
