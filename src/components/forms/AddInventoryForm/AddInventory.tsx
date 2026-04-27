@@ -28,8 +28,8 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
   };
 
   return (
-    <CardContainer className="w-150 shadow-none border-none overscroll-contain ">
-      <form>
+    <CardContainer className="w-150 max-h-[80vh] shadow-none border-none flex flex-col overflow-hidden overscroll-contain">
+      <form className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden themed-scrollbar-always overscroll-contain pr-1">
         {/* Use 'container' and 'size' for Grid2 compatibility */}
         <Grid container spacing={1}>
           {/* SECTION 1: IDENTITY */}
@@ -174,7 +174,7 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
       </form>
 
       {/* ACTIONS */}
-      <div className="mt-5 flex justify-end gap-2">
+      <div className="mt-5 flex shrink-0 justify-end gap-2">
         <Button
           onClick={onClose}
           sx={{

@@ -82,7 +82,7 @@ const CardContainer = ({
         {!loading && isEmpty && <EmptyState />}
         {/* Content */}
         {!loading && !isEmpty && (
-          <div className="h-full min-h-0 flex-1">{children}</div>
+          <div className="h-full min-h-0 flex-1 flex flex-col">{children}</div>
         )}
       </div>
     </div>

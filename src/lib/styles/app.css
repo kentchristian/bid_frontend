@@ -74,6 +74,18 @@ body {
   transition: background-color 300ms ease, color 300ms ease;
 }
 
+:root.app-modal-open,
+:root.app-modal-open body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+:root.app-modal-open .app-main,
+:root.app-modal-open .page-container {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
 .auth-hero {
   font-family: 'Space Grotesk', 'Manrope', Inter, Avenir, Helvetica, Arial, sans-serif;
 }
@@ -246,6 +258,29 @@ main {
 
 .themed-scrollbar:hover::-webkit-scrollbar-thumb:hover,
 .themed-scrollbar:focus-within::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
+}
+
+.themed-scrollbar-always {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.themed-scrollbar-always::-webkit-scrollbar {
+  width: var(--scrollbar-size);
+  height: var(--scrollbar-size);
+}
+
+.themed-scrollbar-always::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.themed-scrollbar-always::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+
+.themed-scrollbar-always::-webkit-scrollbar-thumb:hover {
   background-color: var(--scrollbar-thumb-hover);
 }
 

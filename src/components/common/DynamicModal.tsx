@@ -1,4 +1,5 @@
 import { Box, Button, Modal } from '@mui/material';
+import { useEffect } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { Typography } from './Typography';
 
@@ -17,10 +18,36 @@ const CenteredModal = ({
   minWidth = 500,
   title,
 }: CenteredModalProps) => {
+  useEffect(() => {
+    if (typeof document === 'undefined' || !open) return;
+
+    const root = document.documentElement;
+    const attr = 'data-modal-lock-count';
+    const currentCount = Number(root.getAttribute(attr) ?? '0');
+    const nextCount = currentCount + 1;
+
+    root.setAttribute(attr, String(nextCount));
+    root.classList.add('app-modal-open');
+
+    return () => {
+      const mountedCount = Number(root.getAttribute(attr) ?? '1');
+      const updatedCount = Math.max(mountedCount - 1, 0);
+
+      if (updatedCount === 0) {
+        root.removeAttribute(attr);
+        root.classList.remove('app-modal-open');
+        return;
+      }
+
+      root.setAttribute(attr, String(updatedCount));
+    };
+  }, [open]);
+
   return (
     <Modal
       open={open}
       onClose={onClose}
+      disableScrollLock={false}
       closeAfterTransition
       slotProps={{
         backdrop: {
@@ -41,7 +68,8 @@ const CenteredModal = ({
           width: 'auto',
           minWidth: minWidth,
           maxHeight: '90vh',
-          overflowY: 'auto',
+          overflow: 'hidden',
+          overscrollBehavior: 'contain',
         }}
       >
         <div className="flex flex-row items-center justify-between mb-2">
