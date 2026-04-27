@@ -3,7 +3,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { CiCircleCheck, CiCirclePlus } from "react-icons/ci";
 import { FaCloudUploadAlt, FaRegChartBar } from "react-icons/fa";
-import { FiEdit2, FiEye, FiMinus, FiPlus, FiSearch, FiTrash2, FiX } from 'react-icons/fi';
+import { FiEdit2, FiEye, FiMinus, FiPlus, FiSave, FiSearch, FiTrash2, FiUploadCloud, FiX } from 'react-icons/fi';
 import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
 import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
 import { IoReceiptOutline, IoTrendingDownSharp } from "react-icons/io5";
@@ -44,6 +44,8 @@ export const icons = {
   circlePlus: CiCirclePlus,
   minus: FiMinus,
   plus: FiPlus,
+  cloud: FiUploadCloud,
+  save: FiSave,
   
 
 

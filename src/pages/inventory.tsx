@@ -9,8 +9,10 @@ import WareHouseInventory from '../components/tables/WareHoustInventory';
 import { icons } from '../lib/constants/icons';
 import { currency } from '../lib/utils/currency';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
+import DynamicModal from '../components/common/DynamicModal';
+import AddInventoryForm from '../components/forms/AddInventoryForm';
 import { useInventoryMetrics } from '../lib/hooks/useMetrics';
 import type {
   InventoryHealthItems,
@@ -20,13 +22,21 @@ import type {
 } from '../lib/types/warehouse-inventory-type';
 
 const Inventory = () => {
-  const handleAddInventory = () => {};
+  const [isAddInventoryOpen, setIsAddInventoryOpen] = useState(false);
+
+  const handleAddInventoryClose = () => {
+    setIsAddInventoryOpen(false);
+  };
+
+  const handleAddInventory = () => {
+    setIsAddInventoryOpen(true);
+  };
 
   const {
     data: inventoryMetrics,
     isLoading: inventoryMetricsLoading,
     status: inventoryMetricsStatus,
-    isRefetching: inventoryMetricsReFetching,
+    // isRefetching: inventoryMetricsReFetching,
   } = useInventoryMetrics();
 
   const inventoryKPIData = [
@@ -143,6 +153,13 @@ const Inventory = () => {
         loading={
           inventoryMetricsLoading && inventoryMetricsStatus === 'pending'
         }
+      />
+      <DynamicModal
+        open={isAddInventoryOpen}
+        onClose={handleAddInventoryClose}
+        title="Add New Inventory Item"
+        children={<AddInventoryForm onClose={handleAddInventoryClose} />}
+        // children={<AddInventory />}
       />
     </PageContainer>
   );

@@ -43,7 +43,7 @@ const CardContainer = ({
       style={{ backgroundColor: 'var(--card)', color: 'var(--main-text)' }}
     >
       {/* Header */}
-      {!loading && (
+      {title && !loading && (
         <div className="card-header flex justify-between items-center mb-6">
           <div className="flex flex-row items-center gap-2">
             <Typography variant="h3" className="text-lg font-semibold">

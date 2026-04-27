@@ -199,7 +199,7 @@ const CreateSalesForm = () => {
   const SoldBySection = () => {
     return (
       <div className="flex-1">
-        <Typography variant="body-sm" className="text-(--main-text)">
+        <Typography variant="h4" className="text-base text-(--main-text)">
           Sold By
         </Typography>
         <div className="mt-2 flex items-center gap-2">

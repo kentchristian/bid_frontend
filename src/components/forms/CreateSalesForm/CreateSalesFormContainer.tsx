@@ -19,7 +19,7 @@ const CreateSalesFormContainer = ({
   };
 
   return (
-    <CardContainer className="w-full min-w-300">
+    <CardContainer className="w-full min-w-300 shadow-none border-none">
       <header className="flex flex-row gap">
         <section
           // onClick={() => handleActiveTab(0)}

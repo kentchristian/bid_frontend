@@ -64,7 +64,7 @@ const CenteredModal = ({
             <icons.close size={20} />
           </Button>
         </div>
-
+        <hr className="border-t-[0.5px] border-gray-400/20 mb-4" />
         {children}
       </Box>
     </Modal>
