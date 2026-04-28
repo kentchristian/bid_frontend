@@ -7,10 +7,10 @@ import {
   InputLabel,
   Stack,
   TextField,
-  Typography,
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
+import { Typography } from '../../common/Typography';
 
 interface CreateCategoryFormProps {
   onClose: () => void;
@@ -27,12 +27,24 @@ const CreateCategoryForm = ({
 }: CreateCategoryFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
-    color: '#6366f1',
+    color: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting Category:', formData);
+
+    //transform Capitalize first letter
+    const payload = {
+      name:
+        formData?.name.charAt(0).toUpperCase() +
+        formData?.name.slice(1).toLocaleLowerCase(),
+      color: formData?.color,
+    };
+
+    alert(`
+        Category: ${payload.name}
+        Color: ${payload.color}
+      `);
   };
 
   /**
@@ -40,8 +52,14 @@ const CreateCategoryForm = ({
    * 1. Strips '#' for the text input display.
    * 2. Adds '#' back for the color wheel state.
    */
+  // Check if the current color is valid (stripping the # for the check)
+  const isInvalidColor = useMemo(() => {
+    const cleanHex = formData.color.replace('#', '');
+    // Check if it's empty or doesn't match hex pattern
+    return cleanHex.length > 0 && !/^([0-9A-F]{3}){1,2}$/i.test(cleanHex);
+  }, [formData.color]);
+
   const handleColorChange = (newVal: string) => {
-    // Remove any existing hash if pasted, and keep only valid hex chars
     const cleanValue = newVal.replace(/#/g, '').slice(0, 6);
     setFormData({ ...formData, color: `#${cleanValue}` });
   };
@@ -82,7 +100,7 @@ const CreateCategoryForm = ({
   }, [existingCategories]);
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="">
       <Stack spacing={3}>
         {/* Category Name Field */}
         <FormControl>
@@ -149,15 +167,7 @@ const CreateCategoryForm = ({
                     transition: 'background-color 0.15s ease',
                   }}
                 />
-                <Typography
-                  sx={{
-                    fontFamily: 'monospace',
-                    fontWeight: 800,
-                    fontSize: '0.75rem',
-                    letterSpacing: '1px',
-                    color: 'text.secondary',
-                  }}
-                >
+                <Typography variant="code" className="bg-(--main-bg)">
                   PREVIEW
                 </Typography>
               </Stack>
@@ -168,12 +178,16 @@ const CreateCategoryForm = ({
                 // We display the color without the '#' because the StartAdornment provides it
                 value={formData.color.replace('#', '')}
                 onChange={(e) => handleColorChange(e.target.value)}
+                required
+                // ERROR HANDLING HERE
+                error={isInvalidColor}
+                helperText={
+                  isInvalidColor ? 'Enter a valid 3 or 6-digit hex code' : ''
+                }
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Typography
-                        sx={{ fontWeight: 700, color: 'text.secondary' }}
-                      >
+                      <Typography variant="code" className="bg-(--main-bg)">
                         #
                       </Typography>
                     </InputAdornment>
@@ -183,8 +197,6 @@ const CreateCategoryForm = ({
                   maxLength: 6,
                   style: {
                     textTransform: 'uppercase',
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
                   },
                 }}
               />
