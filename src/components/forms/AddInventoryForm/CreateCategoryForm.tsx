@@ -10,10 +10,12 @@ import {
 } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
+import { useCreateCategory } from '../../../lib/hooks/useCategory';
+import { capitalizeWords } from '../../../lib/utils/capitalizeWords';
 import { Typography } from '../../common/Typography';
 
 interface CreateCategoryFormProps {
-  onClose: () => void;
+  handleClose: () => void;
   existingCategories: {
     id: string;
     name: string;
@@ -21,7 +23,7 @@ interface CreateCategoryFormProps {
   others: string;
 }
 const CreateCategoryForm = ({
-  onClose,
+  handleClose,
   existingCategories,
   others,
 }: CreateCategoryFormProps) => {
@@ -30,21 +32,25 @@ const CreateCategoryForm = ({
     color: '',
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { mutate: createCategory, isPending: createCategoryLoading } =
+    useCreateCategory({ handleClose });
+
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
     //transform Capitalize first letter
     const payload = {
-      name:
-        formData?.name.charAt(0).toUpperCase() +
-        formData?.name.slice(1).toLocaleLowerCase(),
+      name: capitalizeWords(formData?.name),
       color: formData?.color,
     };
 
-    alert(`
-        Category: ${payload.name}
-        Color: ${payload.color}
-      `);
+    createCategory(payload);
+
+    // clear category
+    setFormData({
+      name: '',
+      color: '',
+    });
   };
 
   /**
@@ -68,7 +74,7 @@ const CreateCategoryForm = ({
     {
       label: 'Cancel',
       type: 'button',
-      onClick: () => onClose(),
+      onClick: () => handleClose(),
       sx: {
         backgroundColor: 'var(--accent-negative)',
         color: 'var(--invert-text)',
@@ -81,6 +87,7 @@ const CreateCategoryForm = ({
     {
       label: 'Save Category',
       type: 'submit',
+      loading: createCategoryLoading,
       sx: {
         backgroundColor: 'var(--accent-positive)',
         color: 'var(--invert-text)',
@@ -208,6 +215,7 @@ const CreateCategoryForm = ({
         <Box className="flex flex-row gap-3 justify-end pt-6 ">
           {buttonConfigs.map((item, index) => (
             <Button
+              loading={item?.loading}
               key={index}
               type={item?.type as 'button' | 'submit'}
               onClick={item?.onClick}

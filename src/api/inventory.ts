@@ -1,7 +1,9 @@
 import type { InventoryByCategoryType } from "../lib/types/inventory-by-category";
+import type { AddInventoryType } from "../lib/types/inventory-type";
 import type { SalesFormOptionsType } from "../lib/types/sales-form-options-types";
 import type { InventoryMetrics } from "../lib/types/usequery-types";
 import { baseApi } from "../services/axiosClient";
+import { getCsrfToken } from "./auth";
 
 
 export const getInventoryMetrics = async (): Promise<InventoryMetrics> => {
@@ -25,3 +27,14 @@ export const getInventoryByCategory = async (category: string): Promise<Inventor
 }
 
 
+export const addNewInventory = async (payload: AddInventoryType) => {
+  const token = await getCsrfToken();
+  
+  const { data } = await baseApi.post<AddInventoryType>(`/api/inventory/`, payload, {
+    headers: {
+      'X-CSRFToken': token,
+    }
+  });
+
+  return data;
+}
