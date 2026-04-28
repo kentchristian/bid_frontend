@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { Typography } from './Typography';
 
-type CenteredModalProps = {
+type DynamicModalProps = {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
@@ -11,13 +11,13 @@ type CenteredModalProps = {
   title?: string;
 };
 
-const CenteredModal = ({
+const DynamicModal = ({
   open,
   onClose,
   children,
   minWidth = 500,
   title,
-}: CenteredModalProps) => {
+}: DynamicModalProps) => {
   useEffect(() => {
     if (typeof document === 'undefined' || !open) return;
 
@@ -99,4 +99,4 @@ const CenteredModal = ({
   );
 };
 
-export default CenteredModal;
+export default DynamicModal;

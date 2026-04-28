@@ -13,6 +13,8 @@ type TrendRateType = (
 **/
 export const getTrendRate: TrendRateType = (presentValue, oldValue) => {
   if (presentValue === 0) return 0;
+  if (oldValue === 0) return 100;
+
 
   const dif = presentValue - oldValue;
   const quo = dif / oldValue;

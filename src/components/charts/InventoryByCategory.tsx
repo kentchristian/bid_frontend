@@ -41,17 +41,18 @@ const InventoryByCategory = ({ data, loading }: InventoryByCategory) => {
           {/* The Basis/Range: Unhidden but styled subtly */}
           <XAxis
             type="number"
-            tick={{ fontSize: 11, fill: '#9ca3af' }} // Gray-400 color
+            tick={{ fontSize: 11, fill: 'var(--main-text)' }} // Gray-400 color
             axisLine={true}
             tickLine={true}
             tickFormatter={(value) => value.toLocaleString()} // Formats numbers like 1,000
+            stroke={'var(--main-text)'}
           />
 
           <YAxis
             dataKey="category__name"
             type="category"
             width={120}
-            tick={{ fontSize: 12, fontWeight: 500, fill: '#374151' }}
+            tick={{ fontSize: 12, fontWeight: 500, fill: 'var(--main-text)' }}
             axisLine={true}
             tickLine={false}
             stroke={'var(--main-text)'}

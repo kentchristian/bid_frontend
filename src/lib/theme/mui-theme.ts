@@ -118,5 +118,12 @@ export const getTheme = (mode: ThemeMode) =>
           },
         },
       },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: {
+            color: 'var(--main-text)'
+          }
+        }
+      }
     },
   })
