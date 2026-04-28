@@ -85,6 +85,7 @@ const Inventory = () => {
         reorderThreshold: item?.reorder_threshold ?? 0,
         unitPrice: item?.unit_price ?? 0,
         status: status,
+        updatedAt: item?.updated_at ?? '',
       }));
     };
 

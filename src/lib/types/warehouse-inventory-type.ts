@@ -12,6 +12,7 @@ export type WareHouseInventoryType = {
   max_quantity?: number;
   reorder_threshold: number;
   unit_price: number
+  updated_at: string;
 }
 
 export type TransformedWareHouseType = {
@@ -23,6 +24,7 @@ export type TransformedWareHouseType = {
   reorderThreshold: number;
   unitPrice: number;
   status: string; 
+  updatedAt: Date | string;
 }
 
 

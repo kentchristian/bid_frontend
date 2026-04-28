@@ -1,4 +1,5 @@
 import { Button, Tooltip } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
@@ -6,6 +7,7 @@ import type {
   TransformedHealthItems,
   TransformedWareHouseType,
 } from '../../lib/types/warehouse-inventory-type';
+import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
 import { Typography } from '../common/Typography';
@@ -62,14 +64,24 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     },
   ];
 
-  const columns = [
-    { field: 'productName', headerName: 'Product Name', flex: 1 },
+  const columns: GridColDef[] = [
+    { field: 'productName', headerName: 'Product Name', flex: 2 },
     { field: 'category', headerName: 'Category', flex: 1 },
-    { field: 'currentStock', headerName: 'Current Stock', flex: 1 },
-    { field: 'maxQuantity', headerName: 'Max Quantity', flex: 1 },
-    { field: 'reorderThreshold', headerName: 'Re-order Threshold', flex: 1 },
+    { field: 'currentStock', headerName: 'Current Stock', flex: 0.5 },
+    { field: 'maxQuantity', headerName: 'Max Quantity', flex: 0.5 },
+    { field: 'reorderThreshold', headerName: 'Re-order Threshold', flex: 0.5 },
     { field: 'unitPrice', headerName: 'Unit Price', flex: 1 },
-    { field: 'status', headerName: 'Status', flex: 1 },
+    { field: 'status', headerName: 'Status', flex: 0.5 },
+    {
+      field: 'updatedAt',
+      headerName: 'Updated At',
+      flex: 1.5,
+      renderCell: (params) => {
+        const date = dateMonthDayTimeFormatter(new Date(params.value));
+
+        return date.toLocaleString();
+      },
+    },
     {
       field: 'actions',
       headerName: 'Actions',
