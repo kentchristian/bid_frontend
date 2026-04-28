@@ -156,8 +156,22 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
     // Set Unique V4 on Submit TODO: use for Idempotent Implementation later
     // setAddInventoryForm({ ...addInventoryForm, id: uuidv4() });
 
+    // find category
+    const categoryID = salesFormOptions?.categories?.find((item) => {
+      if (
+        item.name.toLowerCase() === addInventoryForm?.category.toLowerCase()
+      ) {
+        return item;
+      }
+    });
+    alert(categoryID?.id ?? '');
+    if (!categoryID) {
+      return ''; // Return if no matching id
+    }
+
     // transform payload
     const payload: AddInventoryType = {
+      category: categoryID.id,
       product_name: addInventoryForm?.productName,
       stock_quantity: addInventoryForm?.currentStock ?? 0,
       max_quantity: addInventoryForm?.maxQuantity ?? 0,
@@ -337,7 +351,9 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
                 required
                 slotProps={{
                   htmlInput: {
-                    min: (addInventoryForm?.currentStock ?? 0) * 0.25, // Optional: prevent negative numbers
+                    min: Math.floor(
+                      (addInventoryForm?.currentStock ?? 0) * 0.25,
+                    ), // Optional: prevent negative numbers
                   },
                 }}
                 InputProps={{

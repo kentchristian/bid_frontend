@@ -5,4 +5,5 @@ export type AddInventoryType = {
   max_quantity: number,
   reorder_threshold: number,
   unit_price: number
+  category: string;
 }
