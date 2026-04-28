@@ -1,29 +1,42 @@
 import { useEffect, useState } from 'react';
 
-const getScrollTop = (event?: Event) => {
-  if (typeof window === 'undefined') return 0;
+const readGlobalScrollTop = () => {
+  return window.scrollY || document.documentElement.scrollTop || 0;
+};
 
-  if (!event) {
-    return window.scrollY || document.documentElement.scrollTop || 0;
-  }
+const shouldIgnoreScroll = () => {
+  return document.documentElement.classList.contains('app-modal-open');
+};
 
-  const target = event.target;
-
+const findPageContainerFromTarget = (target: EventTarget | null) => {
   if (target instanceof Document) {
-    const pageContainer = target.querySelector<HTMLElement>('.page-container');
-    if (pageContainer) return pageContainer.scrollTop;
-    return target.documentElement.scrollTop || window.scrollY || 0;
+    return target.querySelector<HTMLElement>('.page-container');
   }
 
   if (target instanceof HTMLElement) {
-    const pageContainer = target.closest?.('.page-container');
-    // Ignore scroll events outside the app's main page scroll container
-    // (e.g. modal content rendered via React portal).
-    if (!pageContainer) return null;
+    return target.closest<HTMLElement>('.page-container');
+  }
+
+  return null;
+};
+
+const readScrollTop = (event?: Event) => {
+  if (!event) {
+    return readGlobalScrollTop();
+  }
+
+  const pageContainer = findPageContainerFromTarget(event.target);
+  if (pageContainer) {
     return pageContainer.scrollTop;
   }
 
-  return window.scrollY || 0;
+  if (event.target instanceof Document) {
+    return event.target.documentElement.scrollTop || readGlobalScrollTop();
+  }
+
+  // Ignore scroll events outside the app's main page scroll container
+  // (e.g. modal content rendered via React portal).
+  return null;
 };
 
 export const useScrollThreshold = (threshold = 50) => {
@@ -33,11 +46,11 @@ export const useScrollThreshold = (threshold = 50) => {
     if (typeof window === 'undefined') return;
 
     const handleScroll = (event: Event) => {
-      if (document.documentElement.classList.contains('app-modal-open')) {
+      if (shouldIgnoreScroll()) {
         return;
       }
 
-      const nextScrollTop = getScrollTop(event);
+      const nextScrollTop = readScrollTop(event);
       if (nextScrollTop === null) return;
 
       // If we scroll past the threshold, set to true
@@ -45,7 +58,7 @@ export const useScrollThreshold = (threshold = 50) => {
     };
 
     // Initialize on mount
-    const initialScrollTop = getScrollTop();
+    const initialScrollTop = readScrollTop();
     if (initialScrollTop !== null) {
       setIsScrolled(initialScrollTop > threshold);
     }
