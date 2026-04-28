@@ -144,10 +144,10 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
     setAddInventoryForm({
       productName: '',
       category: '',
-      currentStock: null,
-      maxQuantity: null,
-      reOrderThreshold: null,
-      unitPrice: null,
+      currentStock: 0,
+      maxQuantity: 0,
+      reOrderThreshold: 0,
+      unitPrice: 0,
     });
   };
   const handleAddNewInventorySubmit = (e: React.SubmitEvent) => {
@@ -164,7 +164,7 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
         return item;
       }
     });
-    alert(categoryID?.id ?? '');
+
     if (!categoryID) {
       return ''; // Return if no matching id
     }
