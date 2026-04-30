@@ -22,7 +22,7 @@ export const useSalesFormOptions = () => {
 
 export const useInventoryByCategory = (category: string) => {
    return useAuthQuery<InventoryByCategoryType>(
-    ['inventory-by-category', category],
+    ['inventory-by-category'],
     () => getInventoryByCategory(category),
     {
       enabled: Boolean(category)

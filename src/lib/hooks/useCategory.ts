@@ -20,7 +20,7 @@ export const useCreateCategory = ({ handleClose }: useCreateCategoryProps) => {
       const message = "New Category Added!";
       
       showSnackbar(message, { variant: 'success' });
-      
+      handleClose(); // close after settled
  
     },
     onSettled: () => {
@@ -30,7 +30,7 @@ export const useCreateCategory = ({ handleClose }: useCreateCategoryProps) => {
            queryClient.invalidateQueries({ queryKey: [csrftoken, key] });
         })
 
-      handleClose(); // close after settled
+     
       
     }
   })

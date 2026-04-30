@@ -158,7 +158,7 @@ const Inventory = () => {
       <DynamicModal
         open={isAddInventoryOpen}
         onClose={handleAddInventoryClose}
-        title="Add New Inventory Item"
+        title="Add Inventory Item"
         children={<AddInventoryForm onClose={handleAddInventoryClose} />}
         // children={<AddInventory />}
       />

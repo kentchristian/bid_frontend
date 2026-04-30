@@ -292,6 +292,11 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
                   type="number"
                   required
                   sx={{ width: 125 }}
+                  slotProps={{
+                    htmlInput: {
+                      min: 1,
+                    },
+                  }}
                   value={addInventoryForm?.currentStock}
                   onChange={(e) => {
                     const value = Math.floor(Number(e.target.value));
@@ -314,7 +319,7 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
                   value={addInventoryForm?.maxQuantity}
                   slotProps={{
                     htmlInput: {
-                      min: addInventoryForm?.currentStock, // Optional: prevent negative numbers
+                      min: addInventoryForm?.currentStock, // Prevent Max less than stock
                     },
                   }}
                   onChange={(e) => {
@@ -351,9 +356,7 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
                 required
                 slotProps={{
                   htmlInput: {
-                    min: Math.floor(
-                      (addInventoryForm?.currentStock ?? 0) * 0.25,
-                    ), // Optional: prevent negative numbers
+                    min: 1,
                   },
                 }}
                 InputProps={{
