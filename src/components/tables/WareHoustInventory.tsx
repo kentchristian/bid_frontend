@@ -3,6 +3,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
+import type { StockAdjustmentProps } from '../../lib/types/inventory-type';
 import type {
   TransformedHealthItems,
   TransformedWareHouseType,
@@ -10,8 +11,10 @@ import type {
 import { dateMonthDayTimeFormatter } from '../../lib/utils/dateMonthDayTimeFormatter';
 import CardContainer from '../common/CardContainer';
 import DynamicDataGrid from '../common/DynamicDataGrid';
+import DynamicModal from '../common/DynamicModal';
 import { Typography } from '../common/Typography';
 import SearchBar from '../filters/SearchBar';
+import StockAdjustment from '../forms/InventoryControl/StockAdjustment';
 
 type InventoryStatus = 'Healthy' | 'Low' | 'Empty';
 
@@ -24,6 +27,34 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
   const [activeStatus, setActiveStatus] = useState<InventoryStatus>('Healthy');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [onOpenStockAdjustment, setOpenStockAdjustment] = useState(false);
+  const [adjustmentType, setAdjustmentType] = useState<'add' | 'subtract'>();
+  const [inventoryItem, setInventoryItem] = useState<StockAdjustmentProps>({
+    id: '',
+    product_name: '',
+    unit_price: 0,
+    stock_quantity: 0,
+    max_quantity: 0,
+    reorder_threshold: 0,
+  });
+
+  const handleCloseStockAdjustment = () => {
+    setOpenStockAdjustment(false);
+  };
+
+  const handleOpenStockAdjustment = ({ ...props }: StockAdjustmentProps) => {
+    setInventoryItem({
+      id: props.id,
+      product_name: props.product_name,
+      unit_price: props.unit_price,
+      stock_quantity: props.stock_quantity,
+      max_quantity: props.max_quantity,
+      reorder_threshold: props.reorder_threshold,
+    });
+
+    setOpenStockAdjustment(true);
+  };
 
   const actionButtonSx = (colorVar: string) => ({
     minWidth: 0,
@@ -46,21 +77,28 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
       accent: '--accent-positive',
       icon: <icons.plus size={16} />,
       toolTip: 'Add Quantity',
-      action: (id: string) => alert(`Add stock for ID ${id}`),
+      action: ({ ...props }: StockAdjustmentProps) => {
+        setAdjustmentType('add');
+        handleOpenStockAdjustment(props);
+      },
     },
     {
       label: ``,
       accent: '--accent-negative',
       icon: <icons.minus size={16} />,
       toolTip: 'Subtract Quantity',
-      action: (id: string) => alert(`Minus stock for ID ${id}`),
+      action: ({ ...props }: StockAdjustmentProps) => {
+        setAdjustmentType('subtract');
+        handleOpenStockAdjustment(props);
+      },
     },
     {
       label: `Edit product ID`,
       accent: '--accent-primary',
       icon: <icons.edit size={16} />,
       toolTip: 'Edit Inventory',
-      action: (id: string) => alert(`Edit product ID ${id}`),
+      action: ({ ...props }: StockAdjustmentProps) =>
+        alert(`Edit product ID ${props.id}`),
     },
   ];
 
@@ -87,7 +125,23 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
       headerName: 'Actions',
       flex: 1.5,
       renderCell: (params: any) => {
-        const { id } = params.row;
+        const {
+          id,
+          productName,
+          currentStock,
+          maxQuantity,
+          unitPrice,
+          reorderThreshold,
+        } = params.row;
+
+        const product = {
+          id: id,
+          product_name: productName,
+          stock_quantity: currentStock,
+          max_quantity: maxQuantity,
+          unit_price: unitPrice,
+          reorder_threshold: reorderThreshold,
+        };
         return (
           <div className="flex items-center justify-start gap-2 p-2">
             {buttonProps.map((item, index) => (
@@ -97,7 +151,7 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
                   aria-label={`${item.label}: ${id}`}
                   variant="outlined"
                   sx={actionButtonSx(item.accent)}
-                  onClick={() => item.action(id)}
+                  onClick={() => item.action(product)}
                 >
                   {item.icon}
                 </Button>
@@ -236,6 +290,20 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
           loading={loading}
           minHeight={450}
           className="warehouse-data-grid"
+        />
+        <DynamicModal
+          title="Stock Adjustment"
+          open={onOpenStockAdjustment}
+          onClose={handleCloseStockAdjustment}
+          children={
+            <>
+              <StockAdjustment
+                data={inventoryItem}
+                type={adjustmentType ?? 'add'}
+                onClose={handleCloseStockAdjustment}
+              />
+            </>
+          }
         />
       </CardContainer>
     </>

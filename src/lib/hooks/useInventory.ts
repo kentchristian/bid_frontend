@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addNewInventory } from "../../api/inventory";
+import { addNewInventory, inboundOutboundAdjustment } from "../../api/inventory";
 import { useSnackbar } from "../providers/SnackbarProvider";
-import type { AddInventoryType } from "../types/inventory-type";
+import type { AddInventoryType, StockAdjustmentProps } from "../types/inventory-type";
 import { getCookie } from "../utils/getCookie";
 
 
@@ -18,6 +18,42 @@ export const useAddNewInventory = ({ onClose }: useAddNewInventoryProps) => {
     mutationFn: (payload: AddInventoryType) => addNewInventory(payload),
     onSuccess: () => {
       const message = "New Inventory Added!";
+      
+      showSnackbar(message, { variant: 'success' });
+      
+ 
+    },
+    onSettled: () => {
+       const subKeys = ['inventory-metrics', 'sales-form-options']
+        
+        subKeys.forEach((key) => {
+           queryClient.invalidateQueries({ queryKey: [csrftoken, key] });
+        })
+
+      onClose(); // close after settled
+      
+    }
+  })
+
+}
+
+
+
+
+interface useInboundOutboundAdjustmentProps {
+  onClose: () => void;
+}
+export const useInboundOutboundAdjustment = ({ onClose }: useInboundOutboundAdjustmentProps) => {
+  const queryClient = useQueryClient();
+  const { showSnackbar } = useSnackbar();
+  const csrftoken = getCookie('csrftoken');
+
+  return useMutation({
+    mutationFn: (
+      {payload, id}: {payload: StockAdjustmentProps, id: string}
+    ) => inboundOutboundAdjustment(payload, id),
+    onSuccess: () => {
+      const message = "Inventory Updated!";
       
       showSnackbar(message, { variant: 'success' });
       
