@@ -1,0 +1,1 @@
+export const OTHERS = 'Others (Create new unique category)';

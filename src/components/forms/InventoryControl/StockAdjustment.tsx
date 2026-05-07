@@ -3,11 +3,11 @@ import { Box, Button, FormControl, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { icons } from '../../../lib/constants/icons';
 import { useInboundOutboundAdjustment } from '../../../lib/hooks/useInventory';
-import type { StockAdjustmentProps } from '../../../lib/types/inventory-type';
+import type { ControlInventoryProps } from '../../../lib/types/inventory-type';
 import { Typography } from '../../common/Typography';
 
 type Props = {
-  data: StockAdjustmentProps;
+  data: ControlInventoryProps;
   type: 'add' | 'subtract';
   onClose: () => void;
 };
@@ -17,7 +17,7 @@ const StockAdjustment = ({ data, type, onClose }: Props) => {
     useInboundOutboundAdjustment({ onClose });
   // API Fetch
 
-  const [formData, setFormData] = useState<StockAdjustmentProps>({ ...data });
+  const [formData, setFormData] = useState<ControlInventoryProps>({ ...data });
 
   // Add this inside your component, before the sxButtonConfigs
   const isUnchanged = JSON.stringify(data) === JSON.stringify(formData);
@@ -25,7 +25,7 @@ const StockAdjustment = ({ data, type, onClose }: Props) => {
   const isAdd = type === 'add';
 
   const handleInputChange =
-    (field: keyof StockAdjustmentProps) =>
+    (field: keyof ControlInventoryProps) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value === '' ? '' : parseFloat(e.target.value);
       setFormData((prev) => ({ ...prev, [field]: value }));
@@ -34,12 +34,7 @@ const StockAdjustment = ({ data, type, onClose }: Props) => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const data = {
-      payload: formData,
-      id: formData.id,
-    };
-
-    adjustments(data);
+    adjustments(formData);
   };
 
   const sxButtonConfigs = [

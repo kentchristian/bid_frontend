@@ -1,5 +1,5 @@
 import type { InventoryByCategoryType } from "../lib/types/inventory-by-category";
-import type { AddInventoryType, StockAdjustmentProps } from "../lib/types/inventory-type";
+import type { AddInventoryType, ControlInventoryProps, EditProductType } from "../lib/types/inventory-type";
 import type { SalesFormOptionsType } from "../lib/types/sales-form-options-types";
 import type { InventoryMetrics } from "../lib/types/usequery-types";
 import { baseApi } from "../services/axiosClient";
@@ -41,10 +41,24 @@ export const addNewInventory = async (payload: AddInventoryType) => {
 
 
 // add or subtract
-export const inboundOutboundAdjustment = async (payload: StockAdjustmentProps, id: string) => {
+export const inboundOutboundAdjustment = async (payload: ControlInventoryProps) => {
   const token = await getCsrfToken();
   
-  const { data } = await baseApi.patch<StockAdjustmentProps>(`/api/inventory/${id}/`, payload, {
+  const { data } = await baseApi.patch<ControlInventoryProps>(`/api/inventory/${payload.id}/`, payload, {
+    headers: {
+      'X-CSRFToken': token,
+    }
+  });
+
+  return data;
+}
+
+
+// edit product
+export const editProduct = async (payload: EditProductType) => {
+  const token = await getCsrfToken();
+  
+  const { data } = await baseApi.patch<EditProductType>(`/api/inventory/${payload.id}/`, payload, {
     headers: {
       'X-CSRFToken': token,
     }

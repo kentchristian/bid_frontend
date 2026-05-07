@@ -3,7 +3,10 @@ import type { GridColDef } from '@mui/x-data-grid';
 import { useRef, useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
-import type { StockAdjustmentProps } from '../../lib/types/inventory-type';
+import {
+  type ControlInventoryProps,
+  type EditProductType,
+} from '../../lib/types/inventory-type';
 import type {
   TransformedHealthItems,
   TransformedWareHouseType,
@@ -14,6 +17,7 @@ import DynamicDataGrid from '../common/DynamicDataGrid';
 import DynamicModal from '../common/DynamicModal';
 import { Typography } from '../common/Typography';
 import SearchBar from '../filters/SearchBar';
+import { EditProduct } from '../forms/InventoryControl';
 import StockAdjustment from '../forms/InventoryControl/StockAdjustment';
 
 type InventoryStatus = 'Healthy' | 'Low' | 'Empty';
@@ -29,21 +33,34 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [onOpenStockAdjustment, setOpenStockAdjustment] = useState(false);
+  const [onOpenEditProduct, setOpenEditProduct] = useState(false);
+
   const [adjustmentType, setAdjustmentType] = useState<'add' | 'subtract'>();
-  const [inventoryItem, setInventoryItem] = useState<StockAdjustmentProps>({
+  const [inventoryItem, setInventoryItem] = useState<ControlInventoryProps>({
     id: '',
     product_name: '',
     unit_price: 0,
     stock_quantity: 0,
     max_quantity: 0,
     reorder_threshold: 0,
+    category: '',
+  });
+
+  const [editProduct, setEditProduct] = useState<EditProductType>({
+    id: '',
+    product_name: '',
+    category: '',
   });
 
   const handleCloseStockAdjustment = () => {
     setOpenStockAdjustment(false);
   };
 
-  const handleOpenStockAdjustment = ({ ...props }: StockAdjustmentProps) => {
+  const handleCloseEditProduct = () => {
+    setOpenEditProduct(false);
+  };
+
+  const handleOpenStockAdjustment = ({ ...props }: ControlInventoryProps) => {
     setInventoryItem({
       id: props.id,
       product_name: props.product_name,
@@ -51,9 +68,19 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
       stock_quantity: props.stock_quantity,
       max_quantity: props.max_quantity,
       reorder_threshold: props.reorder_threshold,
+      category: props.category,
     });
 
     setOpenStockAdjustment(true);
+  };
+
+  const handleOpenEditProduct = ({ ...props }: ControlInventoryProps) => {
+    setEditProduct({
+      id: props.id,
+      product_name: props.product_name,
+      category: props.category,
+    });
+    setOpenEditProduct(true);
   };
 
   const actionButtonSx = (colorVar: string) => ({
@@ -73,32 +100,35 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
 
   const buttonProps = [
     {
+      id: 'add',
       label: `Add stock for ID`,
       accent: '--accent-positive',
       icon: <icons.plus size={16} />,
       toolTip: 'Add Quantity',
-      action: ({ ...props }: StockAdjustmentProps) => {
+      action: ({ ...props }: ControlInventoryProps) => {
         setAdjustmentType('add');
         handleOpenStockAdjustment(props);
       },
     },
     {
+      id: 'sub',
       label: ``,
       accent: '--accent-negative',
       icon: <icons.minus size={16} />,
       toolTip: 'Subtract Quantity',
-      action: ({ ...props }: StockAdjustmentProps) => {
+      action: ({ ...props }: ControlInventoryProps) => {
         setAdjustmentType('subtract');
         handleOpenStockAdjustment(props);
       },
     },
     {
+      id: 'edit',
       label: `Edit product ID`,
       accent: '--accent-primary',
       icon: <icons.edit size={16} />,
       toolTip: 'Edit Inventory',
-      action: ({ ...props }: StockAdjustmentProps) =>
-        alert(`Edit product ID ${props.id}`),
+      action: ({ ...props }: ControlInventoryProps) =>
+        handleOpenEditProduct(props),
     },
   ];
 
@@ -132,6 +162,7 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
           maxQuantity,
           unitPrice,
           reorderThreshold,
+          category,
         } = params.row;
 
         const product = {
@@ -141,7 +172,9 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
           max_quantity: maxQuantity,
           unit_price: unitPrice,
           reorder_threshold: reorderThreshold,
+          category: category,
         };
+
         return (
           <div className="flex items-center justify-start gap-2 p-2">
             {buttonProps.map((item, index) => (
@@ -300,6 +333,19 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
               <StockAdjustment
                 data={inventoryItem}
                 type={adjustmentType ?? 'add'}
+                onClose={handleCloseStockAdjustment}
+              />
+            </>
+          }
+        />
+        <DynamicModal
+          title="Edit Product"
+          open={onOpenEditProduct}
+          onClose={handleCloseEditProduct}
+          children={
+            <>
+              <EditProduct
+                data={editProduct}
                 onClose={handleCloseStockAdjustment}
               />
             </>

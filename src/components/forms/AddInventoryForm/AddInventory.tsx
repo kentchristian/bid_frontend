@@ -1,13 +1,11 @@
 import {
   Button,
-  CircularProgress,
   Divider,
   FormControl,
   FormLabel,
   Grid,
   InputAdornment,
   MenuItem,
-  OutlinedInput,
   Select,
   Stack,
   TextField,
@@ -18,6 +16,8 @@ import { icons } from '../../../lib/constants/icons';
 import { useSalesFormOptions } from '../../../lib/hooks/useSales';
 import CardContainer from '../../common/CardContainer';
 
+import { OTHERS } from '../../../lib/constants/variables';
+import { DropDownProps } from '../../../lib/helpers/dropdown-props';
 import { useAddNewInventory } from '../../../lib/hooks/useInventory';
 import type { AddInventoryType } from '../../../lib/types/inventory-type';
 import DynamicModal from '../../common/DynamicModal';
@@ -32,6 +32,8 @@ interface AddInventoryProps {
 const AddInventory = ({ onClose }: AddInventoryProps) => {
   const { data: salesFormOptions, isLoading: salesFormOptionsLoading } =
     useSalesFormOptions();
+
+  const dropDownConfig = DropDownProps(salesFormOptionsLoading);
 
   const { mutate: addNewInventory, isPending: addNewInventoryLoading } =
     useAddNewInventory({ onClose });
@@ -69,20 +71,6 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
   };
   const handleOthersModalClose = () => {
     setOthersModalOpen(false);
-  };
-
-  const DropDownProps = {
-    IconComponent: salesFormOptionsLoading ? () => null : undefined,
-    input: (
-      <OutlinedInput
-        endAdornment={
-          salesFormOptionsLoading ? (
-            <CircularProgress color="inherit" size={20} sx={{ mr: 2 }} />
-          ) : null
-        }
-      />
-    ),
-    loading: salesFormOptionsLoading,
   };
 
   // Transform Category Options
@@ -137,7 +125,6 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
   ];
 
   // OTHERS add
-  const OTHERS = 'Others (Create new unique category)';
 
   const handleClearForm = () => {
     // Clear Form
@@ -259,9 +246,9 @@ const AddInventory = ({ onClose }: AddInventoryProps) => {
                     category: event.target.value,
                   });
                 }}
-                disabled={DropDownProps?.loading}
-                IconComponent={DropDownProps?.IconComponent}
-                input={DropDownProps?.input}
+                disabled={dropDownConfig?.loading}
+                IconComponent={dropDownConfig?.IconComponent}
+                input={dropDownConfig?.input}
               >
                 {categoryOptions?.map((item) => (
                   <MenuItem key={item?.id} value={item?.name}>
