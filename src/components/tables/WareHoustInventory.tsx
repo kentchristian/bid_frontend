@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@mui/material';
 import type { GridColDef } from '@mui/x-data-grid';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { icons } from '../../lib/constants/icons';
 import { cn } from '../../lib/helpers/cn';
 import {
@@ -245,7 +245,31 @@ const WareHouseInventory = ({ data, loading }: WareHouseInventoryProps) => {
     Empty: statusData.Empty.length,
   };
 
-  const filteredRows = statusData[activeStatus];
+  const filteredRows = useMemo(() => {
+    if (!statusData) return [];
+
+    // If there's no search term, just return the items for the current active tab
+    if (!searchTerm) {
+      return statusData[activeStatus];
+    }
+
+    const searchLower = searchTerm.toLowerCase().trim();
+
+    // 1. Combine all warehouse items into a single flat array
+    const allWareHouseItems = [
+      ...statusData.Healthy,
+      ...statusData.Low,
+      ...statusData.Empty,
+    ];
+
+    // 2. Filter down that combined array using .filter()
+    return allWareHouseItems.filter((item) => {
+      return (
+        item.productName?.toLowerCase().includes(searchLower) ||
+        item.category?.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [searchTerm, statusData, activeStatus]);
 
   const handleSearch = (text: string) => {
     if (searchTimeoutRef.current) {
