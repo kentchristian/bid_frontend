@@ -9,6 +9,7 @@ import { getCookie } from "../utils/getCookie";
 interface useInventoryProps {
   onClose: () => void;
 }
+
 export const useAddNewInventory = ({ onClose }: useInventoryProps) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
@@ -38,8 +39,6 @@ export const useAddNewInventory = ({ onClose }: useInventoryProps) => {
 }
 
 
-
-
 export const useInboundOutboundAdjustment = ({ onClose }: useInventoryProps) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
@@ -49,10 +48,7 @@ export const useInboundOutboundAdjustment = ({ onClose }: useInventoryProps) => 
     mutationFn: (payload: ControlInventoryProps) => inboundOutboundAdjustment(payload),
     onSuccess: () => {
       const message = "Inventory Updated!";
-      
       showSnackbar(message, { variant: 'success' });
-      
- 
     },
     onSettled: () => {
        const subKeys = ['inventory-metrics', 'sales-form-options']
@@ -69,8 +65,6 @@ export const useInboundOutboundAdjustment = ({ onClose }: useInventoryProps) => 
 }
 
 
-
-
 export const useEditProduct = ({ onClose }: useInventoryProps) => {
   const queryClient = useQueryClient();
   const { showSnackbar } = useSnackbar();
@@ -82,18 +76,16 @@ export const useEditProduct = ({ onClose }: useInventoryProps) => {
       const message = "Inventory Updated!";
       
       showSnackbar(message, { variant: 'success' });
-      onClose(); // close after 
- 
+      
     },
     onSettled: () => {
-       const subKeys = ['inventory-metrics', 'sales-form-options']
+      const subKeys = ['inventory-metrics', 'sales-form-options']
         
         subKeys.forEach((key) => {
            queryClient.invalidateQueries({ queryKey: [csrftoken, key] });
         })
 
-      
-      
+      onClose(); // close after      
     }
   })
 

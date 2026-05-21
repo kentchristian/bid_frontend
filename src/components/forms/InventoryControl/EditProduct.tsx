@@ -79,7 +79,7 @@ const EditProduct = ({ data, onClose }: Props) => {
     if (isUnchanged || !salesFormOptions?.categories) return;
 
     const category = salesFormOptions?.categories?.find((item) => {
-      if (item.name.toLowerCase() === formData?.category.toLowerCase()) {
+      if (item.name.toLowerCase() === formData?.category?.toLowerCase()) {
         return item;
       }
     });

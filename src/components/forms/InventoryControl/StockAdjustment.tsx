@@ -34,7 +34,9 @@ const StockAdjustment = ({ data, type, onClose }: Props) => {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    adjustments(formData);
+    const { category, ...payload } = formData;
+
+    adjustments(payload);
   };
 
   const sxButtonConfigs = [

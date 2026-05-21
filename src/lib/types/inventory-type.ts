@@ -16,7 +16,7 @@ export type ControlInventoryProps = {
     stock_quantity: number;
     max_quantity: number;
     reorder_threshold: number;
-    category: string;
+    category?: string;
   };
 
 

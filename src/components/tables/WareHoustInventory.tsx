@@ -346,7 +346,7 @@ Enables monitoring of inventory thresholds and supports direct quantity adjustme
             <>
               <EditProduct
                 data={editProduct}
-                onClose={handleCloseStockAdjustment}
+                onClose={handleCloseEditProduct}
               />
             </>
           }
