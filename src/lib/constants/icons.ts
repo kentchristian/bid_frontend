@@ -1,16 +1,41 @@
-
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { CiCircleCheck, CiCirclePlus } from "react-icons/ci";
-import { FaCloudUploadAlt, FaRegChartBar } from "react-icons/fa";
-import { FiEdit2, FiEye, FiMinus, FiPlus, FiSave, FiSearch, FiTrash2, FiUploadCloud, FiX } from 'react-icons/fi';
-import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from "react-icons/go";
-import { IoIosTrendingUp, IoMdWarning } from "react-icons/io";
-import { IoReceiptOutline, IoTrendingDownSharp } from "react-icons/io5";
-import { MdArrowDropDown, MdArrowDropUp, MdCancel, MdClose, MdCompareArrows, MdDashboard, MdInventory, MdMenu, MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
-import { RiLogoutCircleLine } from "react-icons/ri";
-import { TbLayoutSidebarLeftCollapse, TbReportSearch } from "react-icons/tb";
-import { first, second, third } from "../../assets/rank-icons";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { BsRobot } from 'react-icons/bs';
+import { CiCircleCheck, CiCirclePlus } from 'react-icons/ci';
+import { FaCloudUploadAlt, FaRegChartBar } from 'react-icons/fa';
+import {
+  FiCalendar,
+  FiDownload,
+  FiEdit2,
+  FiEye,
+  FiFilter,
+  FiMinus,
+  FiMoreHorizontal,
+  FiPlus,
+  FiSave,
+  FiSearch,
+  FiTrash2,
+  FiUploadCloud,
+  FiX,
+} from 'react-icons/fi';
+import { GoArrowDown, GoArrowUp, GoSidebarCollapse } from 'react-icons/go';
+import { IoIosTrendingUp, IoMdWarning } from 'react-icons/io';
+import { IoReceiptOutline, IoTrendingDownSharp } from 'react-icons/io5';
+import {
+  MdArrowDropDown,
+  MdArrowDropUp,
+  MdCancel,
+  MdClose,
+  MdCompareArrows,
+  MdDashboard,
+  MdInventory,
+  MdMenu,
+  MdOutlineDarkMode,
+  MdOutlineLightMode,
+} from 'react-icons/md';
+import { RiLogoutCircleLine } from 'react-icons/ri';
+import { TbLayoutSidebarLeftCollapse, TbReportSearch } from 'react-icons/tb';
+import { first, second, third } from '../../assets/rank-icons';
 
 export const icons = {
   expand: GoSidebarCollapse,
@@ -38,6 +63,11 @@ export const icons = {
   show: FiEye,
   delete: FiTrash2,
   search: FiSearch,
+  calendar: FiCalendar,
+  download: FiDownload,
+  filter: FiFilter,
+  more: FiMoreHorizontal,
+  bot: BsRobot,
   miniClose: FiX,
   upload: FaCloudUploadAlt,
   cancel: MdCancel,
@@ -46,17 +76,13 @@ export const icons = {
   plus: FiPlus,
   cloud: FiUploadCloud,
   save: FiSave,
-  
 
-
-  // Visiblitye MUI 
+  // Visiblitye MUI
   visbilityOn: Visibility,
   visibilityOff: VisibilityOff,
-
 
   // Ranked Icons
   first: first,
   second: second,
   third: third,
-
 };

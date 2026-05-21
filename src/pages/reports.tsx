@@ -1,22 +1,35 @@
-import { Button } from '@mui/material';
-import ComingSoon from '../components/common/ComingSoon';
 import PageContainer from '../components/common/PageContainer';
-import TransactionReceipt from '../components/modals/TransactionReceipt';
-import { useTransactionTicket } from '../lib/store/useTransactionTicket';
+import {
+  AiInsightCard,
+  InventoryHealthPanel,
+  MonthlySalesTrend,
+  RecentTransactionsReport,
+  ReportsToolbar,
+  SalesPerformanceOverview,
+  StaffLeaderboard,
+} from '../components/reports';
 
 const Reports = () => {
-  const { onOpen } = useTransactionTicket(); // Transaction Ticket State
-
   return (
-    <PageContainer className="flex flex-col gap-2">
-      <h1 className="text-2xl font-semibold">Reports</h1>
-      <p className="text-sm text-[color:var(--sidebar-muted)]">
-        Reporting dashboards will live here.
-      </p>
-      <ComingSoon />
-      <Button onClick={onOpen}>Open</Button>
-      <TransactionReceipt />;
-      {/* <AddInventory open={true} onClose={() => {}} /> */}
+    <PageContainer className="flex flex-col gap-4">
+      <ReportsToolbar />
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,2fr)_minmax(320px,0.95fr)]">
+        <div className="flex min-w-0 flex-col gap-4">
+          <AiInsightCard />
+          <SalesPerformanceOverview />
+
+          <div className="grid grid-cols-1 gap-4 2xl:grid-cols-2">
+            <StaffLeaderboard />
+            <MonthlySalesTrend />
+          </div>
+        </div>
+
+        <div className="flex min-w-0 flex-col gap-4">
+          <InventoryHealthPanel />
+          <RecentTransactionsReport />
+        </div>
+      </div>
     </PageContainer>
   );
 };
