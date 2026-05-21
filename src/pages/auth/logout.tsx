@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, ListItemIcon, MenuItem } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -17,9 +17,15 @@ type LogoutProps = {
   sx?: SxProps<Theme>;
   labelClassName?: string;
   onItemClick?: () => void;
+  variant?: 'button' | 'menuItem';
 };
 
-const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
+const Logout = ({
+  sx,
+  labelClassName,
+  onItemClick,
+  variant = 'button',
+}: LogoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -44,17 +50,51 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
-    onItemClick?.();
+    if (variant === 'button') {
+      onItemClick?.();
+    }
   };
 
   const handleCloseDialog = () => {
     if (logoutMutation.isPending) return;
     setOpenDialog(false); // avoids early closing
+    if (variant === 'menuItem') {
+      onItemClick?.();
+    }
   };
 
   const handleConfirmDialog = () => {
     logoutMutation.mutate();
   };
+  const dialog = (
+    <LogoutConfirmationDialog
+      open={openDialog}
+      onClose={handleCloseDialog}
+      onConfirm={handleConfirmDialog}
+      loading={logoutMutation.isPending}
+    />
+  );
+
+  if (variant === 'menuItem') {
+    return (
+      <>
+        <MenuItem
+          onClick={handleOpenDialog}
+          disabled={logoutMutation.isPending}
+          aria-label="Log out"
+          aria-busy={logoutMutation.isPending || undefined}
+          sx={sx}
+        >
+          <ListItemIcon>
+            <icons.logout size={20} />
+          </ListItemIcon>
+          {logoutMutation.isPending ? 'Logging out...' : 'Logout'}
+        </MenuItem>
+        {dialog}
+      </>
+    );
+  }
+
   return (
     <>
       <Button
@@ -70,13 +110,7 @@ const Logout = ({ sx, labelClassName, onItemClick }: LogoutProps) => {
           {logoutMutation.isPending ? 'Logging out...' : 'Logout'}
         </span>
       </Button>
-
-      <LogoutConfirmationDialog
-        open={openDialog}
-        onClose={handleCloseDialog}
-        onConfirm={handleConfirmDialog}
-        loading={logoutMutation.isPending}
-      />
+      {dialog}
     </>
   );
 };
