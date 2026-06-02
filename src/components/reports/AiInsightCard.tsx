@@ -1,9 +1,9 @@
 import { Tooltip } from '@mui/material';
 import {
+  Tooltip as ChartTooltip,
   Line,
   LineChart,
   ResponsiveContainer,
-  Tooltip as ChartTooltip,
 } from 'recharts';
 import { icons } from '../../lib/constants/icons';
 import CardContainer from '../common/CardContainer';
