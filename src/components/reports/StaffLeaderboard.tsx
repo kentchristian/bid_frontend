@@ -22,7 +22,7 @@ export const StaffLeaderboard = () => {
         const { avatar, name } = params.row;
 
         // Helper to get initials from the name
-        const getInitials = (fullName) => {
+        const getInitials = (fullName: string) => {
           if (!fullName) return avatar || '';
           const parts = fullName.trim().split(/\s+/);
           if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
@@ -77,16 +77,14 @@ export const StaffLeaderboard = () => {
       title="Staff Performance Leaderboard"
       className="min-h-72 p-4 shadow-sm"
     >
-      <div className="overflow-x-auto rounded-lg border border-[color:var(--card-border)]">
-        <DynamicDataGrid
-          columns={columns}
-          rows={transformedRows || []}
-          minHeight={350}
-          loading={
-            staffLeaderboardLoading && staffLeaderboardStatus === 'pending'
-          }
-        />
-      </div>
+      <DynamicDataGrid
+        columns={columns}
+        rows={transformedRows || []}
+        minHeight={350}
+        loading={
+          staffLeaderboardLoading && staffLeaderboardStatus === 'pending'
+        }
+      />
     </CardContainer>
   );
 };

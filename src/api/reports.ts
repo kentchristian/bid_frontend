@@ -3,6 +3,7 @@ import type {
   MonthlySalesTrendApiParameters,
   MonthlySalesTrendResponse,
   RawSalesPerformanceOverviewResponse,
+  RecentTransactionsResponse,
   StaffLeaderboardResponse,
 } from '../lib/types/report-types';
 import { baseApi } from '../services/axiosClient';
@@ -39,6 +40,17 @@ export const getMonthlySalesTrend = async ({
 }: MonthlySalesTrendApiParameters): Promise<MonthlySalesTrendResponse> => {
   const { data } = await baseApi.get<MonthlySalesTrendResponse>(
     `/api/sales_report/monthly_sales_trend/?year=${year}&month=${month}`,
+  );
+
+  return data;
+};
+
+
+
+
+export const getRecentTransactionReports = async (): Promise<RecentTransactionsResponse> => {
+  const { data } = await baseApi.get<RecentTransactionsResponse>(
+    `/api/sales_report/recent_transactions_report/`,
   );
 
   return data;

@@ -59,18 +59,18 @@ export const InventoryHealthPanel = () => {
     <CardContainer title="Inventory Health" className="min-h-96 p-4 shadow-sm">
       <div className="flex h-full flex-col gap-5">
         <section>
-          <Typography variant="overline">Low Stock Alerts</Typography>
-          <div className="mt-3 overflow-x-auto rounded-lg border border-[color:var(--card-border)]">
-            <DynamicDataGrid
-              columns={columns}
-              rows={transformedRows || []}
-              minHeight={350}
-              loading={
-                inventoryHealthReportLoading &&
-                inventoryHealthReportStatus === 'pending'
-              }
-            />
-          </div>
+          <Typography variant="overline" className="mb-2">
+            Low Stock Alerts
+          </Typography>
+          <DynamicDataGrid
+            columns={columns}
+            rows={transformedRows || []}
+            minHeight={350}
+            loading={
+              inventoryHealthReportLoading &&
+              inventoryHealthReportStatus === 'pending'
+            }
+          />
         </section>
       </div>
     </CardContainer>

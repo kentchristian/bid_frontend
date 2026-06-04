@@ -1,6 +1,6 @@
 
-import { getInventoryHealthReport, getMonthlySalesTrend, getSalesPerformanceOverview, getStaffPerformanceLeaderBoard } from "../../api/reports";
-import type { AlertsResponse, MonthlySalesTrendApiParameters, MonthlySalesTrendResponse, RawSalesPerformanceOverviewResponse, StaffLeaderboardResponse } from "../types/report-types";
+import { getInventoryHealthReport, getMonthlySalesTrend, getRecentTransactionReports, getSalesPerformanceOverview, getStaffPerformanceLeaderBoard } from "../../api/reports";
+import type { AlertsResponse, MonthlySalesTrendApiParameters, MonthlySalesTrendResponse, RawSalesPerformanceOverviewResponse, RecentTransactionsResponse, StaffLeaderboardResponse } from "../types/report-types";
 import { useAuthQuery } from "./useAuthQuery";
 
 
@@ -36,6 +36,17 @@ export const useMonthlySalesTrendReport = ({year, month}: MonthlySalesTrendApiPa
     ['monthly-sales-trend-report', { year, month }], 
     // 2. Fixed: Passed as an object wrapper inside an anonymous arrow function
     () => getMonthlySalesTrend({ year, month })
+    
+  );
+}
+
+
+
+
+export const useRecentTransactionsReport = () => {
+  return useAuthQuery<RecentTransactionsResponse>(
+    'recent-transactions-report',
+    getRecentTransactionReports
     
   );
 }

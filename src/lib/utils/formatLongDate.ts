@@ -1,4 +1,4 @@
-const longDateFormatter = new Intl.DateTimeFormat('en-US', {
+const longDateFormatter = new Intl.DateTimeFormat('en-PH', {
   month: 'long',
   day: 'numeric',
   year: 'numeric',
