@@ -12,6 +12,7 @@ interface UserData {
   name: string;
   tenant: Tenant;
   role: string;
+  role_name: string;
   is_active: boolean;
 }
 

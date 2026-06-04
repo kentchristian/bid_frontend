@@ -1,6 +1,5 @@
 import AccountCircleOutlined from '@mui/icons-material/AccountCircleOutlined';
 import BusinessOutlined from '@mui/icons-material/BusinessOutlined';
-import Settings from '@mui/icons-material/Settings';
 import {
   Avatar,
   Divider,
@@ -45,7 +44,7 @@ const ProfileMenu = () => {
 
   const open = Boolean(anchorEl);
   const userName = userData?.name ?? 'User';
-  const role = formatRole(userData?.role);
+  const role = formatRole(userData?.role_name);
   const tenantName = userData?.tenant?.name ?? 'Tenant';
   const initials = getInitials(userName);
 
@@ -75,12 +74,12 @@ const ProfileMenu = () => {
       text: tenantName,
       helper: 'Workspace',
     },
-    {
-      icons: <Settings fontSize="small" />,
-      text: 'Settings',
-      fn: handleClose,
-      helper: 'Account preferences',
-    },
+    // {
+    //   icons: <Settings fontSize="small" />,
+    //   text: 'Settings',
+    //   fn: handleClose,
+    //   helper: 'Account preferences',
+    // },
   ];
 
   return (
