@@ -14,7 +14,6 @@ import { useSalesPerformanceOverview } from '../../lib/hooks/useReports';
 import { currency } from '../../lib/utils/currency';
 import CardContainer from '../common/CardContainer';
 import { Typography } from '../common/Typography';
-import { ReportActions } from './ReportActions';
 
 export const SalesPerformanceOverview = () => {
   const {
@@ -27,7 +26,7 @@ export const SalesPerformanceOverview = () => {
   return (
     <CardContainer
       title="Sales Performance Overview"
-      customFunction={<ReportActions compact />}
+      // customFunction={<ReportActions compact />}
       className="min-h-82 p-4 shadow-sm"
       loading={
         salesPerformanceLoading && salesPerformanceLoadingStatus === 'pending'

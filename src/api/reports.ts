@@ -45,13 +45,11 @@ export const getMonthlySalesTrend = async ({
   return data;
 };
 
+export const getRecentTransactionReports =
+  async (): Promise<RecentTransactionsResponse> => {
+    const { data } = await baseApi.get<RecentTransactionsResponse>(
+      `/api/sales_report/recent_transactions_report/`,
+    );
 
-
-
-export const getRecentTransactionReports = async (): Promise<RecentTransactionsResponse> => {
-  const { data } = await baseApi.get<RecentTransactionsResponse>(
-    `/api/sales_report/recent_transactions_report/`,
-  );
-
-  return data;
-};
+    return data;
+  };

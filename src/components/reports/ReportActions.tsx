@@ -43,7 +43,7 @@ export const ReportActions = ({ compact = false }: ReportActionsProps) => {
           )}
         </Button>
       </Tooltip>
-      <Tooltip title="Filters" arrow>
+      {/* <Tooltip title="Filters" arrow>
         <Button
           variant="outlined"
           startIcon={<icons.filter size={15} />}
@@ -62,7 +62,7 @@ export const ReportActions = ({ compact = false }: ReportActionsProps) => {
         >
           {!compact && <Typography variant="body-sm">Filters</Typography>}
         </Button>
-      </Tooltip>
+      </Tooltip> */}
     </div>
   );
 };

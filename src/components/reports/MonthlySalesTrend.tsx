@@ -8,17 +8,28 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { useState } from 'react';
+import dayjs, { type Dayjs } from 'dayjs';
 
 import { useMonthlySalesTrendReport } from '../../lib/hooks/useReports';
 import { formatCurrency } from '../../lib/utils/formatCurrency';
 import { formatLongDate } from '../../lib/utils/formatLongDate';
 import CardContainer from '../common/CardContainer';
-import { ReportActions } from './ReportActions';
+import { ReportMonthYearPicker } from './ReportMonthYearPicker';
 
 export const MonthlySalesTrend = () => {
+  const [monthlySalesFilter, setMonthlySalesFilter] = useState<Dayjs | null>(
+    dayjs('2026-04-01'),
+  );
+
+  const selectedMonthlySalesDate = monthlySalesFilter ?? dayjs();
   const filterData = {
-    year: 2026,
-    month: 4,
+    year: selectedMonthlySalesDate.year(),
+    month: selectedMonthlySalesDate.month() + 1,
+  };
+
+  const handleMonthlySalesFilterChange = (value: Dayjs | null) => {
+    setMonthlySalesFilter(value);
   };
 
   const {
@@ -35,7 +46,13 @@ export const MonthlySalesTrend = () => {
         monthlySalesTrendLoading && monthlySalesTrendStatus === 'pending'
       }
       title="Monthly Sales Trend"
-      customFunction={<ReportActions compact />}
+      customFunction={
+        <ReportMonthYearPicker
+          label="Monthly sales filter"
+          value={monthlySalesFilter}
+          onChange={handleMonthlySalesFilterChange}
+        />
+      }
       className="min-h-72 p-4 shadow-sm"
       isEmpty={chartData.length === 0}
     >
