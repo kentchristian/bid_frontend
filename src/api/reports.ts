@@ -1,17 +1,45 @@
-import type { AlertsResponse, RawSalesPerformanceOverviewResponse } from "../lib/types/report-types";
-import { baseApi } from "../services/axiosClient";
+import type {
+  AlertsResponse,
+  MonthlySalesTrendApiParameters,
+  MonthlySalesTrendResponse,
+  RawSalesPerformanceOverviewResponse,
+  StaffLeaderboardResponse,
+} from '../lib/types/report-types';
+import { baseApi } from '../services/axiosClient';
 
+export const getSalesPerformanceOverview =
+  async (): Promise<RawSalesPerformanceOverviewResponse> => {
+    const { data } = await baseApi.get<RawSalesPerformanceOverviewResponse>(
+      '/api/sales_report/sales_performance_overview/',
+    );
 
-
-export const getSalesPerformanceOverview = async (): Promise<RawSalesPerformanceOverviewResponse> => {
-  const { data } = await baseApi.get<RawSalesPerformanceOverviewResponse>('/api/sales_report/sales_performance_overview/');
-
-  return data;
-}
-
+    return data;
+  };
 
 export const getInventoryHealthReport = async (): Promise<AlertsResponse> => {
-  const { data } = await baseApi.get<AlertsResponse>('/api/inventory_report/inventory_health_report/');
+  const { data } = await baseApi.get<AlertsResponse>(
+    '/api/inventory_report/inventory_health_report/',
+  );
 
   return data;
-}
+};
+
+export const getStaffPerformanceLeaderBoard =
+  async (): Promise<StaffLeaderboardResponse> => {
+    const { data } = await baseApi.get<StaffLeaderboardResponse>(
+      '/api/sales_report/staff_performance_leaderboard/',
+    );
+
+    return data;
+  };
+
+export const getMonthlySalesTrend = async ({
+  year,
+  month,
+}: MonthlySalesTrendApiParameters): Promise<MonthlySalesTrendResponse> => {
+  const { data } = await baseApi.get<MonthlySalesTrendResponse>(
+    `/api/sales_report/monthly_sales_trend/?year=${year}&month=${month}`,
+  );
+
+  return data;
+};
