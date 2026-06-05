@@ -354,3 +354,20 @@ main {
     transform: rotateY(360deg);
   }
 }
+
+
+
+
+
+/* Fallback colors exclusively for html2canvas snapshots */
+.html2canvas-print-target {
+  background-color: #ffffff !important;
+  color: #171717 !important;
+}
+
+.html2canvas-print-target * {
+  /* Forces all Tailwind v4 oklch utilities inside the report to evaluate to flat hex/rgb colors */
+  background-color: inherit;
+  border-color: #e5e5e5 !important; 
+  color: #1f2937 !important;
+}
