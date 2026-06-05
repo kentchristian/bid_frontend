@@ -64,29 +64,6 @@ export const ReportActions = ({ compact = false }: ReportActionsProps) => {
     }
   };
 
-  const buttonSx = compact
-    ? {
-        minWidth: 0,
-        height: 32,
-        px: 1.25,
-        color: 'var(--main-text)',
-        borderColor: 'var(--card-border)',
-        backgroundColor: 'var(--card)',
-        '&:hover': {
-          borderColor: 'var(--sidebar-muted)',
-          backgroundColor: 'var(--sidebar-hover)',
-        },
-      }
-    : {
-        height: 40,
-        color: 'var(--invert-text)',
-        backgroundColor: 'var(--accent-positive)',
-        '&:hover': {
-          backgroundColor: 'var(--accent-positive-hover)',
-          color: 'var(--invert-text)',
-        },
-      };
-
   return (
     <>
       <div className="flex items-center gap-2">
@@ -96,11 +73,11 @@ export const ReportActions = ({ compact = false }: ReportActionsProps) => {
             startIcon={<icons.show size={15} />}
             onClick={handlePreviewOpen}
             sx={{
-              ...buttonSx,
               minWidth: compact ? 0 : 96,
               color: 'var(--main-text)',
-              borderColor: 'var(--card-border)',
-              backgroundColor: 'var(--card)',
+              backgroundColor: 'var(--main-bg)',
+
+              px: 1.25,
             }}
           >
             {!compact && <Typography variant="body-sm">Preview</Typography>}
@@ -119,7 +96,14 @@ export const ReportActions = ({ compact = false }: ReportActionsProps) => {
             }
             onClick={handleDirectDownload}
             disabled={isDownloading}
-            sx={buttonSx}
+            sx={{
+              color: 'var(--invert-text)',
+              backgroundColor: 'var(--accent-positive)',
+              '&:hover': {
+                backgroundColor: 'var(--accent-positive-hover)',
+                color: 'var(--invert-text)',
+              },
+            }}
           >
             {!compact && (
               <Typography variant="body-sm">

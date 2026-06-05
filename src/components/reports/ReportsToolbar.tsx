@@ -15,10 +15,10 @@ export const ReportsToolbar = () => {
             Executive sales, stock health, staff, and transaction intelligence.
           </Typography>
         </div>
+        <ReportActions />
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <ReportActions />
         <AiPromptSearch />
       </div>
     </div>

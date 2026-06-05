@@ -59,14 +59,14 @@ export const AiPromptSearch = () => {
         variant="contained"
         startIcon={<icons.filter size={15} />}
         sx={{
-          height: 40,
-          minWidth: 92,
           color: 'var(--invert-text)',
-          backgroundColor: 'var(--main-text)',
+          backgroundColor: 'var(--accent-positive)',
           '&:hover': {
-            backgroundColor: 'var(--sidebar-muted)',
+            backgroundColor: 'var(--accent-positive-hover)',
             color: 'var(--invert-text)',
           },
+          height: 40,
+          minWidth: 92,
         }}
       >
         <Typography variant="body-sm">Query</Typography>
